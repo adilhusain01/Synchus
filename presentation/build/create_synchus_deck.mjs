@@ -170,8 +170,8 @@ function routeSlide(presentation) {
   const slide = presentation.slides.add()
   slide.background.fill = C.paper
   eyebrow(slide, 'Spatial intelligence', 96, 76, 360, C.coral)
-  text(slide, 'A route becomes a decision — with evidence.', 96, 116, 1060, 72, { fontSize: 50, bold: true })
-  text(slide, 'Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest gaps in live data.', 98, 204, 1020, 60, { fontSize: 23, color: C.muted })
+  text(slide, 'A route becomes a decision — with evidence.', 96, 116, 1080, 118, { fontSize: 44, bold: true })
+  text(slide, 'Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest gaps in live data.', 98, 250, 1020, 60, { fontSize: 23, color: C.muted })
   addImage(slide, 'synchus-route.png', 96, 330, 1130, 610, { alt: 'Synchus route intelligence dashboard', crop: { left: 0, top: 0, right: 0, bottom: 0 } })
   rect(slide, 1288, 330, 530, 610, '#e9f0df', 20, C.line)
   text(slide, 'What the map makes visible', 1332, 380, 400, 38, { fontSize: 27, bold: true })

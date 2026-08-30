@@ -2,13 +2,13 @@
   "schema": "openai.presentation.layout/v4",
   "unit": "px",
   "slide": {
-    "aid": "sl/kkueik",
-    "id": "kkueik",
+    "aid": "sl/at1jvl",
+    "id": "at1jvl",
     "slide": 4,
-    "layoutId": "359566c1-ba7b-489a-b48c-303448e13b7d",
+    "layoutId": "7cf7a97a-8fc9-47e7-9b98-3c51ae3dab23",
     "layoutName": "Title Slide",
     "layoutType": "title",
-    "masterLayoutId": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+    "masterLayoutId": "317ad29d-fa32-444f-8eeb-930413386c70",
     "masterLayoutName": "Master",
     "backgroundColor": "#FFFAF0",
     "frame": {
@@ -45,15 +45,15 @@
   "inheritedLayers": [
     {
       "scope": "layout",
-      "id": "359566c1-ba7b-489a-b48c-303448e13b7d",
+      "id": "7cf7a97a-8fc9-47e7-9b98-3c51ae3dab23",
       "name": "Title Slide",
       "type": "title",
-      "parentLayoutId": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+      "parentLayoutId": "317ad29d-fa32-444f-8eeb-930413386c70",
       "elements": []
     },
     {
       "scope": "master",
-      "id": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+      "id": "317ad29d-fa32-444f-8eeb-930413386c70",
       "name": "Master",
       "type": "master",
       "elements": []
@@ -64,7 +64,7 @@
       "order": 1,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/utg7ax4b",
+      "aid": "sh/ud0761of",
       "id": "1",
       "bbox": [
         96,
@@ -125,20 +125,20 @@
       "order": 2,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/hwrq5cn2",
+      "aid": "sh/hgrq1gnq",
       "id": "2",
       "bbox": [
         96,
         116,
-        1060,
-        72
+        1080,
+        118
       ],
       "geometry": "rect",
       "text": "A route becomes a decision — with evidence.",
       "textPreview": "A route becomes a decision — with evidence.",
-      "resolvedFontSize": 50,
+      "resolvedFontSize": 44,
       "resolvedTextStyle": {
-        "fontSize": 50,
+        "fontSize": 44,
         "typeface": "+mn-lt",
         "color": "#17201C",
         "bold": true,
@@ -151,15 +151,11 @@
         }
       },
       "textLayout": {
-        "lineCount": 2,
+        "lineCount": 1,
         "lines": [
           {
             "index": 1,
-            "text": "A route becomes a decision — with"
-          },
-          {
-            "index": 2,
-            "text": "evidence."
+            "text": "A route becomes a decision — with evidence."
           }
         ]
       },
@@ -168,7 +164,7 @@
           "index": 1,
           "text": "A route becomes a decision — with evidence.",
           "resolvedTextStyle": {
-            "fontSize": 50,
+            "fontSize": 44,
             "color": "#17201C",
             "bold": true
           },
@@ -176,7 +172,7 @@
             {
               "index": 1,
               "text": "A route becomes a decision — with evidence.",
-              "fontSize": 50,
+              "fontSize": 44,
               "color": "#17201C",
               "bold": true
             }
@@ -190,11 +186,11 @@
       "order": 3,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/gvipc7mh",
+      "aid": "sh/wfip8b6l",
       "id": "3",
       "bbox": [
         98,
-        204,
+        250,
         1020,
         60
       ],
@@ -252,7 +248,7 @@
       "order": 4,
       "kind": "image",
       "scope": "slide",
-      "aid": "im/2hobyx8n",
+      "aid": "im/6ps3ipsv",
       "id": "4",
       "bbox": [
         96,
@@ -280,7 +276,7 @@
         ]
       },
       "asset": {
-        "assetId": "fdae40a3-a683-4467-a513-7eaf296313c2",
+        "assetId": "0de9402f-8c52-4b32-bd01-d7a608409921",
         "contentType": "image/jpeg",
         "byteLength": 111156
       }
@@ -289,7 +285,7 @@
       "order": 5,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/6pg76x4f",
+      "aid": "sh/ih07ulob",
       "id": "5",
       "bbox": [
         1288,
@@ -306,7 +302,7 @@
       "order": 6,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/ts761cnq",
+      "aid": "sh/5kbq5gn2",
       "id": "6",
       "bbox": [
         1332,
@@ -367,7 +363,7 @@
       "order": 7,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/8ryp87m5",
+      "aid": "sh/4j2pwb6h",
       "id": "7",
       "bbox": [
         1334,
@@ -383,7 +379,7 @@
       "order": 8,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/j25ovi5o",
+      "aid": "sh/rmt87q58",
       "id": "8",
       "bbox": [
         1380,
@@ -441,7 +437,7 @@
       "order": 9,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/y1w72d43",
+      "aid": "sh/6lkrylon",
       "id": "9",
       "bbox": [
         1334,
@@ -457,7 +453,7 @@
       "order": 10,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/gfaps7y9",
+      "aid": "sh/g7m94325",
       "id": "10",
       "bbox": [
         1380,
@@ -515,7 +511,7 @@
       "order": 11,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/hgjq1czu",
+      "aid": "sh/18vax83q",
       "id": "11",
       "bbox": [
         1334,
@@ -531,7 +527,7 @@
       "order": 12,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/uts7qxg3",
+      "aid": "sh/e5kr2tkz",
       "id": "12",
       "bbox": [
         1380,
@@ -589,7 +585,7 @@
       "order": 13,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/vu18z2ho",
+      "aid": "sh/f6tsvylk",
       "id": "13",
       "bbox": [
         1334,
@@ -605,7 +601,7 @@
       "order": 14,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/8rqpo7yd",
+      "aid": "sh/ovmt832h",
       "id": "14",
       "bbox": [
         1380,
@@ -670,7 +666,7 @@
       "order": 15,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/tszqxszy",
+      "aid": "sh/pwva183m",
       "id": "15",
       "bbox": [
         1334,
@@ -686,7 +682,7 @@
       "order": 16,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/6p87mxg7",
+      "aid": "sh/294b6dkb",
       "id": "16",
       "bbox": [
         1348,
@@ -747,7 +743,7 @@
       "order": 17,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/7qh8v2hs",
+      "aid": "sh/3adszylw",
       "id": "17",
       "bbox": [
         1334,
@@ -812,7 +808,7 @@
       "order": 18,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/snu90ryh",
+      "aid": "sh/cz6tcn2d",
       "id": "18",
       "bbox": [
         96,
@@ -873,7 +869,7 @@
       "order": 19,
       "kind": "shape",
       "scope": "slide",
-      "aid": "sh/do3q9wf2",
+      "aid": "sh/d0fa5s3y",
       "id": "19",
       "bbox": [
         1736,
