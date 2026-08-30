@@ -1,0 +1,1019 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/kqokw3",
+    "id": "kqokw3",
+    "slide": 5,
+    "layoutId": "359566c1-ba7b-489a-b48c-303448e13b7d",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#101A16",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "359566c1-ba7b-489a-b48c-303448e13b7d",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/a9c3ulsv",
+      "id": "1",
+      "bbox": [
+        96,
+        80,
+        600,
+        28
+      ],
+      "geometry": "rect",
+      "text": "GROUND TRUTH, IN THE WORKER’S LANGUAGE",
+      "textPreview": "GROUND TRUTH, IN THE WORKER’S LANGUAGE",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "+mn-lt",
+        "color": "#C8FF3D",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "GROUND TRUTH, IN THE WORKER’S LANGUAGE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "GROUND TRUTH, IN THE WORKER’S LANGUAGE",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "color": "#C8FF3D",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "GROUND TRUTH, IN THE WORKER’S LANGUAGE",
+              "fontSize": 14,
+              "color": "#C8FF3D",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/xwn2p0bm",
+      "id": "2",
+      "bbox": [
+        96,
+        122,
+        980,
+        142
+      ],
+      "geometry": "rect",
+      "text": "The worker does not fill a form. Synchus conducts the interview.",
+      "textPreview": "The worker does not fill a form. Synchus conducts the interview.",
+      "resolvedFontSize": 52,
+      "resolvedTextStyle": {
+        "fontSize": 52,
+        "typeface": "+mn-lt",
+        "color": "#FFFAF0",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The worker does not fill a form."
+          },
+          {
+            "index": 2,
+            "text": "Synchus conducts the interview."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The worker does not fill a form. Synchus conducts the interview.",
+          "resolvedTextStyle": {
+            "fontSize": 52,
+            "color": "#FFFAF0",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The worker does not fill a form. Synchus conducts the interview.",
+              "fontSize": 52,
+              "color": "#FFFAF0",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/wvelwva1",
+      "id": "3",
+      "bbox": [
+        98,
+        292,
+        900,
+        58
+      ],
+      "geometry": "rect",
+      "text": "Hindi, Hinglish or English — voice is the fastest way to get the detail the company is missing.",
+      "textPreview": "Hindi, Hinglish or English — voice is the fastest way to get the detail the company is missing.",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "fontSize": 23,
+        "typeface": "+mn-lt",
+        "color": "#C7D1CA",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Hindi, Hinglish or English — voice is the fastest way to get the detail the company is"
+          },
+          {
+            "index": 2,
+            "text": "missing."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Hindi, Hinglish or English — voice is the fastest way to get the detail the company is missing.",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "color": "#C7D1CA"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Hindi, Hinglish or English — voice is the fastest way to get the detail the company is missing.",
+              "fontSize": 23,
+              "color": "#C7D1CA"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/69c7y50r",
+      "id": "4",
+      "bbox": [
+        1110,
+        68,
+        700,
+        852
+      ],
+      "geometry": "roundRect",
+      "alt": "Synchus voice orb interface",
+      "contentType": "image/jpeg",
+      "imageFit": "cover",
+      "imageMask": {
+        "geometry": "roundRect",
+        "adjustmentList": [
+          {
+            "name": "adj",
+            "formula": "val 2286"
+          }
+        ]
+      },
+      "asset": {
+        "assetId": "9569222e-887b-4479-b4ed-2cbc24ac4f92",
+        "contentType": "image/jpeg",
+        "byteLength": 19409
+      }
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/m5cjq1sz",
+      "id": "5",
+      "bbox": [
+        96,
+        425,
+        900,
+        102
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#E8E0F4",
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9832lgba",
+      "id": "6",
+      "bbox": [
+        122,
+        443,
+        126,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Worker",
+      "textPreview": "Worker",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Worker"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Worker",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Worker",
+              "fontSize": 13,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/87ulsbap",
+      "id": "7",
+      "bbox": [
+        122,
+        473,
+        820,
+        34
+      ],
+      "geometry": "rect",
+      "text": "“NH44 par blockage hai.”",
+      "textPreview": "“NH44 par blockage hai.”",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "fontSize": 20,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "“NH44 par blockage hai.”"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "“NH44 par blockage hai.”",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "“NH44 par blockage hai.”",
+              "fontSize": 20,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/72pkva9o",
+      "id": "8",
+      "bbox": [
+        96,
+        551,
+        900,
+        102
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#E7F2D8",
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/61w325s3",
+      "id": "9",
+      "bbox": [
+        122,
+        569,
+        126,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Synchus",
+      "textPreview": "Synchus",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Synchus"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Synchus",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Synchus",
+              "fontSize": 13,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/wnqd8rqp",
+      "id": "10",
+      "bbox": [
+        122,
+        599,
+        820,
+        34
+      ],
+      "geometry": "rect",
+      "text": "“Kis vehicle, exact location, severity aur expected end time?”",
+      "textPreview": "“Kis vehicle, exact location, severity aur expected end time?”",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "fontSize": 20,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "“Kis vehicle, exact location, severity aur expected end time?”"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "“Kis vehicle, exact location, severity aur expected end time?”",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "“Kis vehicle, exact location, severity aur expected end time?”",
+              "fontSize": 20,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/xojehwra",
+      "id": "11",
+      "bbox": [
+        96,
+        677,
+        900,
+        102
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#E8E0F4",
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/al8v6h8j",
+      "id": "12",
+      "bbox": [
+        122,
+        695,
+        126,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Worker",
+      "textPreview": "Worker",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Worker"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Worker",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Worker",
+              "fontSize": 13,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vmhwfm94",
+      "id": "13",
+      "bbox": [
+        122,
+        725,
+        820,
+        34
+      ],
+      "geometry": "rect",
+      "text": "“DL30AN8381, Murthal, medium, 18:30 tak clear ho sakta hai.”",
+      "textPreview": "“DL30AN8381, Murthal, medium, 18:30 tak clear ho sakta hai.”",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "fontSize": 20,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "“DL30AN8381, Murthal, medium, 18:30 tak clear ho sakta hai.”"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "“DL30AN8381, Murthal, medium, 18:30 tak clear ho sakta hai.”",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "“DL30AN8381, Murthal, medium, 18:30 tak clear ho sakta hai.”",
+              "fontSize": 20,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8jqd47qd",
+      "id": "14",
+      "bbox": [
+        96,
+        803,
+        900,
+        102
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFF0AE",
+      "lineWidth": 0
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9kzedcry",
+      "id": "15",
+      "bbox": [
+        122,
+        821,
+        126,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Synchus",
+      "textPreview": "Synchus",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Synchus"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Synchus",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Synchus",
+              "fontSize": 13,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/mh8v2h8n",
+      "id": "16",
+      "bbox": [
+        122,
+        851,
+        820,
+        34
+      ],
+      "geometry": "rect",
+      "text": "“Confirm karun? Is report ko review ke liye stage kar raha hoon.”",
+      "textPreview": "“Confirm karun? Is report ko review ke liye stage kar raha hoon.”",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "fontSize": 20,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "“Confirm karun? Is report ko review ke liye stage kar raha hoon.”"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "“Confirm karun? Is report ko review ke liye stage kar raha hoon.”",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "“Confirm karun? Is report ko review ke liye stage kar raha hoon.”",
+              "fontSize": 20,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 17,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/nihcbm98",
+      "id": "17",
+      "bbox": [
+        96,
+        956,
+        620,
+        28
+      ],
+      "geometry": "rect",
+      "text": "Press Space to begin. Press Space again to stop.",
+      "textPreview": "Press Space to begin. Press Space again to stop.",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "fontSize": 15,
+        "typeface": "+mn-lt",
+        "color": "#C8FF3D",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Press Space to begin. Press Space again to stop."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Press Space to begin. Press Space again to stop.",
+          "resolvedTextStyle": {
+            "fontSize": 15,
+            "color": "#C8FF3D",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Press Space to begin. Press Space again to stop.",
+              "fontSize": 15,
+              "color": "#C8FF3D",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 18,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0f6d07ah",
+      "id": "18",
+      "bbox": [
+        96,
+        1016,
+        160,
+        24
+      ],
+      "geometry": "rect",
+      "text": "SYNCHUS",
+      "textPreview": "SYNCHUS",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "SYNCHUS"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "SYNCHUS",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "SYNCHUS",
+              "fontSize": 12,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 19,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/lgzu9cr2",
+      "id": "19",
+      "bbox": [
+        1736,
+        1016,
+        88,
+        24
+      ],
+      "geometry": "rect",
+      "text": "05",
+      "textPreview": "05",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "05"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "05",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "05",
+              "fontSize": 12,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

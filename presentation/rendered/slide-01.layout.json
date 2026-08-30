@@ -1,0 +1,571 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/45bnc5",
+    "id": "45bnc5",
+    "slide": 1,
+    "layoutId": "359566c1-ba7b-489a-b48c-303448e13b7d",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#F6F1E7",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "359566c1-ba7b-489a-b48c-303448e13b7d",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/mxw7ux0r",
+      "id": "1",
+      "bbox": [
+        830,
+        42,
+        1000,
+        950
+      ],
+      "geometry": "roundRect",
+      "alt": "Synchus operational memory illustration",
+      "contentType": "image/png",
+      "imageCrop": {
+        "left": 0.2,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "imageFit": "cover",
+      "imageMask": {
+        "geometry": "roundRect",
+        "adjustmentList": [
+          {
+            "name": "adj",
+            "formula": "val 1684"
+          }
+        ]
+      },
+      "asset": {
+        "assetId": "a1c6f4fd-53f1-447c-a7f3-1c733857cf92",
+        "contentType": "image/png",
+        "byteLength": 1636230
+      }
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4bqhwfux",
+      "id": "2",
+      "bbox": [
+        84,
+        92,
+        150,
+        52
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#17201C",
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5czipkbi",
+      "id": "3",
+      "bbox": [
+        102,
+        106,
+        114,
+        24
+      ],
+      "geometry": "rect",
+      "text": "SYNCHUS",
+      "textPreview": "SYNCHUS",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "fontSize": 15,
+        "typeface": "+mn-lt",
+        "color": "#FFFAF0",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "SYNCHUS"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "SYNCHUS",
+          "resolvedTextStyle": {
+            "fontSize": 15,
+            "color": "#FFFAF0",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "SYNCHUS",
+              "fontSize": 15,
+              "color": "#FFFAF0",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ulozq5cv",
+      "id": "4",
+      "bbox": [
+        92,
+        238,
+        660,
+        28
+      ],
+      "geometry": "rect",
+      "text": "OPERATIONAL MEMORY FOR INDIAN LOGISTICS",
+      "textPreview": "OPERATIONAL MEMORY FOR INDIAN LOGISTICS",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "OPERATIONAL MEMORY FOR INDIAN LOGISTICS"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "OPERATIONAL MEMORY FOR INDIAN LOGISTICS",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "OPERATIONAL MEMORY FOR INDIAN LOGISTICS",
+              "fontSize": 14,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vmx0jqtg",
+      "id": "5",
+      "bbox": [
+        88,
+        286,
+        715,
+        260
+      ],
+      "geometry": "rect",
+      "text": "The company learns at the speed of its ground truth.",
+      "textPreview": "The company learns at the speed of its ground truth.",
+      "resolvedFontSize": 70,
+      "resolvedTextStyle": {
+        "fontSize": 70,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The company learns"
+          },
+          {
+            "index": 2,
+            "text": "at the speed of its"
+          },
+          {
+            "index": 3,
+            "text": "ground truth."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The company learns at the speed of its ground truth.",
+          "resolvedTextStyle": {
+            "fontSize": 70,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The company learns at the speed of its ground truth.",
+              "fontSize": 70,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gnqhsvul",
+      "id": "6",
+      "bbox": [
+        92,
+        590,
+        630,
+        120
+      ],
+      "geometry": "rect",
+      "text": "Voice, files, field reports and operational systems become one living context layer — with humans retaining authority.",
+      "textPreview": "Voice, files, field reports and operational systems become one living context layer — with humans retaining authority.",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "fontSize": 27,
+        "typeface": "+mn-lt",
+        "color": "#65706A",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Voice, files, field reports and operational systems"
+          },
+          {
+            "index": 2,
+            "text": "become one living context layer — with humans"
+          },
+          {
+            "index": 3,
+            "text": "retaining authority."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Voice, files, field reports and operational systems become one living context layer — with humans retaining authority.",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "color": "#65706A"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Voice, files, field reports and operational systems become one living context layer — with humans retaining authority.",
+              "fontSize": 27,
+              "color": "#65706A"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/h8zil0b6",
+      "id": "7",
+      "bbox": [
+        92,
+        778,
+        180,
+        36
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#C8FF3D",
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/6hozmlcj",
+      "id": "8",
+      "bbox": [
+        106,
+        786,
+        152,
+        18
+      ],
+      "geometry": "rect",
+      "text": "HACKATHON DEMO",
+      "textPreview": "HACKATHON DEMO",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "HACKATHON DEMO"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "HACKATHON DEMO",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "HACKATHON DEMO",
+              "fontSize": 12,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/7ixgfqd4",
+      "id": "9",
+      "bbox": [
+        92,
+        854,
+        330,
+        34
+      ],
+      "geometry": "rect",
+      "text": "Hindi · Hinglish · English",
+      "textPreview": "Hindi · Hinglish · English",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Hindi · Hinglish · English"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Hindi · Hinglish · English",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Hindi · Hinglish · English",
+              "fontSize": 18,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rm50zu1g",
+      "id": "10",
+      "bbox": [
+        92,
+        980,
+        200,
+        28
+      ],
+      "geometry": "rect",
+      "text": "2026",
+      "textPreview": "2026",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "+mn-lt",
+        "color": "#65706A",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "2026"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "2026",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "color": "#65706A"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "2026",
+              "fontSize": 14,
+              "color": "#65706A"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

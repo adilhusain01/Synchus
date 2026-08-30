@@ -7,6 +7,7 @@ const ASSET = `${OUT}/assets`
 const RENDER = `${OUT}/rendered`
 const W = 1920
 const H = 1080
+const imageBytes = {}
 
 const C = {
   ink: '#17201c',
@@ -78,7 +79,8 @@ function numberCard(slide, num, label, x, y, fill) {
 
 function addImage(slide, name, x, y, w, h, options = {}) {
   return slide.images.add({
-    path: `${ASSET}/${name}`,
+    blob: imageBytes[name],
+    contentType: 'image/png',
     alt: options.alt || name,
     fit: options.fit || 'cover',
     position: { left: x, top: y, width: w, height: h },
@@ -286,6 +288,9 @@ function closeSlide(presentation) {
 
 async function main() {
   await fs.mkdir(RENDER, { recursive: true })
+  for (const name of ['synchus-hero.png', 'synchus-route.png', 'synchus-live.png', 'synchus-approvals.png', 'synchus-audit.png']) {
+    imageBytes[name] = await fs.readFile(`${ASSET}/${name}`)
+  }
   const presentation = Presentation.create({ slideSize: { width: W, height: H } })
   titleSlide(presentation)
   problemSlide(presentation)

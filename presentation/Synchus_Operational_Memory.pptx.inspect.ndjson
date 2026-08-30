@@ -1,0 +1,178 @@
+{"kind":"deck","id":"pr/2x9btf","name":"Deck"}
+{"kind":"layout","layoutId":"4106e1bb-c705-44df-ac8b-7f2ce46a4786","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"359566c1-ba7b-489a-b48c-303448e13b7d","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/45bnc5","slide":1,"title":"SYNCHUS","textShapes":7}
+{"kind":"shape","id":"sh/4bqhwfux","slide":1,"bbox":[84,92,150,52]}
+{"kind":"textbox","id":"sh/5czipkbi","slide":1,"text":"SYNCHUS","textPreview":"SYNCHUS","textChars":7,"textLines":1,"bbox":[102,106,114,24]}
+{"kind":"textbox","id":"sh/ulozq5cv","slide":1,"text":"OPERATIONAL MEMORY FOR INDIAN LOGISTICS","textPreview":"OPERATIONAL MEMORY FOR INDIAN LOGISTICS","textChars":39,"textLines":1,"bbox":[92,238,660,28]}
+{"kind":"textbox","id":"sh/vmx0jqtg","slide":1,"text":"The company learns at the speed of its ground truth.","textPreview":"The company learns at the speed of its ground truth.","textChars":52,"textLines":1,"bbox":[88,286,715,260]}
+{"kind":"textbox","id":"sh/gnqhsvul","slide":1,"text":"Voice, files, field reports and operational systems become one living context layer — with humans retaining authority.","textPreview":"Voice, files, field reports and operational systems become one living context layer — with humans retaining authority.","textChars":118,"textLines":1,"bbox":[92,590,630,120]}
+{"kind":"shape","id":"sh/h8zil0b6","slide":1,"bbox":[92,778,180,36]}
+{"kind":"textbox","id":"sh/6hozmlcj","slide":1,"text":"HACKATHON DEMO","textPreview":"HACKATHON DEMO","textChars":14,"textLines":1,"bbox":[106,786,152,18]}
+{"kind":"textbox","id":"sh/7ixgfqd4","slide":1,"text":"Hindi · Hinglish · English","textPreview":"Hindi · Hinglish · English","textChars":26,"textLines":1,"bbox":[92,854,330,34]}
+{"kind":"textbox","id":"sh/rm50zu1g","slide":1,"text":"2026","textPreview":"2026","textChars":4,"textLines":1,"bbox":[92,980,200,28]}
+{"kind":"image","id":"im/mxw7ux0r","slide":1,"name":"","geometry":"roundRect","alt":"Synchus operational memory illustration","bbox":[830,42,1000,950]}
+{"kind":"notes","id":"nt/45bnc5","slide":1,"text":"Open with the idea, not the software. Synchus is not another dashboard. It is a way for the company to remember what the people closest to the work already know.\n\n[Sources]\nHero illustration: original asset generated with OpenAI image generation for this deck. Product concept and copy: Synchus project team."}
+{"kind":"slide","id":"sl/bjgbbs","slide":2,"title":"THE REAL OPERATIONAL PROBLEM","textShapes":15}
+{"kind":"textbox","id":"sh/w7ed8va1","slide":2,"text":"THE REAL OPERATIONAL PROBLEM","textPreview":"THE REAL OPERATIONAL PROBLEM","textChars":28,"textLines":1,"bbox":[96,84,420,28]}
+{"kind":"textbox","id":"sh/v65czq9g","slide":2,"text":"The system of record is never the whole truth.","textPreview":"The system of record is never the whole truth.","textChars":46,"textLines":1,"bbox":[96,130,1110,90]}
+{"kind":"textbox","id":"sh/u5wv6lsv","slide":2,"text":"Every company has documents, dashboards and people who know what changed ten minutes ago. Those truths rarely meet.","textPreview":"Every company has documents, dashboards and people who know what changed ten minutes ago. Those truths rarely meet.","textChars":115,"textLines":1,"bbox":[98,236,940,72]}
+{"kind":"shape","id":"sh/5c7u50ri","slide":2,"bbox":[96,390,366,258]}
+{"kind":"shape","id":"sh/4bydcvax","slide":2,"bbox":[124,420,44,44]}
+{"kind":"textbox","id":"sh/japc3q9c","slide":2,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[124,431,44,20]}
+{"kind":"textbox","id":"sh/i9gva5sr","slide":2,"text":"Files & sheets","textPreview":"Files & sheets","textChars":14,"textLines":1,"bbox":[124,490,306,38]}
+{"kind":"textbox","id":"sh/lg3u9gre","slide":2,"text":"Contracts, logs, tickets\nand scattered exports","textPreview":"Contracts, logs, tickets | and scattered exports","textChars":46,"textLines":2,"bbox":[124,545,292,62]}
+{"kind":"shape","id":"sh/0fut0bat","slide":2,"bbox":[546,390,366,258]}
+{"kind":"shape","id":"sh/mdobylon","slide":2,"bbox":[574,420,44,44]}
+{"kind":"textbox","id":"sh/nexcrqp8","slide":2,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[574,431,44,20]}
+{"kind":"textbox","id":"sh/of6t0b6t","slide":2,"text":"Operational systems","textPreview":"Operational systems","textChars":19,"textLines":1,"bbox":[574,490,306,38]}
+{"kind":"textbox","id":"sh/9gfutg7e","slide":2,"text":"Fleet, routes, hubs\nand service records","textPreview":"Fleet, routes, hubs | and service records","textChars":39,"textLines":2,"bbox":[574,545,292,62]}
+{"kind":"shape","id":"sh/ahob2loj","slide":2,"bbox":[996,390,366,258]}
+{"kind":"shape","id":"sh/bixcvqp4","slide":2,"bbox":[1024,420,44,44]}
+{"kind":"textbox","id":"sh/wj6t4v6p","slide":2,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[1024,431,44,20]}
+{"kind":"textbox","id":"sh/xkzux0na","slide":2,"text":"Ground reality","textPreview":"Ground reality","textChars":14,"textLines":1,"bbox":[1024,490,306,38]}
+{"kind":"textbox","id":"sh/yl8b65ov","slide":2,"text":"Voice notes, calls\nand worker observations","textPreview":"Voice notes, calls | and worker observations","textChars":42,"textLines":2,"bbox":[1024,545,292,62]}
+{"kind":"shape","id":"sh/jmhcza5g","slide":2,"bbox":[96,750,1380,126]}
+{"kind":"textbox","id":"sh/fahsnalo","slide":2,"text":"The consequence: decisions are made from partial context, while the people who could complete the picture have no structured way to contribute.","textPreview":"The consequence: decisions are made from partial context, while the people who could complete the picture have no structured way to contr...","textChars":143,"textLines":1,"bbox":[132,781,1300,72]}
+{"kind":"textbox","id":"sh/u98bu543","slide":2,"text":"SYNCHUS","textPreview":"SYNCHUS","textChars":7,"textLines":1,"bbox":[96,1016,160,24]}
+{"kind":"textbox","id":"sh/hcjap03e","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1736,1016,88,24]}
+{"kind":"notes","id":"nt/bjgbbs","slide":2,"text":"This is the tension we designed for. Not a lack of data. A lack of shared, trusted context between files, systems and the field.\n\n[Sources]\nProduct framing and copy: Synchus project team. No external statistics used."}
+{"kind":"slide","id":"sl/kunnb0","slide":3,"title":"THE SYNCHUS CONTEXT LAYER","textShapes":22}
+{"kind":"textbox","id":"sh/4fy5wnyx","slide":3,"text":"THE SYNCHUS CONTEXT LAYER","textPreview":"THE SYNCHUS CONTEXT LAYER","textChars":25,"textLines":1,"bbox":[96,84,420,28]}
+{"kind":"textbox","id":"sh/jep4nihc","slide":3,"text":"One living operational memory.","textPreview":"One living operational memory.","textChars":30,"textLines":1,"bbox":[96,128,940,76]}
+{"kind":"textbox","id":"sh/idgnudgr","slide":3,"text":"Synchus keeps raw inputs, reasons across connected evidence, separates known from unknown, and stages only useful changes for human approval.","textPreview":"Synchus keeps raw inputs, reasons across connected evidence, separates known from unknown, and stages only useful changes for human appro...","textChars":141,"textLines":1,"bbox":[98,232,1040,64]}
+{"kind":"shape","id":"sh/hs7ml8z6","slide":3,"bbox":[96,420,334,292]}
+{"kind":"textbox","id":"sh/wry5s3yl","slide":3,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[124,450,70,30]}
+{"kind":"textbox","id":"sh/vq54jyh0","slide":3,"text":"Listen","textPreview":"Listen","textChars":6,"textLines":1,"bbox":[124,505,260,42]}
+{"kind":"textbox","id":"sh/upwnqtgv","slide":3,"text":"Voice, Telegram, uploads\nand existing systems","textPreview":"Voice, Telegram, uploads | and existing systems","textChars":45,"textLines":2,"bbox":[124,570,260,70]}
+{"kind":"textbox","id":"sh/9onmh8za","slide":3,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[446,530,40,40]}
+{"kind":"shape","id":"sh/8ne5o3yp","slide":3,"bbox":[526,420,334,292]}
+{"kind":"textbox","id":"sh/q1gri9sr","slide":3,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[554,450,70,30]}
+{"kind":"textbox","id":"sh/b2psre9c","slide":3,"text":"Reconcile","textPreview":"Reconcile","textChars":9,"textLines":1,"bbox":[554,505,260,42]}
+{"kind":"textbox","id":"sh/c3y9kzax","slide":3,"text":"Match entities, conflicts,\nlocations and time","textPreview":"Match entities, conflicts, | locations and time","textChars":45,"textLines":2,"bbox":[554,570,260,70]}
+{"kind":"textbox","id":"sh/d47at4ri","slide":3,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[876,530,40,40]}
+{"kind":"shape","id":"sh/2xwrepsv","slide":3,"bbox":[956,420,334,292]}
+{"kind":"textbox","id":"sh/3y5snu9g","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[984,450,70,30]}
+{"kind":"textbox","id":"sh/ozy9gza1","slide":3,"text":"Reason","textPreview":"Reason","textChars":6,"textLines":1,"bbox":[984,505,260,42]}
+{"kind":"textbox","id":"sh/p07ap4r6","slide":3,"text":"Find what matters,\nwhat is missing and why","textPreview":"Find what matters, | what is missing and why","textChars":42,"textLines":2,"bbox":[984,570,260,70]}
+{"kind":"textbox","id":"sh/e9wrapsj","slide":3,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[1306,530,40,40]}
+{"kind":"shape","id":"sh/fa5sju94","slide":3,"bbox":[1386,420,334,292]}
+{"kind":"textbox","id":"sh/je1orqpw","slide":3,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1414,450,70,30]}
+{"kind":"textbox","id":"sh/ids7il8b","slide":3,"text":"Act safely","textPreview":"Act safely","textChars":10,"textLines":1,"bbox":[1414,505,260,42]}
+{"kind":"textbox","id":"sh/5g36tg72","slide":3,"text":"Answer, stage, approve,\naudit and reverse","textPreview":"Answer, stage, approve, | audit and reverse","textChars":41,"textLines":2,"bbox":[1414,570,260,70]}
+{"kind":"shape","id":"sh/4fapkvqh","slide":3,"bbox":[96,804,320,36]}
+{"kind":"textbox","id":"sh/ril8vqp8","slide":3,"text":"HUMAN APPROVAL IS THE BOUNDARY","textPreview":"HUMAN APPROVAL IS THE BOUNDARY","textChars":30,"textLines":1,"bbox":[110,812,292,18]}
+{"kind":"textbox","id":"sh/6hc7ml8n","slide":3,"text":"Raw events remain preserved. Canonical context changes only after a person approves it.","textPreview":"Raw events remain preserved. Canonical context changes only after a person approves it.","textChars":87,"textLines":1,"bbox":[438,810,850,32]}
+{"kind":"textbox","id":"sh/t43qx07y","slide":3,"text":"SYNCHUS","textPreview":"SYNCHUS","textChars":7,"textLines":1,"bbox":[96,1016,160,24]}
+{"kind":"textbox","id":"sh/sjupovqd","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1736,1016,88,24]}
+{"kind":"notes","id":"nt/kunnb0","slide":3,"text":"Walk through the loop: Listen, reconcile, reason, act safely. The important bit is that Synchus never turns an uncertain field report into permanent truth by itself.\n\n[Sources]\nSystem design: Synchus project team."}
+{"kind":"slide","id":"sl/kkueik","slide":4,"title":"SPATIAL INTELLIGENCE","textShapes":12}
+{"kind":"textbox","id":"sh/utg7ax4b","slide":4,"text":"SPATIAL INTELLIGENCE","textPreview":"SPATIAL INTELLIGENCE","textChars":20,"textLines":1,"bbox":[96,76,360,28]}
+{"kind":"textbox","id":"sh/hwrq5cn2","slide":4,"text":"A route becomes a decision — with evidence.","textPreview":"A route becomes a decision — with evidence.","textChars":43,"textLines":1,"bbox":[96,116,1060,72]}
+{"kind":"textbox","id":"sh/gvipc7mh","slide":4,"text":"Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest gaps in live data.","textPreview":"Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest gaps in live data.","textChars":117,"textLines":1,"bbox":[98,204,1020,60]}
+{"kind":"shape","id":"sh/6pg76x4f","slide":4,"bbox":[1288,330,530,610]}
+{"kind":"textbox","id":"sh/ts761cnq","slide":4,"text":"What the map makes visible","textPreview":"What the map makes visible","textChars":26,"textLines":1,"bbox":[1332,380,400,38]}
+{"kind":"shape","id":"sh/8ryp87m5","slide":4,"bbox":[1334,462,26,26]}
+{"kind":"textbox","id":"sh/j25ovi5o","slide":4,"text":"Route geometry and distance","textPreview":"Route geometry and distance","textChars":27,"textLines":1,"bbox":[1380,457,365,50]}
+{"kind":"shape","id":"sh/y1w72d43","slide":4,"bbox":[1334,554,26,26]}
+{"kind":"textbox","id":"sh/gfaps7y9","slide":4,"text":"Hub clusters and home assignments","textPreview":"Hub clusters and home assignments","textChars":33,"textLines":1,"bbox":[1380,549,365,50]}
+{"kind":"shape","id":"sh/hgjq1czu","slide":4,"bbox":[1334,646,26,26]}
+{"kind":"textbox","id":"sh/uts7qxg3","slide":4,"text":"Precautions and historical incidents","textPreview":"Precautions and historical incidents","textChars":36,"textLines":1,"bbox":[1380,641,365,50]}
+{"kind":"shape","id":"sh/vu18z2ho","slide":4,"bbox":[1334,738,26,26]}
+{"kind":"textbox","id":"sh/8rqpo7yd","slide":4,"text":"What is missing — without pretending it is live","textPreview":"What is missing — without pretending it is live","textChars":47,"textLines":1,"bbox":[1380,733,365,50]}
+{"kind":"shape","id":"sh/tszqxszy","slide":4,"bbox":[1334,810,242,36]}
+{"kind":"textbox","id":"sh/6p87mxg7","slide":4,"text":"NOT A LIVE GPS CLAIM","textPreview":"NOT A LIVE GPS CLAIM","textChars":20,"textLines":1,"bbox":[1348,818,214,18]}
+{"kind":"textbox","id":"sh/7qh8v2hs","slide":4,"text":"The app distinguishes static evidence from live feeds — visibly.","textPreview":"The app distinguishes static evidence from live feeds — visibly.","textChars":64,"textLines":1,"bbox":[1334,862,390,48]}
+{"kind":"textbox","id":"sh/snu90ryh","slide":4,"text":"SYNCHUS","textPreview":"SYNCHUS","textChars":7,"textLines":1,"bbox":[96,1016,160,24]}
+{"kind":"textbox","id":"sh/do3q9wf2","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1736,1016,88,24]}
+{"kind":"image","id":"im/2hobyx8n","slide":4,"name":"","geometry":"roundRect","alt":"Synchus route intelligence dashboard","bbox":[96,330,1130,610]}
+{"kind":"notes","id":"nt/kkueik","slide":4,"text":"This is not a live-tracking theatre. It is an evidence map. Hubs and fleet assignments are clear. It also plainly says when current positions or yard counts are not connected.\n\n[Sources]\nProduct screenshot: locally captured from Synchus route intelligence. Basemap: OpenStreetMap contributors. Route geometry: OSRM road route."}
+{"kind":"slide","id":"sl/kqokw3","slide":5,"title":"GROUND TRUTH, IN THE WORKER’S LANGUAGE","textShapes":14}
+{"kind":"textbox","id":"sh/a9c3ulsv","slide":5,"text":"GROUND TRUTH, IN THE WORKER’S LANGUAGE","textPreview":"GROUND TRUTH, IN THE WORKER’S LANGUAGE","textChars":38,"textLines":1,"bbox":[96,80,600,28]}
+{"kind":"textbox","id":"sh/xwn2p0bm","slide":5,"text":"The worker does not fill a form. Synchus conducts the interview.","textPreview":"The worker does not fill a form. Synchus conducts the interview.","textChars":64,"textLines":1,"bbox":[96,122,980,142]}
+{"kind":"textbox","id":"sh/wvelwva1","slide":5,"text":"Hindi, Hinglish or English — voice is the fastest way to get the detail the company is missing.","textPreview":"Hindi, Hinglish or English — voice is the fastest way to get the detail the company is missing.","textChars":95,"textLines":1,"bbox":[98,292,900,58]}
+{"kind":"shape","id":"sh/m5cjq1sz","slide":5,"bbox":[96,425,900,102]}
+{"kind":"textbox","id":"sh/9832lgba","slide":5,"text":"Worker","textPreview":"Worker","textChars":6,"textLines":1,"bbox":[122,443,126,24]}
+{"kind":"textbox","id":"sh/87ulsbap","slide":5,"text":"“NH44 par blockage hai.”","textPreview":"“NH44 par blockage hai.”","textChars":24,"textLines":1,"bbox":[122,473,820,34]}
+{"kind":"shape","id":"sh/72pkva9o","slide":5,"bbox":[96,551,900,102]}
+{"kind":"textbox","id":"sh/61w325s3","slide":5,"text":"Synchus","textPreview":"Synchus","textChars":7,"textLines":1,"bbox":[122,569,126,24]}
+{"kind":"textbox","id":"sh/wnqd8rqp","slide":5,"text":"“Kis vehicle, exact location, severity aur expected end time?”","textPreview":"“Kis vehicle, exact location, severity aur expected end time?”","textChars":62,"textLines":1,"bbox":[122,599,820,34]}
+{"kind":"shape","id":"sh/xojehwra","slide":5,"bbox":[96,677,900,102]}
+{"kind":"textbox","id":"sh/al8v6h8j","slide":5,"text":"Worker","textPreview":"Worker","textChars":6,"textLines":1,"bbox":[122,695,126,24]}
+{"kind":"textbox","id":"sh/vmhwfm94","slide":5,"text":"“DL30AN8381, Murthal, medium, 18:30 tak clear ho sakta hai.”","textPreview":"“DL30AN8381, Murthal, medium, 18:30 tak clear ho sakta hai.”","textChars":60,"textLines":1,"bbox":[122,725,820,34]}
+{"kind":"shape","id":"sh/8jqd47qd","slide":5,"bbox":[96,803,900,102]}
+{"kind":"textbox","id":"sh/9kzedcry","slide":5,"text":"Synchus","textPreview":"Synchus","textChars":7,"textLines":1,"bbox":[122,821,126,24]}
+{"kind":"textbox","id":"sh/mh8v2h8n","slide":5,"text":"“Confirm karun? Is report ko review ke liye stage kar raha hoon.”","textPreview":"“Confirm karun? Is report ko review ke liye stage kar raha hoon.”","textChars":65,"textLines":1,"bbox":[122,851,820,34]}
+{"kind":"textbox","id":"sh/nihcbm98","slide":5,"text":"Press Space to begin. Press Space again to stop.","textPreview":"Press Space to begin. Press Space again to stop.","textChars":48,"textLines":1,"bbox":[96,956,620,28]}
+{"kind":"textbox","id":"sh/0f6d07ah","slide":5,"text":"SYNCHUS","textPreview":"SYNCHUS","textChars":7,"textLines":1,"bbox":[96,1016,160,24]}
+{"kind":"textbox","id":"sh/lgzu9cr2","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1736,1016,88,24]}
+{"kind":"image","id":"im/69c7y50r","slide":5,"name":"","geometry":"roundRect","alt":"Synchus voice orb interface","bbox":[1110,68,700,852]}
+{"kind":"notes","id":"nt/kqokw3","slide":5,"text":"Use this as the live moment. Speak the first worker line. The agent should ask for the minimum information it needs before it stages a report. That turns voice into reliable operational input instead of an unstructured note.\n\n[Sources]\nProduct screenshot: locally captured Synchus Live interface. Voice intake policy and conversation examples: Synchus project team."}
+{"kind":"slide","id":"sl/lfowzg","slide":6,"title":"CAPABILITY LAB","textShapes":21}
+{"kind":"textbox","id":"sh/zq5wnip8","slide":6,"text":"CAPABILITY LAB","textPreview":"CAPABILITY LAB","textChars":14,"textLines":1,"bbox":[96,84,280,28]}
+{"kind":"textbox","id":"sh/kredgn6t","slide":6,"text":"When the model is missing, Synchus proposes the smallest safe extension.","textPreview":"When the model is missing, Synchus proposes the smallest safe extension.","textChars":72,"textLines":1,"bbox":[96,126,1450,110]}
+{"kind":"textbox","id":"sh/lsneps7e","slide":6,"text":"Some useful information does not fit today’s tables. Synchus can turn that gap into a reviewable capability proposal — never an unreviewed database mutation.","textPreview":"Some useful information does not fit today’s tables. Synchus can turn that gap into a reviewable capability proposal — never an unreviewe...","textChars":157,"textLines":1,"bbox":[98,266,1280,62]}
+{"kind":"shape","id":"sh/mtwvidoz","slide":6,"bbox":[96,410,484,410]}
+{"kind":"textbox","id":"sh/7u5wripk","slide":6,"text":"INCOMING EVIDENCE","textPreview":"INCOMING EVIDENCE","textChars":17,"textLines":1,"bbox":[130,446,260,28]}
+{"kind":"textbox","id":"sh/8vydkn65","slide":6,"text":"Cold-chain readings arrive in a CSV.","textPreview":"Cold-chain readings arrive in a CSV.","textChars":36,"textLines":1,"bbox":[130,496,360,70]}
+{"kind":"textbox","id":"sh/9w7ets7a","slide":6,"text":"“Temperature excursions must be linked to a vehicle, shipment and time window.”","textPreview":"“Temperature excursions must be linked to a vehicle, shipment and time window.”","textChars":79,"textLines":1,"bbox":[130,596,360,88]}
+{"kind":"shape","id":"sh/uxgvmxov","slide":6,"bbox":[130,730,260,36]}
+{"kind":"textbox","id":"sh/vypwv2pg","slide":6,"text":"NO CURRENT ENTITY EXISTS","textPreview":"NO CURRENT ENTITY EXISTS","textChars":24,"textLines":1,"bbox":[144,738,232,18]}
+{"kind":"textbox","id":"sh/3ehw32pk","slide":6,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[624,556,100,64]}
+{"kind":"shape","id":"sh/id8fux8z","slide":6,"bbox":[748,386,560,466]}
+{"kind":"textbox","id":"sh/5gje5s7q","slide":6,"text":"AGENT PROPOSAL","textPreview":"AGENT PROPOSAL","textChars":14,"textLines":1,"bbox":[786,424,260,28]}
+{"kind":"textbox","id":"sh/4faxwnq5","slide":6,"text":"cold_chain_reading","textPreview":"cold_chain_reading","textChars":18,"textLines":1,"bbox":[786,470,350,48]}
+{"kind":"shape","id":"sh/vahwzi9o","slide":6,"bbox":[786,546,450,42]}
+{"kind":"textbox","id":"sh/u98fqd83","slide":6,"text":"vehicle_registration · text · required","textPreview":"vehicle_registration · text · required","textChars":38,"textLines":1,"bbox":[804,558,410,20]}
+{"kind":"shape","id":"sh/hcze1s7e","slide":6,"bbox":[786,604,450,42]}
+{"kind":"textbox","id":"sh/gbqxsnq9","slide":6,"text":"recorded_at · timestamp · required","textPreview":"recorded_at · timestamp · required","textChars":34,"textLines":1,"bbox":[804,616,410,20]}
+{"kind":"shape","id":"sh/f61wbmps","slide":6,"bbox":[786,662,450,42]}
+{"kind":"textbox","id":"sh/e5sf2h87","slide":6,"text":"temperature_c · number · required","textPreview":"temperature_c · number · required","textChars":33,"textLines":1,"bbox":[804,674,410,20]}
+{"kind":"shape","id":"sh/a1wzulsf","slide":6,"bbox":[786,720,450,42]}
+{"kind":"textbox","id":"sh/b2503690","slide":6,"text":"shipment_ref · text · optional","textPreview":"shipment_ref · text · optional","textChars":30,"textLines":1,"bbox":[804,732,410,20]}
+{"kind":"textbox","id":"sh/w3ehwbal","slide":6,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[1350,556,100,64]}
+{"kind":"shape","id":"sh/x4ni5gr6","slide":6,"bbox":[1466,410,350,410]}
+{"kind":"textbox","id":"sh/y5wzylsr","slide":6,"text":"HUMAN REVIEW","textPreview":"HUMAN REVIEW","textChars":12,"textLines":1,"bbox":[1502,446,250,28]}
+{"kind":"textbox","id":"sh/j6p07q9c","slide":6,"text":"Approve\nor reject.","textPreview":"Approve | or reject.","textChars":18,"textLines":2,"bbox":[1502,502,260,82]}
+{"kind":"textbox","id":"sh/k7yh0vah","slide":6,"text":"Approval creates the capability. Rejection preserves the raw evidence and the audit trail.","textPreview":"Approval creates the capability. Rejection preserves the raw evidence and the audit trail.","textChars":90,"textLines":1,"bbox":[1502,630,260,106]}
+{"kind":"shape","id":"sh/l87i90r2","slide":6,"bbox":[1502,758,150,36]}
+{"kind":"textbox","id":"sh/e9czm1s7","slide":6,"text":"REVERSIBLE","textPreview":"REVERSIBLE","textChars":10,"textLines":1,"bbox":[1516,766,122,18]}
+{"kind":"textbox","id":"sh/falgvm9s","slide":6,"text":"SYNCHUS","textPreview":"SYNCHUS","textChars":7,"textLines":1,"bbox":[96,1016,160,24]}
+{"kind":"textbox","id":"sh/hor214ba","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1736,1016,88,24]}
+{"kind":"notes","id":"nt/lfowzg","slide":6,"text":"This is an important differentiator. When a document describes a new kind of operational fact, the system can propose a bounded schema and its required checks. People approve it. Every extension is reversible and auditable.\n\n[Sources]\nCapability Lab design and example: Synchus project team. Demo data: demo/02_cold_chain_readings.csv."}
+{"kind":"slide","id":"sl/9ervkl","slide":7,"title":"TRUST IS A PRODUCT SURFACE","textShapes":9}
+{"kind":"textbox","id":"sh/d4z6pkny","slide":7,"text":"TRUST IS A PRODUCT SURFACE","textPreview":"TRUST IS A PRODUCT SURFACE","textChars":26,"textLines":1,"bbox":[96,76,390,28]}
+{"kind":"textbox","id":"sh/q1one547","slide":7,"text":"Useful intelligence, without a black box.","textPreview":"Useful intelligence, without a black box.","textChars":41,"textLines":1,"bbox":[96,116,1100,70]}
+{"kind":"textbox","id":"sh/r2hona5s","slide":7,"text":"Synchus keeps the source, the reasoning, the uncertainty and the human decision visible together.","textPreview":"Synchus keeps the source, the reasoning, the uncertainty and the human decision visible together.","textChars":97,"textLines":1,"bbox":[98,204,1080,56]}
+{"kind":"shape","id":"sh/e58ni54j","slide":7,"bbox":[96,906,386,62]}
+{"kind":"textbox","id":"sh/f6hora54","slide":7,"text":"Evidence stays linked","textPreview":"Evidence stays linked","textChars":21,"textLines":1,"bbox":[116,925,346,24]}
+{"kind":"shape","id":"sh/ovapozml","slide":7,"bbox":[526,906,386,62]}
+{"kind":"textbox","id":"sh/pwj6x436","slide":7,"text":"Unknowns stay visible","textPreview":"Unknowns stay visible","textChars":21,"textLines":1,"bbox":[546,925,346,24]}
+{"kind":"shape","id":"sh/dc72p8zi","slide":7,"bbox":[956,906,386,62]}
+{"kind":"textbox","id":"sh/cbylg3ix","slide":7,"text":"Approvals preserve authority","textPreview":"Approvals preserve authority","textChars":28,"textLines":1,"bbox":[976,925,346,24]}
+{"kind":"shape","id":"sh/rapknyhc","slide":7,"bbox":[1386,906,386,62]}
+{"kind":"textbox","id":"sh/q9g3et0r","slide":7,"text":"Changes can be reversed","textPreview":"Changes can be reversed","textChars":23,"textLines":1,"bbox":[1406,925,346,24]}
+{"kind":"textbox","id":"sh/10r2tsze","slide":7,"text":"SYNCHUS","textPreview":"SYNCHUS","textChars":7,"textLines":1,"bbox":[96,1016,160,24]}
+{"kind":"textbox","id":"sh/0zilknyt","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1736,1016,88,24]}
+{"kind":"image","id":"im/54b2lcf6","slide":7,"name":"","geometry":"roundRect","alt":"Synchus approval queue","bbox":[96,334,850,520]}
+{"kind":"image","id":"im/4321c7yl","slide":7,"name":"","geometry":"roundRect","alt":"Synchus audit ledger","bbox":[988,334,830,520]}
+{"kind":"notes","id":"nt/9ervkl","slide":7,"text":"Show the approval queue and audit ledger together. The answer is not the product. The evidence behind the answer, its uncertainty and the ability to reverse a decision are the product.\n\n[Sources]\nProduct screenshots: locally captured Synchus approval queue and audit ledger."}
+{"kind":"slide","id":"sl/arr86g","slide":8,"title":"THE SYNCHUS PROMISE","textShapes":14}
+{"kind":"shape","id":"sh/8f6dw32l","slide":8,"bbox":[0,0,1920,16]}
+{"kind":"textbox","id":"sh/7exwnyl0","slide":8,"text":"THE SYNCHUS PROMISE","textPreview":"THE SYNCHUS PROMISE","textChars":19,"textLines":1,"bbox":[96,102,400,28]}
+{"kind":"textbox","id":"sh/6d4vutkf","slide":8,"text":"Files become evidence.\nVoices become structured knowledge.\nMaps become decisions.","textPreview":"Files become evidence. | Voices become structured knowledge. | Maps become decisions.","textChars":81,"textLines":3,"bbox":[96,158,1180,270]}
+{"kind":"textbox","id":"sh/hkfet832","slide":8,"text":"And through it all, the company keeps its human judgment.","textPreview":"And through it all, the company keeps its human judgment.","textChars":57,"textLines":1,"bbox":[98,474,880,45]}
+{"kind":"shape","id":"sh/gj6d0n2h","slide":8,"bbox":[96,620,1612,2]}
+{"kind":"textbox","id":"sh/vixwrilc","slide":8,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[96,684,56,30]}
+{"kind":"textbox","id":"sh/uhovydkr","slide":8,"text":"Listen to the field","textPreview":"Listen to the field","textChars":19,"textLines":1,"bbox":[96,738,420,42]}
+{"kind":"textbox","id":"sh/xoveho3y","slide":8,"text":"Speak in Hindi, Hinglish or English.","textPreview":"Speak in Hindi, Hinglish or English.","textChars":36,"textLines":1,"bbox":[96,800,400,40]}
+{"kind":"textbox","id":"sh/wnmdoj2d","slide":8,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[636,684,56,30]}
+{"kind":"textbox","id":"sh/m1cbe5kr","slide":8,"text":"See the operation","textPreview":"See the operation","textChars":17,"textLines":1,"bbox":[636,738,420,42]}
+{"kind":"textbox","id":"sh/72lc7alc","slide":8,"text":"Routes, hubs, fleet and evidence in context.","textPreview":"Routes, hubs, fleet and evidence in context.","textChars":44,"textLines":1,"bbox":[636,800,400,40]}
+{"kind":"textbox","id":"sh/83udgf2x","slide":8,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1176,684,56,30]}
+{"kind":"textbox","id":"sh/9o3u9k32","slide":8,"text":"Learn safely","textPreview":"Learn safely","textChars":12,"textLines":1,"bbox":[1176,738,420,42]}
+{"kind":"textbox","id":"sh/upcvipkn","slide":8,"text":"Propose, approve, audit and reverse.","textPreview":"Propose, approve, audit and reverse.","textChars":36,"textLines":1,"bbox":[1176,800,400,40]}
+{"kind":"shape","id":"sh/vqlcbal8","slide":8,"bbox":[96,934,600,36]}
+{"kind":"textbox","id":"sh/wrudkf2t","slide":8,"text":"THE COMPANY LEARNS AT THE SPEED OF ITS GROUND TRUTH","textPreview":"THE COMPANY LEARNS AT THE SPEED OF ITS GROUND TRUTH","textChars":51,"textLines":1,"bbox":[110,942,572,18]}
+{"kind":"textbox","id":"sh/hs3udk3e","slide":8,"text":"SYNCHUS","textPreview":"SYNCHUS","textChars":7,"textLines":1,"bbox":[1530,970,280,34]}
+{"kind":"notes","id":"nt/arr86g","slide":8,"text":"Close exactly here: “Synchus is not asking the company to become more technical. It is helping the company listen to itself — safely, in the language its people already use.” Then pause.\n\n[Sources]\nClosing copy: Synchus project team."}

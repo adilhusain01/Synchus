@@ -78,7 +78,7 @@ function RoutePage() {
     return () => cancelAnimationFrame(frame)
   }, [route.data, routeBounds])
 
-  if (options.isLoading || route.isLoading) return <LoadingBlock label="Compiling route evidence" />
+  if (options.isLoading || route.isLoading) return <RouteSkeleton />
   if (options.error) return <ErrorBlock error={options.error} />
   if (route.error && !route.data) return <ErrorBlock error={route.error} />
   const data = route.data!
@@ -143,7 +143,7 @@ function RoutePage() {
       <div className="space-y-4">
         <div className="grid grid-cols-3 gap-3 xl:grid-cols-1"><RouteStat label="Distance" value={`${Math.round(data.distance_km)} km`} note={data.geometry_source} /><RouteStat label="Precautions" value={String(data.precautions.length)} note="route, client, and date" /><RouteStat label="Parked now" value="Unknown" note="yard feed not connected" /></div>
         <Panel title="Route assistant"><textarea aria-label="Route question" name="route-question" autoComplete="off" value={question} onChange={(event) => setQuestion(event.target.value)} rows={4} placeholder="e.g. What are the biggest risks, and which assigned trucks survive static checks?…" className="w-full resize-y rounded-sm border border-[#aaa394] bg-white/70 p-3 text-sm outline-none focus:border-[#2e64f5] focus:ring-3 focus:ring-[#2e64f5]/15" /><Button className="mt-3" onClick={() => ask.mutate()} disabled={!question.trim() || ask.isPending}>{ask.isPending ? 'Reasoning…' : 'Ask Route Agent'}</Button>{ask.data ? <div aria-live="polite" className="mt-4 border-l-4 border-[#2e64f5] bg-[#dfe7f4] p-4"><p className="font-extrabold">{ask.data.headline}</p><p className="mt-2 break-words text-sm leading-6 text-[#425775]">{ask.data.detail}</p></div> : null}</Panel>
-        <Panel title="Why this route is conditional">{data.uncertainty_groups.map((group) => <details key={group.label} className="border-b border-[#d7d1c3] py-3 last:border-0" open><summary className="cursor-pointer text-sm font-extrabold">{group.label}</summary><ul className="mt-2 space-y-1 text-xs text-[#59635d]">{group.items.map((item) => <li key={item}>{item}</li>)}</ul><p className="mt-2 text-xs font-bold text-[#81620e]">{group.effect}</p></details>)}</Panel>
+        <CoveragePanel groups={data.uncertainty_groups} />
       </div>
     </div>
   </div>
@@ -155,6 +155,24 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function RouteStat({ label, value, note }: { label: string; value: string; note: string }) {
   return <article className="border-t-[3px] border-[#17201c] pt-3"><p className="font-['DM_Mono'] text-[9px] uppercase tracking-[.1em] text-[#6b746e]">{label}</p><p className="mt-2 text-2xl font-extrabold tracking-[-.05em]">{value}</p><p className="mt-1 text-[11px] leading-4 text-[#68716b]">{note}</p></article>
+}
+
+function CoveragePanel({ groups }: { groups: RouteData['uncertainty_groups'] }) {
+  const visible = groups.map((group, index) => ({
+    ...group,
+    tone: index === 2 ? 'bg-[#dfe7f4] text-[#31537d]' : index === 1 ? 'bg-[#fff4bf] text-[#77590b]' : 'bg-[#eee8f6] text-[#5d4d86]',
+    summary: index === 0 ? 'Connect GPS, yard and road feeds for live state.' : index === 1 ? 'Add a verified service-due field for dispatch readiness.' : 'History is usable for patterns, not current conditions.',
+  }))
+  return <Panel title="Data coverage">
+    <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-[#d7d1c3] bg-[#e8f0df] px-3 py-2.5"><span className="text-sm font-extrabold text-[#405b31]">Static planning mode</span><StatusPill tone="good">Evidence-aware</StatusPill></div>
+    <div className="space-y-2.5">{visible.map((group) => <article key={group.label} className="rounded-xl border border-[#d7d1c3] bg-white/70 p-3"><div className="flex items-start gap-2.5"><span className={`mt-1 size-2.5 shrink-0 rounded-full ${group.tone}`} aria-hidden="true" /><div><p className="text-sm font-extrabold">{group.label.replace('Historical, not current', 'Historical data')}</p><p className="mt-1 text-xs leading-5 text-[#65706a]">{group.summary}</p></div></div></article>)}</div>
+    <details className="mt-3 border-t border-[#d7d1c3] pt-3"><summary className="cursor-pointer text-xs font-bold text-[#59635d]">View underlying data gaps</summary><div className="mt-3 space-y-3">{groups.map((group) => <div key={group.label}><p className="text-xs font-extrabold">{group.label}</p><p className="mt-1 text-xs leading-5 text-[#59635d]">{group.items.join(' · ')}</p></div>)}</div></details>
+  </Panel>
+}
+
+function RouteSkeleton() {
+  const pulse = 'animate-pulse rounded-xl bg-[#e5dfd2]'
+  return <div className="space-y-6" aria-busy="true" aria-live="polite"><div className="flex items-center justify-between border-b border-[#d7d1c3] pb-4"><div className="flex items-center gap-3"><div className={`size-12 ${pulse}`} /><div className={`h-9 w-72 ${pulse}`} /></div><LoadingBlock label="Updating route" /></div><div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{Array.from({ length: 4 }, (_, index) => <div key={index} className={`h-16 ${pulse}`} />)}</div><div className="grid gap-5 xl:grid-cols-[.72fr_1.55fr_.73fr]"><div className={`h-[620px] ${pulse}`} /><div className={`h-[700px] ${pulse}`} /><div className="space-y-4"><div className={`h-40 ${pulse}`} /><div className={`h-52 ${pulse}`} /><div className={`h-190 ${pulse}`} /></div></div></div>
 }
 
 function MapInspector({ selection }: { selection: MapSelection }) {

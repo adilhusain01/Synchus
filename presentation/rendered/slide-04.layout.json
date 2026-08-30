@@ -1,0 +1,935 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/kkueik",
+    "id": "kkueik",
+    "slide": 4,
+    "layoutId": "359566c1-ba7b-489a-b48c-303448e13b7d",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFAF0",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "359566c1-ba7b-489a-b48c-303448e13b7d",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "4106e1bb-c705-44df-ac8b-7f2ce46a4786",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/utg7ax4b",
+      "id": "1",
+      "bbox": [
+        96,
+        76,
+        360,
+        28
+      ],
+      "geometry": "rect",
+      "text": "SPATIAL INTELLIGENCE",
+      "textPreview": "SPATIAL INTELLIGENCE",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "+mn-lt",
+        "color": "#F07252",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "SPATIAL INTELLIGENCE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "SPATIAL INTELLIGENCE",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "color": "#F07252",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "SPATIAL INTELLIGENCE",
+              "fontSize": 14,
+              "color": "#F07252",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/hwrq5cn2",
+      "id": "2",
+      "bbox": [
+        96,
+        116,
+        1060,
+        72
+      ],
+      "geometry": "rect",
+      "text": "A route becomes a decision — with evidence.",
+      "textPreview": "A route becomes a decision — with evidence.",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "fontSize": 50,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "A route becomes a decision — with"
+          },
+          {
+            "index": 2,
+            "text": "evidence."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "A route becomes a decision — with evidence.",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "A route becomes a decision — with evidence.",
+              "fontSize": 50,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gvipc7mh",
+      "id": "3",
+      "bbox": [
+        98,
+        204,
+        1020,
+        60
+      ],
+      "geometry": "rect",
+      "text": "Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest gaps in live data.",
+      "textPreview": "Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest gaps in live data.",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "fontSize": 23,
+        "typeface": "+mn-lt",
+        "color": "#65706A",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest"
+          },
+          {
+            "index": 2,
+            "text": "gaps in live data."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest gaps in live data.",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "color": "#65706A"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Select a route and see its hubs, assigned fleet, route precautions, historical patterns and honest gaps in live data.",
+              "fontSize": 23,
+              "color": "#65706A"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/2hobyx8n",
+      "id": "4",
+      "bbox": [
+        96,
+        330,
+        1130,
+        610
+      ],
+      "geometry": "roundRect",
+      "alt": "Synchus route intelligence dashboard",
+      "contentType": "image/jpeg",
+      "imageCrop": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "imageFit": "cover",
+      "imageMask": {
+        "geometry": "roundRect",
+        "adjustmentList": [
+          {
+            "name": "adj",
+            "formula": "val 2623"
+          }
+        ]
+      },
+      "asset": {
+        "assetId": "fdae40a3-a683-4467-a513-7eaf296313c2",
+        "contentType": "image/jpeg",
+        "byteLength": 111156
+      }
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/6pg76x4f",
+      "id": "5",
+      "bbox": [
+        1288,
+        330,
+        530,
+        610
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#E9F0DF",
+      "lineColor": "#D7D0C1",
+      "lineWidth": 1
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ts761cnq",
+      "id": "6",
+      "bbox": [
+        1332,
+        380,
+        400,
+        38
+      ],
+      "geometry": "rect",
+      "text": "What the map makes visible",
+      "textPreview": "What the map makes visible",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "fontSize": 27,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "What the map makes visible"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "What the map makes visible",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "What the map makes visible",
+              "fontSize": 27,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8ryp87m5",
+      "id": "7",
+      "bbox": [
+        1334,
+        462,
+        26,
+        26
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#C8FF3D",
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/j25ovi5o",
+      "id": "8",
+      "bbox": [
+        1380,
+        457,
+        365,
+        50
+      ],
+      "geometry": "rect",
+      "text": "Route geometry and distance",
+      "textPreview": "Route geometry and distance",
+      "resolvedFontSize": 19,
+      "resolvedTextStyle": {
+        "fontSize": 19,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Route geometry and distance"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Route geometry and distance",
+          "resolvedTextStyle": {
+            "fontSize": 19,
+            "color": "#17201C"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Route geometry and distance",
+              "fontSize": 19,
+              "color": "#17201C"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/y1w72d43",
+      "id": "9",
+      "bbox": [
+        1334,
+        554,
+        26,
+        26
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#C8FF3D",
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gfaps7y9",
+      "id": "10",
+      "bbox": [
+        1380,
+        549,
+        365,
+        50
+      ],
+      "geometry": "rect",
+      "text": "Hub clusters and home assignments",
+      "textPreview": "Hub clusters and home assignments",
+      "resolvedFontSize": 19,
+      "resolvedTextStyle": {
+        "fontSize": 19,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Hub clusters and home assignments"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Hub clusters and home assignments",
+          "resolvedTextStyle": {
+            "fontSize": 19,
+            "color": "#17201C"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Hub clusters and home assignments",
+              "fontSize": 19,
+              "color": "#17201C"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/hgjq1czu",
+      "id": "11",
+      "bbox": [
+        1334,
+        646,
+        26,
+        26
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#C8FF3D",
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/uts7qxg3",
+      "id": "12",
+      "bbox": [
+        1380,
+        641,
+        365,
+        50
+      ],
+      "geometry": "rect",
+      "text": "Precautions and historical incidents",
+      "textPreview": "Precautions and historical incidents",
+      "resolvedFontSize": 19,
+      "resolvedTextStyle": {
+        "fontSize": 19,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Precautions and historical incidents"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Precautions and historical incidents",
+          "resolvedTextStyle": {
+            "fontSize": 19,
+            "color": "#17201C"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Precautions and historical incidents",
+              "fontSize": 19,
+              "color": "#17201C"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vu18z2ho",
+      "id": "13",
+      "bbox": [
+        1334,
+        738,
+        26,
+        26
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#F07252",
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8rqpo7yd",
+      "id": "14",
+      "bbox": [
+        1380,
+        733,
+        365,
+        50
+      ],
+      "geometry": "rect",
+      "text": "What is missing — without pretending it is live",
+      "textPreview": "What is missing — without pretending it is live",
+      "resolvedFontSize": 19,
+      "resolvedTextStyle": {
+        "fontSize": 19,
+        "typeface": "+mn-lt",
+        "color": "#8A3E2A",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "What is missing — without pretending"
+          },
+          {
+            "index": 2,
+            "text": "it is live"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "What is missing — without pretending it is live",
+          "resolvedTextStyle": {
+            "fontSize": 19,
+            "color": "#8A3E2A",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "What is missing — without pretending it is live",
+              "fontSize": 19,
+              "color": "#8A3E2A",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/tszqxszy",
+      "id": "15",
+      "bbox": [
+        1334,
+        810,
+        242,
+        36
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFF0AE",
+      "lineWidth": 0
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/6p87mxg7",
+      "id": "16",
+      "bbox": [
+        1348,
+        818,
+        214,
+        18
+      ],
+      "geometry": "rect",
+      "text": "NOT A LIVE GPS CLAIM",
+      "textPreview": "NOT A LIVE GPS CLAIM",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "+mn-lt",
+        "color": "#17201C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "NOT A LIVE GPS CLAIM"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "NOT A LIVE GPS CLAIM",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "color": "#17201C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "NOT A LIVE GPS CLAIM",
+              "fontSize": 12,
+              "color": "#17201C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 17,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/7qh8v2hs",
+      "id": "17",
+      "bbox": [
+        1334,
+        862,
+        390,
+        48
+      ],
+      "geometry": "rect",
+      "text": "The app distinguishes static evidence from live feeds — visibly.",
+      "textPreview": "The app distinguishes static evidence from live feeds — visibly.",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "fontSize": 17,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The app distinguishes static evidence from"
+          },
+          {
+            "index": 2,
+            "text": "live feeds — visibly."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The app distinguishes static evidence from live feeds — visibly.",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The app distinguishes static evidence from live feeds — visibly.",
+              "fontSize": 17,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 18,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/snu90ryh",
+      "id": "18",
+      "bbox": [
+        96,
+        1016,
+        160,
+        24
+      ],
+      "geometry": "rect",
+      "text": "SYNCHUS",
+      "textPreview": "SYNCHUS",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "SYNCHUS"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "SYNCHUS",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "SYNCHUS",
+              "fontSize": 12,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 19,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/do3q9wf2",
+      "id": "19",
+      "bbox": [
+        1736,
+        1016,
+        88,
+        24
+      ],
+      "geometry": "rect",
+      "text": "04",
+      "textPreview": "04",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "+mn-lt",
+        "color": "#4D653C",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "04"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "04",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "color": "#4D653C",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "04",
+              "fontSize": 12,
+              "color": "#4D653C",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

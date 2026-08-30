@@ -41,6 +41,12 @@ uv run streamlit run app.py --server.address 127.0.0.1
 
 No key is printed by the app. Without a speech key, typed Hindi, Hinglish and English still exercise the entire intake/approval flow.
 
+## Map and data coverage
+
+Synchus uses an OpenStreetMap road base for the visible operational map so account-level CARTO tile watermarks never obscure route evidence. `CARTO_API_BASE_URL` and the CARTO access token stay server-side for future authenticated CARTO data layers; neither is sent to the browser.
+
+The route workspace deliberately uses **static planning mode** when the supplied demo data has no live GPS, yard occupancy, live road/weather, or verified service-due feed. Historical trips and home hub assignments are useful for planning, but Synchus will not label them as live. Connect those sources (or upload a verified equivalent) to remove the relevant coverage gaps.
+
 ## True live voice
 
 `voice_server.py` serves the animated browser orb backed by a persistent, full-duplex Gemini Live session: 16 kHz microphone input, 24 kHz audio output, server voice-activity detection, interruption, live transcripts and bounded context/database tools. The API key remains on the server.
@@ -79,12 +85,32 @@ uv run python meridian.py pipeline --tickets candidate_bundle/tickets.json path/
 
 It writes `outputs/work_orders.jsonl`, `outputs/comms_pending.jsonl`, `outputs/comms_sent.jsonl`, `outputs/quarantine.jsonl`, and `audit/audit.jsonl`. Re-running the same inputs produces byte-identical files. Approved communications retain their first persisted `sent_at` timestamp.
 
+## Voice intake gate
+
+Before staging a worker report, the voice agent must collect the minimum operational facts: reporter, event type, time, location, severity, worker confirmation, and entity reference where relevant. Vehicle issues also require a registration; route disruptions require an expected end time or an explicit `unknown`. The agent can answer first, ask follow-up questions, log incomplete information, or stage a complete report for approval — but it cannot silently promote it.
+
+## Capability Lab
+
+If a document introduces a useful fact that the current context model cannot represent, Synchus creates a **capability proposal** rather than changing code or the database directly. The proposal contains a bounded declarative schema, validation checks, expected surfaces, risk, source link and rollback plan. A human can approve, reject, or later roll back the extension; every action is written to the audit ledger.
+
+## Stage demo kit and deck
+
+`demo/` contains realistic, synthetic upload files and the timed stage runbook:
+
+- `01_route_disruption_report.txt` — complete field report for the voice/approval story.
+- `02_cold_chain_readings.csv` — a model-gap example for Capability Lab.
+- `03_yard_snapshot.json` — point-in-time yard inventory (explicitly not live GPS).
+- `04_client_gate_change.md` — client operating-window evidence.
+- `DEMO_RUNBOOK.md` — exact 5-minute narration, interactions and voice lines.
+
+The editable 1920×1080 pitch deck is `presentation/Synchus_Operational_Memory.pptx`. It is paired with locally generated and captured visual assets under `presentation/assets/`.
+
 ## Demo path
 
 1. Open **Control room** and show the real data-quality alerts.
 2. Open **Route**, select Delhi → Ludhiana, Vertex Retail and a winter date. Fleet filters, route evidence, truck glyphs and map update as one shared state.
 3. Open **Ask** and try `RJ43DD3546 Orion ke liye eligible hai?`.
-4. Open **Inbox**, record/type a bridge diversion or upload a document. The agent decides its disposition automatically.
+4. Open **Inbox**, record/type a bridge diversion or upload a document. The agent decides its disposition automatically and asks for missing facts before it stages a report.
 5. Open **Approvals** and inspect the agent's confidence, reasoning, connections and source before promotion.
 6. Return to `/` for the full-screen, audio-reactive live voice agent.
 
