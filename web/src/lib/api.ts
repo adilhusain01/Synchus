@@ -33,6 +33,18 @@ export type ApprovalData = {
     reporter: string; location?: string; entity_ref?: string; valid_until?: string
     agent_name: string; reasoning: string; source_ref: string; connections: string[]
   }>
+  capabilities: Array<{
+    id: string; title: string; reason: string; status: string; change_class: string
+    entity_type: string; source_ref: string; agent_name: string; risk: string
+    schema: { entity_type: string; fields: Array<{ name: string; type: string; required: boolean }> }
+    sample: Record<string, unknown>; surfaces: string[]
+    validation: { safe: boolean; mode: string; checks: string[]; rollback: string; surfaces: string[] }
+  }>
+  active_capabilities: Array<{
+    id: string; entity_type: string; version: number; approved_at: string; approved_by: string
+    source_proposal_id: string; title: string; risk: string
+    schema: { entity_type: string; fields: Array<{ name: string; type: string; required: boolean }> }
+  }>
   communications: Array<{
     ticket_id: string; message_id: string; recipient: string; body: string
     citations: string[]; context: Record<string, unknown>

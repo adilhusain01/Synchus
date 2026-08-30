@@ -8,7 +8,7 @@ import { ErrorBlock, LoadingBlock, MetricGrid, PageHeader, Panel } from '@/compo
 import { Button } from '@/components/ui/button'
 
 type AuditData = { ledger: string; rows: Array<Record<string, unknown>>; counts: Record<string, number> }
-const ledgers = ['runs', 'events', 'sources', 'decisions', 'quarantine'] as const
+const ledgers = ['runs', 'events', 'capabilities', 'sources', 'decisions', 'quarantine'] as const
 
 export const Route = createFileRoute('/app/audit')({ component: AuditPage })
 
@@ -21,7 +21,7 @@ function AuditPage() {
   const columns = data.rows.length ? Object.keys(data.rows[0]) : []
   return <div className="space-y-7">
     <PageHeader icon={koboyo.audit} eyebrow="Provenance and agent trace" title="Audit ledger" description="Raw inputs, proposed facts, human decisions, sources, and model or tool runs stay separate and inspectable." />
-    <MetricGrid items={[{ value: data.counts.runs, label: 'Agent runs' }, { value: data.counts.events, label: 'Intake events' }, { value: data.counts.sources, label: 'Source files' }, { value: data.counts.quarantine, label: 'Quarantined records' }]} />
+    <MetricGrid items={[{ value: data.counts.runs, label: 'Agent runs' }, { value: data.counts.events, label: 'Intake events' }, { value: data.counts.capabilities, label: 'Capability changes' }, { value: data.counts.sources, label: 'Source files' }, { value: data.counts.quarantine, label: 'Quarantined records' }]} />
     <div className="flex flex-wrap gap-2">{ledgers.map((item) => <Button key={item} size="sm" variant={ledger === item ? 'signal' : 'outline'} onClick={() => setLedger(item)}>{titleCase(item)}</Button>)}</div>
     <Panel title={titleCase(ledger)} eyebrow={`${data.rows.length} records shown`}>
       <div className="hidden overflow-x-auto md:block"><table className="w-full min-w-[760px] border-collapse text-left text-xs"><thead><tr className="border-b-2 border-[#17201c]">{columns.map((column) => <th key={column} className="px-3 py-3 font-['DM_Mono'] text-[9px] uppercase tracking-[.1em] text-[#68716b]">{titleCase(column)}</th>)}</tr></thead><tbody>{data.rows.map((row, index) => <tr key={index} className="border-b border-[#d7d1c3] align-top">{columns.map((column) => <td key={column} className="max-w-[380px] px-3 py-3 leading-5 text-[#46504a]"><span className="line-clamp-4 break-words">{typeof row[column] === 'string' ? row[column] : JSON.stringify(row[column])}</span></td>)}</tr>)}</tbody></table></div>

@@ -93,3 +93,37 @@ def test_current_gemini_default(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("MERIDIAN_MODEL", raising=False)
     assert agent.provider_status()["model"] == "gemini-3.6-flash"
+
+
+def test_capability_lab_promotes_and_rolls_back_without_losing_evidence(tmp_path: Path):
+    conn = m.rebuild(tmp_path / "capability.db")
+    proposal_id = m.propose_capability(
+        conn,
+        title="Cold-chain temperature readings",
+        reason="Repeated sensor readings need a typed shape for route and audit use.",
+        entity_type="cold_chain_reading",
+        fields=[
+            {"name": "vehicle_registration", "type": "string", "required": True},
+            {"name": "temperature_c", "type": "number", "required": True},
+            {"name": "recorded_at", "type": "datetime", "required": True},
+        ],
+        sample={"vehicle_registration": "DL30AN8381", "temperature_c": 4.2, "recorded_at": "2026-08-30T12:00:00"},
+        surfaces=["context", "route", "audit"],
+        source_ref="upload:cold-chain.csv:test",
+        agent_name="test-agent",
+    )
+    held = conn.execute("SELECT status FROM extension_record WHERE capability_proposal_id=?", (proposal_id,)).fetchone()
+    assert held["status"] == "held"
+
+    m.decide_capability(conn, proposal_id, True, "Test capability approver")
+    definition = conn.execute("SELECT status FROM capability_definition WHERE entity_type='cold_chain_reading'").fetchone()
+    record = conn.execute("SELECT status FROM extension_record WHERE capability_proposal_id=?", (proposal_id,)).fetchone()
+    assert definition["status"] == "active"
+    assert record["status"] == "active"
+
+    m.rollback_capability(conn, proposal_id, "Test capability approver")
+    definition = conn.execute("SELECT status FROM capability_definition WHERE entity_type='cold_chain_reading'").fetchone()
+    record = conn.execute("SELECT status FROM extension_record WHERE capability_proposal_id=?", (proposal_id,)).fetchone()
+    assert definition["status"] == "disabled"
+    assert record["status"] == "held"
+    assert conn.execute("SELECT count(*) FROM audit_event WHERE object_id=?", (proposal_id,)).fetchone()[0] == 3

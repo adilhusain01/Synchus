@@ -170,6 +170,9 @@ Stage only claims that could improve future operational decisions. A human still
 Find entities, expiry, conflicts/connections, operational risk, and explain the decision briefly.
 Do not invent facts. Preserve Hindi/Hinglish/English. Return one JSON object with key "items" (max 8).
 Each item must have: disposition, statement, kind, entity_ref, location, valid_until, confidence (0..1), reasoning, connections (string array), risk (low|medium|high|critical).
+When—and only when—the claim contains a reusable structured entity or workflow that Synchus cannot represent as ordinary context, add capability_gap with:
+needed=true, title, reason, entity_type, fields (name/type/required), sample (object), surfaces (context/search/map/route/inbox/approvals/audit), and change_class (data_shape/workflow/ui_projection/integration).
+Prefer ordinary context. Do not request code, SQL, shell commands, dependencies, or destructive migrations.
 Source: {source_ref}
 DATA START
 {text[:MAX_TEXT]}
@@ -215,7 +218,7 @@ def ingest_text(conn: sqlite3.Connection, text: str, *, actor: str, channel: str
     )
     try:
         items, used = analyze_update(clean, source_ref)
-        proposal_ids, dispositions = [], []
+        proposal_ids, capability_proposal_ids, dispositions = [], [], []
         for item in items:
             disposition = item.get("disposition", "log_only")
             if disposition not in {"answer", "log_only", "stage_context", "urgent_escalation"}:
@@ -243,7 +246,28 @@ def ingest_text(conn: sqlite3.Connection, text: str, *, actor: str, channel: str
                     source_ref=source_ref,
                 )
                 proposal_ids.append(pid)
-        trace = {"items": len(items), "dispositions": dispositions, "proposal_ids": proposal_ids}
+                gap = item.get("capability_gap")
+                if isinstance(gap, dict) and gap.get("needed"):
+                    try:
+                        capability_id = m.propose_capability(
+                            conn,
+                            title=str(gap.get("title") or f"Support {item.get('kind', 'new operational data')}"),
+                            reason=str(gap.get("reason") or "Incoming evidence has a reusable shape not covered by current context."),
+                            entity_type=str(gap.get("entity_type") or item.get("kind") or "operational_extension"),
+                            fields=gap.get("fields") if isinstance(gap.get("fields"), list) else [],
+                            sample=gap.get("sample") if isinstance(gap.get("sample"), dict) else {"statement": item.get("statement", clean)},
+                            surfaces=gap.get("surfaces") if isinstance(gap.get("surfaces"), list) else ["context", "search"],
+                            source_ref=source_ref,
+                            agent_name=f"{used['provider']}:{used['model']}",
+                            risk=str(item.get("risk", "medium")),
+                            change_class=str(gap.get("change_class", "data_shape")),
+                        )
+                        capability_proposal_ids.append(capability_id)
+                    except ValueError:
+                        # An invalid extension request stays preserved as evidence; it never becomes executable work.
+                        pass
+        trace = {"items": len(items), "dispositions": dispositions, "proposal_ids": proposal_ids,
+                 "capability_proposal_ids": capability_proposal_ids}
         conn.execute("UPDATE agent_run SET finished_at=?,status='complete',trace_json=? WHERE id=?", (datetime.now().isoformat(timespec="seconds"), json.dumps(trace), run_id))
         conn.commit()
         return {"run_id": run_id, **trace, "provider": used}
@@ -257,7 +281,7 @@ def ingest_upload(conn: sqlite3.Connection, name: str, data: bytes, media_type: 
     fingerprint = hashlib.sha256(data).hexdigest()
     existing = conn.execute("SELECT agent_run_id,status FROM source_upload WHERE fingerprint=?", (fingerprint,)).fetchone()
     if existing:
-        return {"duplicate": True, "run_id": existing["agent_run_id"], "status": existing["status"], "proposal_ids": []}
+        return {"duplicate": True, "run_id": existing["agent_run_id"], "status": existing["status"], "proposal_ids": [], "capability_proposal_ids": []}
     text = extract_bytes(name, data)
     result = ingest_text(conn, text, actor=actor, channel="document", source_ref=f"upload:{name}:{fingerprint[:12]}")
     conn.execute(

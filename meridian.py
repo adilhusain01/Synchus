@@ -178,6 +178,25 @@ def _schema(conn: sqlite3.Connection) -> None:
         CREATE TABLE IF NOT EXISTS comm_approval (
           ticket_id TEXT PRIMARY KEY, approved_by TEXT NOT NULL, sent_at TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS capability_proposal (
+          id TEXT PRIMARY KEY, created_at TEXT NOT NULL, status TEXT NOT NULL,
+          title TEXT NOT NULL, reason TEXT NOT NULL, change_class TEXT NOT NULL,
+          entity_type TEXT NOT NULL, schema_json TEXT NOT NULL, sample_json TEXT NOT NULL,
+          surfaces_json TEXT NOT NULL, source_ref TEXT NOT NULL, agent_name TEXT NOT NULL,
+          risk TEXT NOT NULL, validation_json TEXT NOT NULL, decided_at TEXT, decided_by TEXT
+        );
+        CREATE TABLE IF NOT EXISTS capability_definition (
+          id TEXT PRIMARY KEY, entity_type TEXT NOT NULL UNIQUE, version INTEGER NOT NULL,
+          schema_json TEXT NOT NULL, status TEXT NOT NULL, created_at TEXT NOT NULL,
+          approved_at TEXT NOT NULL, approved_by TEXT NOT NULL, source_proposal_id TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS extension_record (
+          id TEXT PRIMARY KEY, capability_proposal_id TEXT NOT NULL, capability_id TEXT,
+          source_ref TEXT NOT NULL, payload_json TEXT NOT NULL, status TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY(capability_proposal_id) REFERENCES capability_proposal(id),
+          FOREIGN KEY(capability_id) REFERENCES capability_definition(id)
+        );
         CREATE VIRTUAL TABLE IF NOT EXISTS context_fts USING fts5(
           title, body, source_ref, object_type, object_id UNINDEXED
         );
@@ -674,6 +693,103 @@ def decide_proposal(conn: sqlite3.Connection, proposal_id: str, approve: bool, a
                       row["valid_until"], row["source_ref"] + "; " + proposal_id, datetime.now().isoformat(timespec="seconds"), actor))
         _refresh_fts(conn)
     _audit(conn, actor, f"proposal.{status}", "proposal", proposal_id, "Human decision recorded")
+    conn.commit()
+
+
+_CAPABILITY_TYPES = {"string", "number", "integer", "boolean", "date", "datetime"}
+_CAPABILITY_SURFACES = {"context", "search", "map", "route", "inbox", "approvals", "audit"}
+_CAPABILITY_CHANGES = {"data_shape", "workflow", "ui_projection", "integration"}
+
+
+def _validate_capability(entity_type: str, fields: list[dict], surfaces: list[str]) -> tuple[dict, dict]:
+    slug = re.sub(r"[^a-z0-9_]+", "_", entity_type.strip().lower()).strip("_")
+    if not slug or len(slug) > 64:
+        raise ValueError("Capability entity type must be a short, stable name")
+    clean_fields: list[dict] = []
+    seen: set[str] = set()
+    for raw in fields[:24]:
+        name = re.sub(r"[^a-z0-9_]+", "_", str(raw.get("name", "")).strip().lower()).strip("_")
+        field_type = str(raw.get("type", "string")).lower()
+        if not name or name in seen or field_type not in _CAPABILITY_TYPES:
+            continue
+        seen.add(name)
+        clean_fields.append({"name": name, "type": field_type, "required": bool(raw.get("required", False))})
+    if not clean_fields:
+        raise ValueError("Capability proposal needs at least one valid field")
+    clean_surfaces = [surface for surface in dict.fromkeys(surfaces) if surface in _CAPABILITY_SURFACES] or ["context", "search"]
+    schema = {"entity_type": slug, "fields": clean_fields, "additional_properties": True}
+    validation = {
+        "safe": True,
+        "mode": "declarative registry",
+        "checks": ["stable entity name", "allowlisted field types", "additive storage", "no generated SQL or shell"],
+        "rollback": "Disable the capability and return its records to held state; raw evidence is preserved.",
+        "surfaces": clean_surfaces,
+    }
+    return schema, validation
+
+
+def propose_capability(
+    conn: sqlite3.Connection, *, title: str, reason: str, entity_type: str, fields: list[dict],
+    sample: dict, surfaces: list[str], source_ref: str, agent_name: str, risk: str = "medium",
+    change_class: str = "data_shape",
+) -> str:
+    schema, validation = _validate_capability(entity_type, fields, surfaces)
+    change_class = change_class if change_class in _CAPABILITY_CHANGES else "data_shape"
+    risk = risk if risk in {"low", "medium", "high", "critical"} else "medium"
+    sample_json = redact(json.dumps(sample, ensure_ascii=False, default=str))
+    proposal_id = "CAP-" + uuid.uuid4().hex[:10].upper()
+    now = datetime.now().isoformat(timespec="seconds")
+    conn.execute(
+        """INSERT INTO capability_proposal VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+        (proposal_id, now, "pending", redact(title)[:180], redact(reason)[:2000], change_class,
+         schema["entity_type"], json.dumps(schema, ensure_ascii=False), sample_json,
+         json.dumps(validation["surfaces"]), source_ref, agent_name, risk, json.dumps(validation), None, None),
+    )
+    record_id = "EXT-" + uuid.uuid4().hex[:10].upper()
+    conn.execute(
+        "INSERT INTO extension_record VALUES (?,?,?,?,?,?,?)",
+        (record_id, proposal_id, None, source_ref, sample_json, "held", now),
+    )
+    _audit(conn, agent_name, "capability.proposed", "capability_proposal", proposal_id,
+           f"{schema['entity_type']} staged as an additive declarative capability; no code executed")
+    conn.commit()
+    return proposal_id
+
+
+def decide_capability(conn: sqlite3.Connection, proposal_id: str, approve: bool, actor: str) -> None:
+    row = conn.execute("SELECT * FROM capability_proposal WHERE id=? AND status='pending'", (proposal_id,)).fetchone()
+    if not row:
+        return
+    now = datetime.now().isoformat(timespec="seconds")
+    status = "approved" if approve else "rejected"
+    conn.execute("UPDATE capability_proposal SET status=?,decided_at=?,decided_by=? WHERE id=?", (status, now, actor, proposal_id))
+    if approve:
+        existing = conn.execute("SELECT id,version FROM capability_definition WHERE entity_type=?", (row["entity_type"],)).fetchone()
+        capability_id = existing["id"] if existing else "DEF-" + uuid.uuid4().hex[:10].upper()
+        version = int(existing["version"]) + 1 if existing else 1
+        conn.execute(
+            """INSERT INTO capability_definition VALUES (?,?,?,?,?,?,?,?,?)
+               ON CONFLICT(entity_type) DO UPDATE SET version=excluded.version,schema_json=excluded.schema_json,
+               status='active',approved_at=excluded.approved_at,approved_by=excluded.approved_by,
+               source_proposal_id=excluded.source_proposal_id""",
+            (capability_id, row["entity_type"], version, row["schema_json"], "active", row["created_at"], now, actor, proposal_id),
+        )
+        conn.execute("UPDATE extension_record SET capability_id=?,status='active' WHERE capability_proposal_id=?", (capability_id, proposal_id))
+    _audit(conn, actor, f"capability.{status}", "capability_proposal", proposal_id,
+           "Declarative capability and held data promoted" if approve else "Proposal rejected; held data and source evidence preserved")
+    conn.commit()
+
+
+def rollback_capability(conn: sqlite3.Connection, proposal_id: str, actor: str) -> None:
+    definition = conn.execute("SELECT * FROM capability_definition WHERE source_proposal_id=? AND status='active'", (proposal_id,)).fetchone()
+    if not definition:
+        return
+    conn.execute("UPDATE capability_definition SET status='disabled' WHERE id=?", (definition["id"],))
+    conn.execute("UPDATE extension_record SET status='held' WHERE capability_id=?", (definition["id"],))
+    conn.execute("UPDATE capability_proposal SET status='rolled_back',decided_at=?,decided_by=? WHERE id=?",
+                 (datetime.now().isoformat(timespec="seconds"), actor, proposal_id))
+    _audit(conn, actor, "capability.rolled_back", "capability_proposal", proposal_id,
+           "Capability disabled and records returned to held state; evidence was not deleted")
     conn.commit()
 
 

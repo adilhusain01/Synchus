@@ -81,10 +81,11 @@ def _revision() -> str:
             ("context_event", "at"),
             ("agent_run", "started_at"),
             ("proposal", "created_at"),
+            ("capability_proposal", "created_at"),
         ):
             row = conn.execute(
                 f"SELECT count(*),coalesce(max({time_field}),''),coalesce(group_concat(DISTINCT status),'') "
-                f"FROM {table}" if table in {"agent_run", "proposal"} else
+                f"FROM {table}" if table in {"agent_run", "proposal", "capability_proposal"} else
                 f"SELECT count(*),coalesce(max({time_field}),''),'' FROM {table}"
             ).fetchone()
             values.extend(str(value) for value in row)
@@ -218,16 +219,56 @@ def approvals(conn=Depends(database)) -> dict:
         item for item in _jsonl(m.OUTPUTS / "comms_pending.jsonl")
         if item["ticket_id"] not in approved_communications
     ]
+    capabilities = _json_rows(
+        conn,
+        "SELECT * FROM capability_proposal WHERE status='pending' ORDER BY risk IN ('critical','high') DESC,created_at DESC",
+    )
+    for capability in capabilities:
+        capability["schema"] = json.loads(capability.pop("schema_json"))
+        capability["sample"] = json.loads(capability.pop("sample_json"))
+        capability["surfaces"] = json.loads(capability.pop("surfaces_json"))
+        capability["validation"] = json.loads(capability.pop("validation_json"))
+    active_capabilities = _json_rows(
+        conn,
+        """SELECT d.id,d.entity_type,d.version,d.schema_json,d.approved_at,d.approved_by,
+                  d.source_proposal_id,p.title,p.risk
+           FROM capability_definition d JOIN capability_proposal p ON p.id=d.source_proposal_id
+           WHERE d.status='active' ORDER BY d.approved_at DESC""",
+    )
+    for capability in active_capabilities:
+        capability["schema"] = json.loads(capability.pop("schema_json"))
     return {
         "proposals": proposals,
+        "capabilities": capabilities,
+        "active_capabilities": active_capabilities,
         "communications": communications,
         "counts": {
             "pending_proposals": len(proposals),
+            "pending_capabilities": len(capabilities),
             "pending_communications": len(communications),
             "approved": conn.execute("SELECT count(*) FROM proposal WHERE status='approved'").fetchone()[0],
             "rejected": conn.execute("SELECT count(*) FROM proposal WHERE status='rejected'").fetchone()[0],
         },
     }
+
+
+@app.post("/api/approvals/capabilities/{proposal_id}")
+def decide_capability(proposal_id: str, payload: ProposalDecision, conn=Depends(database)) -> dict:
+    decision = payload.decision.lower().strip()
+    if decision not in {"approve", "reject"}:
+        raise HTTPException(status_code=422, detail="Decision must be approve or reject")
+    if not conn.execute("SELECT 1 FROM capability_proposal WHERE id=? AND status='pending'", (proposal_id,)).fetchone():
+        raise HTTPException(status_code=404, detail="Pending capability proposal not found")
+    m.decide_capability(conn, proposal_id, decision == "approve", payload.actor)
+    return {"proposal_id": proposal_id, "status": "approved" if decision == "approve" else "rejected"}
+
+
+@app.post("/api/approvals/capabilities/{proposal_id}/rollback")
+def rollback_capability(proposal_id: str, payload: CommunicationDecision, conn=Depends(database)) -> dict:
+    if not conn.execute("SELECT 1 FROM capability_definition WHERE source_proposal_id=? AND status='active'", (proposal_id,)).fetchone():
+        raise HTTPException(status_code=404, detail="Active capability not found")
+    m.rollback_capability(conn, proposal_id, payload.actor)
+    return {"proposal_id": proposal_id, "status": "rolled_back"}
 
 
 @app.post("/api/approvals/proposals/{proposal_id}")
@@ -258,6 +299,7 @@ LEDGERS = {
     "sources": "SELECT kind,path,substr(fingerprint,1,16) AS sha256,ingested_at FROM source ORDER BY path",
     "decisions": "SELECT at,actor,action,object_type,object_id,details FROM audit_event ORDER BY at DESC LIMIT 200",
     "quarantine": "SELECT ticket_id,created_at,vehicle_reg,driver_id,issue,source_ref FROM ticket WHERE valid=0",
+    "capabilities": "SELECT created_at,id,title,entity_type,change_class,risk,status,source_ref,decided_by FROM capability_proposal ORDER BY created_at DESC LIMIT 200",
 }
 
 
@@ -275,6 +317,7 @@ def audit(ledger: str, conn=Depends(database)) -> dict:
             "events": conn.execute("SELECT count(*) FROM context_event").fetchone()[0],
             "sources": conn.execute("SELECT count(*) FROM source").fetchone()[0],
             "quarantine": conn.execute("SELECT count(*) FROM ticket WHERE valid=0").fetchone()[0],
+            "capabilities": conn.execute("SELECT count(*) FROM capability_proposal").fetchone()[0],
         },
     }
 

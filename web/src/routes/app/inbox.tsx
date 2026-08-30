@@ -8,7 +8,7 @@ import { ErrorBlock, LoadingBlock, MetricGrid, PageHeader, Panel, StatusPill } f
 import { Button } from '@/components/ui/button'
 
 type InboxData = { metrics: Record<string, number>; events: Array<Record<string, string>> }
-type IntakeResult = { run_id: string; dispositions: string[]; proposal_ids: string[] }
+type IntakeResult = { run_id: string; dispositions: string[]; proposal_ids: string[]; capability_proposal_ids: string[] }
 
 export const Route = createFileRoute('/app/inbox')({ component: InboxPage })
 
@@ -53,14 +53,14 @@ function InboxPage() {
             <input aria-label="Reporter or role" name="reporter-role" autoComplete="off" value={actor} onChange={(event) => setActor(event.target.value)} placeholder="Reporter or role…" className="min-h-11 min-w-0 flex-1 rounded-sm border border-[#aaa394] bg-white/70 px-3 text-sm outline-none focus:border-[#2e64f5] focus:ring-3 focus:ring-[#2e64f5]/15" />
             <Button onClick={() => mutation.mutate()} disabled={!text.trim() || mutation.isPending}>{mutation.isPending ? 'Reconciling…' : 'Let Agent Triage'}</Button>
           </div>
-          {mutation.data ? <div className="mt-4 border-l-4 border-[#c8ff3d] bg-[#eef9d2] p-4 text-sm"><p className="font-extrabold">Agent run complete</p><p className="mt-1 text-[#58625c]">{mutation.data.dispositions.map(titleCase).join(', ')}. {mutation.data.proposal_ids.length} staged for approval.</p></div> : null}
+          {mutation.data ? <div className="mt-4 border-l-4 border-[#c8ff3d] bg-[#eef9d2] p-4 text-sm"><p className="font-extrabold">Agent run complete</p><p className="mt-1 text-[#58625c]">{mutation.data.dispositions.map(titleCase).join(', ')}. {mutation.data.proposal_ids.length} claim(s) and {mutation.data.capability_proposal_ids.length} capability change(s) staged.</p></div> : null}
           {mutation.error ? <div className="mt-4"><ErrorBlock error={mutation.error} /></div> : null}
         </Panel>
         <Panel title="Company documents" eyebrow="Files, sheets, exports">
           <p className="text-sm leading-6 text-[#59635d]">PDF, DOCX, XLSX, CSV, JSON, and text are fingerprinted before the agent extracts and reconciles useful claims.</p>
           <input aria-label="Company document" type="file" accept=".txt,.md,.csv,.tsv,.json,.xlsx,.pdf,.docx" onChange={(event) => setFile(event.target.files?.[0] || null)} className="mt-4 block w-full rounded-sm border border-[#aaa394] bg-white/70 p-2 text-xs file:mr-3 file:rounded-sm file:border-0 file:bg-[#e8e3d7] file:px-3 file:py-2 file:font-bold" />
           <Button variant="outline" className="mt-3" disabled={!file || upload.isPending} onClick={() => upload.mutate()}>{upload.isPending ? 'Reading Document…' : 'Process Document'}</Button>
-          {upload.data ? <p className="mt-3 text-sm font-bold text-[#526b10]">{upload.data.duplicate ? 'Already processed; no duplicate context created.' : `${upload.data.proposal_ids.length} claim(s) staged for approval.`}</p> : null}
+          {upload.data ? <p className="mt-3 text-sm font-bold text-[#526b10]">{upload.data.duplicate ? 'Already processed; no duplicate context created.' : `${upload.data.proposal_ids.length} claim(s) and ${upload.data.capability_proposal_ids.length} capability change(s) staged.`}</p> : null}
           {upload.error ? <div className="mt-3"><ErrorBlock error={upload.error} /></div> : null}
         </Panel>
       </div>
