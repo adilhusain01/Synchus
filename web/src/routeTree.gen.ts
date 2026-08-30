@@ -10,42 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApprovalsRouteImport } from './routes/approvals'
-import { Route as AskRouteImport } from './routes/ask'
-import { Route as AuditRouteImport } from './routes/audit'
-import { Route as ControlRouteImport } from './routes/control'
-import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as LiveRouteImport } from './routes/live'
-import { Route as RouteIndexRouteImport } from './routes/route/index'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppApprovalsRouteImport } from './routes/app/approvals'
+import { Route as AppAskRouteImport } from './routes/app/ask'
+import { Route as AppAuditRouteImport } from './routes/app/audit'
+import { Route as AppControlRouteImport } from './routes/app/control'
+import { Route as AppInboxRouteImport } from './routes/app/inbox'
+import { Route as AppRouteIndexRouteImport } from './routes/app/route/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApprovalsRoute = ApprovalsRouteImport.update({
-  id: '/approvals',
-  path: '/approvals',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AskRoute = AskRouteImport.update({
-  id: '/ask',
-  path: '/ask',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditRoute = AuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ControlRoute = ControlRouteImport.update({
-  id: '/control',
-  path: '/control',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InboxRoute = InboxRouteImport.update({
-  id: '/inbox',
-  path: '/inbox',
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LiveRoute = LiveRouteImport.update({
@@ -53,85 +35,120 @@ const LiveRoute = LiveRouteImport.update({
   path: '/live',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RouteIndexRoute = RouteIndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppApprovalsRoute = AppApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAskRoute = AppAskRouteImport.update({
+  id: '/ask',
+  path: '/ask',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAuditRoute = AppAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppControlRoute = AppControlRouteImport.update({
+  id: '/control',
+  path: '/control',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInboxRoute = AppInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRouteIndexRoute = AppRouteIndexRouteImport.update({
   id: '/route/',
   path: '/route/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/approvals': typeof ApprovalsRoute
-  '/ask': typeof AskRoute
-  '/audit': typeof AuditRoute
-  '/control': typeof ControlRoute
-  '/inbox': typeof InboxRoute
+  '/app': typeof AppRouteWithChildren
   '/live': typeof LiveRoute
-  '/route/': typeof RouteIndexRoute
+  '/app/approvals': typeof AppApprovalsRoute
+  '/app/ask': typeof AppAskRoute
+  '/app/audit': typeof AppAuditRoute
+  '/app/control': typeof AppControlRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/': typeof AppIndexRoute
+  '/app/route/': typeof AppRouteIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/approvals': typeof ApprovalsRoute
-  '/ask': typeof AskRoute
-  '/audit': typeof AuditRoute
-  '/control': typeof ControlRoute
-  '/inbox': typeof InboxRoute
   '/live': typeof LiveRoute
-  '/route': typeof RouteIndexRoute
+  '/app/approvals': typeof AppApprovalsRoute
+  '/app/ask': typeof AppAskRoute
+  '/app/audit': typeof AppAuditRoute
+  '/app/control': typeof AppControlRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app': typeof AppIndexRoute
+  '/app/route': typeof AppRouteIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/approvals': typeof ApprovalsRoute
-  '/ask': typeof AskRoute
-  '/audit': typeof AuditRoute
-  '/control': typeof ControlRoute
-  '/inbox': typeof InboxRoute
+  '/app': typeof AppRouteWithChildren
   '/live': typeof LiveRoute
-  '/route/': typeof RouteIndexRoute
+  '/app/approvals': typeof AppApprovalsRoute
+  '/app/ask': typeof AppAskRoute
+  '/app/audit': typeof AppAuditRoute
+  '/app/control': typeof AppControlRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/': typeof AppIndexRoute
+  '/app/route/': typeof AppRouteIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/approvals'
-    | '/ask'
-    | '/audit'
-    | '/control'
-    | '/inbox'
+    | '/app'
     | '/live'
-    | '/route/'
+    | '/app/approvals'
+    | '/app/ask'
+    | '/app/audit'
+    | '/app/control'
+    | '/app/inbox'
+    | '/app/'
+    | '/app/route/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/approvals'
-    | '/ask'
-    | '/audit'
-    | '/control'
-    | '/inbox'
     | '/live'
-    | '/route'
+    | '/app/approvals'
+    | '/app/ask'
+    | '/app/audit'
+    | '/app/control'
+    | '/app/inbox'
+    | '/app'
+    | '/app/route'
   id:
     | '__root__'
     | '/'
-    | '/approvals'
-    | '/ask'
-    | '/audit'
-    | '/control'
-    | '/inbox'
+    | '/app'
     | '/live'
-    | '/route/'
+    | '/app/approvals'
+    | '/app/ask'
+    | '/app/audit'
+    | '/app/control'
+    | '/app/inbox'
+    | '/app/'
+    | '/app/route/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApprovalsRoute: typeof ApprovalsRoute
-  AskRoute: typeof AskRoute
-  AuditRoute: typeof AuditRoute
-  ControlRoute: typeof ControlRoute
-  InboxRoute: typeof InboxRoute
+  AppRoute: typeof AppRouteWithChildren
   LiveRoute: typeof LiveRoute
-  RouteIndexRoute: typeof RouteIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -143,39 +160,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/approvals': {
-      id: '/approvals'
-      path: '/approvals'
-      fullPath: '/approvals'
-      preLoaderRoute: typeof ApprovalsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ask': {
-      id: '/ask'
-      path: '/ask'
-      fullPath: '/ask'
-      preLoaderRoute: typeof AskRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audit': {
-      id: '/audit'
-      path: '/audit'
-      fullPath: '/audit'
-      preLoaderRoute: typeof AuditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/control': {
-      id: '/control'
-      path: '/control'
-      fullPath: '/control'
-      preLoaderRoute: typeof ControlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/inbox': {
-      id: '/inbox'
-      path: '/inbox'
-      fullPath: '/inbox'
-      preLoaderRoute: typeof InboxRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/live': {
@@ -185,25 +174,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LiveRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/route/': {
-      id: '/route/'
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/approvals': {
+      id: '/app/approvals'
+      path: '/approvals'
+      fullPath: '/app/approvals'
+      preLoaderRoute: typeof AppApprovalsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/ask': {
+      id: '/app/ask'
+      path: '/ask'
+      fullPath: '/app/ask'
+      preLoaderRoute: typeof AppAskRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/audit': {
+      id: '/app/audit'
+      path: '/audit'
+      fullPath: '/app/audit'
+      preLoaderRoute: typeof AppAuditRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/control': {
+      id: '/app/control'
+      path: '/control'
+      fullPath: '/app/control'
+      preLoaderRoute: typeof AppControlRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/inbox': {
+      id: '/app/inbox'
+      path: '/inbox'
+      fullPath: '/app/inbox'
+      preLoaderRoute: typeof AppInboxRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/route/': {
+      id: '/app/route/'
       path: '/route'
-      fullPath: '/route/'
-      preLoaderRoute: typeof RouteIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/route/'
+      preLoaderRoute: typeof AppRouteIndexRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppApprovalsRoute: typeof AppApprovalsRoute
+  AppAskRoute: typeof AppAskRoute
+  AppAuditRoute: typeof AppAuditRoute
+  AppControlRoute: typeof AppControlRoute
+  AppInboxRoute: typeof AppInboxRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppRouteIndexRoute: typeof AppRouteIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppApprovalsRoute: AppApprovalsRoute,
+  AppAskRoute: AppAskRoute,
+  AppAuditRoute: AppAuditRoute,
+  AppControlRoute: AppControlRoute,
+  AppInboxRoute: AppInboxRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppRouteIndexRoute: AppRouteIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApprovalsRoute: ApprovalsRoute,
-  AskRoute: AskRoute,
-  AuditRoute: AuditRoute,
-  ControlRoute: ControlRoute,
-  InboxRoute: InboxRoute,
+  AppRoute: AppRouteWithChildren,
   LiveRoute: LiveRoute,
-  RouteIndexRoute: RouteIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

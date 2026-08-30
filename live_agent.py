@@ -1,4 +1,4 @@
-"""Local full-duplex Meridian voice agent using Gemini Live and bounded database tools."""
+"""Local full-duplex Synchus voice agent using Gemini Live and bounded database tools."""
 
 from __future__ import annotations
 
@@ -94,7 +94,7 @@ async def run(model: str) -> None:
         outdata[:] = (data + b"\x00" * needed)[:needed]
 
     system = f"""
-You are Meridian, a concise live operational voice agent for Indian logistics workers.
+You are Synchus, a concise live operational voice agent for Indian logistics workers.
 Speak in the user's Hindi, Hinglish, or English. You may be interrupted naturally.
 Use tools before operational claims. Distinguish fleet home assignment/history from live state.
 Never say a vehicle is dispatch-ready when availability, current location, or service-due state is unknown.
@@ -110,7 +110,7 @@ Canonical context always requires human approval. Today is {date.today().isoform
     with sd.RawInputStream(samplerate=INPUT_RATE, blocksize=CHUNK, channels=1, dtype="int16", callback=mic_callback), \
          sd.RawOutputStream(samplerate=OUTPUT_RATE, blocksize=2400, channels=1, dtype="int16", callback=speaker_callback):
         async with client.aio.live.connect(model=model, config=config) as session:
-            print("Meridian Live connected. Speak naturally; Ctrl+C exits.", flush=True)
+            print("Synchus Live connected. Speak naturally; Ctrl+C exits.", flush=True)
 
             async def send_audio() -> None:
                 while True:
@@ -154,7 +154,7 @@ Canonical context always requires human approval. Today is {date.today().isoform
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run Meridian's full-duplex local voice agent")
+    parser = argparse.ArgumentParser(description="Run Synchus's full-duplex local voice agent")
     parser.add_argument("--model", default=os.getenv("MERIDIAN_LIVE_MODEL", "gemini-3.1-flash-live-preview"))
     args = parser.parse_args()
     try:

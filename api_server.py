@@ -1,4 +1,4 @@
-"""Reactive HTTP surface for the TanStack Meridian client."""
+"""Reactive HTTP surface for the TanStack Synchus client."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-app = FastAPI(title="Meridian Context API", version="0.2.0", lifespan=lifespan)
+app = FastAPI(title="Synchus Context API", version="0.2.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],

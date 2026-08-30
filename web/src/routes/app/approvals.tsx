@@ -7,7 +7,7 @@ import { titleCase } from '@/lib/utils'
 import { ErrorBlock, LoadingBlock, MetricGrid, PageHeader, Panel, StatusPill } from '@/components/common'
 import { Button } from '@/components/ui/button'
 
-export const Route = createFileRoute('/approvals')({ component: ApprovalsPage })
+export const Route = createFileRoute('/app/approvals')({ component: ApprovalsPage })
 
 function ApprovalsPage() {
   const client = useQueryClient()

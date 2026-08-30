@@ -85,7 +85,7 @@ async def handle_document(update, context) -> None:
         return
     document = update.message.document
     if document.file_size and document.file_size > 20 * 1024 * 1024:
-        await update.message.reply_text("That exceeds Telegram's standard 20 MB bot download limit. Upload it in the Meridian app instead.")
+        await update.message.reply_text("That exceeds Telegram's standard 20 MB bot download limit. Upload it in the Synchus app instead.")
         return
     file = await context.bot.get_file(document.file_id)
     data = bytes(await file.download_as_bytearray())

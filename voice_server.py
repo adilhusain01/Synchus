@@ -1,4 +1,4 @@
-"""Browser voice-orb server: WebSocket audio bridge to Gemini Live with Meridian tools."""
+"""Browser voice-orb server: WebSocket audio bridge to Gemini Live with Synchus tools."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ def create_app():
     if FastAPI is None:
         raise RuntimeError("Install live dependencies: uv sync --extra live")
 
-    app = FastAPI(title="Meridian Live Voice")
+    app = FastAPI(title="Synchus Live Voice")
 
     @app.get("/")
     async def index():
@@ -50,7 +50,7 @@ def create_app():
             "input_audio_transcription": {}, "output_audio_transcription": {},
             "realtime_input_config": {"automatic_activity_detection": {"disabled": False}},
             "system_instruction": (
-                "You are Meridian, a concise live operational voice agent for Indian logistics workers. "
+                "You are Synchus, a concise live operational voice agent for Indian logistics workers. "
                 "Match Hindi, Hinglish, or English. Use tools before operational claims. Be interruptible. "
                 "Never call history or home assignment live state, and never call a vehicle dispatch-ready "
                 "when availability or service state is unknown. Stage new worker information with stage_observation; "

@@ -17,7 +17,7 @@ KOBOYO_WORKER = "https://koboyo.com/icons/svg/factory-worker.svg"
 KOBOYO_MIC = "https://koboyo.com/icons/svg/boom-microphone.svg"
 KOBOYO_WARNING = "https://koboyo.com/icons/svg/warning-sign-for-road.svg"
 
-st.set_page_config(page_title="Meridian Context", page_icon="◉", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Synchus Context", page_icon="◉", layout="wide", initial_sidebar_state="expanded")
 
 st.markdown("""
 <style>
@@ -68,7 +68,7 @@ provider = agent.provider_status()
 
 with st.sidebar:
     st.image(KOBOYO_TRUCK, width=72)
-    st.markdown("## ◉ MERIDIAN")
+    st.markdown("## ◉ SYNCHUS")
     st.caption("OPERATIONAL MEMORY / DEMO")
     st.markdown("<span class='live-dot'></span><span class='stamp'>Context online</span>", unsafe_allow_html=True)
     st.caption(f"Reasoning: {provider['provider']} · {provider['model']}")
@@ -282,7 +282,7 @@ with tabs[2]:
                 for hit in m.search(conn, st.session_state.get("ask_result_question", q)):
                     st.markdown(f"**{hit['title']}**  \n{hit['body'][:500]}  \n`{hit['source_ref']}`")
         else:
-            st.info("Ask a question or load a scenario. Meridian will separate known facts, useful inferences and missing live state.")
+            st.info("Ask a question or load a scenario. Synchus will separate known facts, useful inferences and missing live state.")
     with prompt_col:
         st.subheader("Try a field question")
         for index, example in enumerate(examples):

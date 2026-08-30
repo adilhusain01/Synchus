@@ -1,4 +1,4 @@
-# Meridian architecture
+# Synchus architecture
 
 ## Product thesis
 
@@ -23,14 +23,14 @@ The UI must never visually collapse these layers. A fleet-master home assignment
 
 ## Shared query surface
 
-Hotelist's useful product pattern is the coupling of filters, ranked list, map and assistant around one query state. Meridian adapts it as:
+Hotelist's useful product pattern is the coupling of filters, ranked list, map and assistant around one query state. Synchus adapts it as:
 
 - Filters: origin, destination, date, client, model year and BS stage.
 - Ranked/list view: origin assignments with bounded rule checks.
 - Map: route geometry, hubs, one glyph per home assignment, applicable precautions and projected historical incidents.
 - Assistant: answers about the exact route selection and preserves explicit unknowns.
 
-Hotelist also exposes cross-source consensus rather than treating one rating as unquestionable. Meridian's intake agent similarly labels new claims `single_source`, `corroborated`, or `conflict_present` and shows the connected evidence to the approver.
+Hotelist also exposes cross-source consensus rather than treating one rating as unquestionable. Synchus's intake agent similarly labels new claims `single_source`, `corroborated`, or `conflict_present` and shows the connected evidence to the approver.
 
 ## Bounded agent tools
 

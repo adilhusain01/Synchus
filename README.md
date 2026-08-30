@@ -1,6 +1,6 @@
-# Meridian Context
+# Synchus
 
-An active operational-memory demo built from the supplied Meridian Freight challenge data. It combines files, spreadsheets, emails, interviews, worker messages and voice into one provenance-preserving SQLite context layer.
+An active operational-memory product built from the supplied Meridian Freight challenge data. Synchus combines files, spreadsheets, emails, interviews, worker messages and voice in one provenance-preserving context layer.
 
 The agent is allowed to retrieve, reconcile, reason, log and stage changes. It is not allowed to silently turn a model output into canonical operational truth. Human approval is the promotion boundary.
 
@@ -18,7 +18,7 @@ pnpm install
 pnpm dev
 ```
 
-Open `http://127.0.0.1:5173`. TanStack Query listens to the API event stream, so new voice, Telegram, document, approval, and audit activity refreshes open workspaces without a page reload. The original Streamlit prototype remains available with `uv run streamlit run app.py --server.address 127.0.0.1`.
+Open `http://127.0.0.1:5173` for Synchus Live or `http://127.0.0.1:5173/app` for the operations workspace. TanStack Query listens to the API event stream, so new voice, Telegram, document, approval, and audit activity refreshes open workspaces without a page reload. The original Streamlit prototype remains available with `uv run streamlit run app.py --server.address 127.0.0.1`.
 
 The first run builds `data/meridian.db` from `candidate_bundle/`. Services load local settings from `.env`; real values are ignored by Git. Copy `.env.example` if needed.
 
@@ -86,6 +86,6 @@ It writes `outputs/work_orders.jsonl`, `outputs/comms_pending.jsonl`, `outputs/c
 3. Open **Ask** and try `RJ43DD3546 Orion ke liye eligible hai?`.
 4. Open **Inbox**, record/type a bridge diversion or upload a document. The agent decides its disposition automatically.
 5. Open **Approvals** and inspect the agent's confidence, reasoning, connections and source before promotion.
-6. Open **Live** for the voice-orb, realtime-agent and Telegram launch paths.
+6. Return to `/` for the full-screen, audio-reactive live voice agent.
 
 Stale trip records are labeled historical, fleet home assignments are never called parked/live locations, driver PII is not copied into the context database, and missing operational state remains `UNKNOWN` rather than becoming a false `PASS`.

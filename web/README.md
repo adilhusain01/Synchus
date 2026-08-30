@@ -1,6 +1,6 @@
-# Meridian Web
+# Synchus Web
 
-Reactive operations client for the Meridian context layer.
+Reactive operations client for the Synchus context layer.
 
 ## Stack
 
@@ -9,7 +9,7 @@ Reactive operations client for the Meridian context layer.
 - Zustand for shared route controls
 - shadcn-style primitives and CVA
 - Tailwind utilities directly in JSX
-- MapLibre with OpenStreetMap raster tiles
+- MapLibre with CARTO/OpenStreetMap raster tiles and an OSRM route overlay
 - Koboyo operational iconography
 
 ## Development

@@ -57,7 +57,7 @@ KOBOYO_WARNING_ICON = "https://koboyo.com/icons/svg/warning-sign-for-road.svg"
 def _sized_svg_data_url(url: str, width: int, height: int) -> str:
     """Give a dimensionless Koboyo SVG natural dimensions for Deck.gl's bitmap loader."""
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Meridian-Hackathon/0.2"})
+        req = urllib.request.Request(url, headers={"User-Agent": "Synchus-Hackathon/0.2"})
         with urllib.request.urlopen(req, timeout=5) as response:
             svg = response.read().decode("utf-8")
         svg = re.sub(r"<svg\b", f'<svg width="{width}" height="{height}"', svg, count=1)
@@ -410,7 +410,7 @@ def road_route(origin: str, destination: str) -> dict:
         "https://router.project-osrm.org/route/v1/driving/"
         f"{a_lon},{a_lat};{b_lon},{b_lat}?overview=full&geometries=geojson"
     )
-    req = urllib.request.Request(url, headers={"User-Agent": "Meridian-Hackathon/0.2 (route-intelligence-demo)"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Synchus-Hackathon/0.2 (route-intelligence-demo)"})
     try:
         with urllib.request.urlopen(req, timeout=7) as response:
             route = json.loads(response.read())["routes"][0]
@@ -681,7 +681,7 @@ def transcribe_sarvam(audio_bytes: bytes, mime: str = "audio/wav") -> str:
     key = os.getenv("SARVAM_API_KEY")
     if not key:
         raise RuntimeError("SARVAM_API_KEY is not configured")
-    boundary = "----Meridian" + uuid.uuid4().hex
+    boundary = "----Synchus" + uuid.uuid4().hex
     chunks = [
         f"--{boundary}\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\nsaaras:v3\r\n".encode(),
         f"--{boundary}\r\nContent-Disposition: form-data; name=\"language_code\"\r\n\r\nunknown\r\n".encode(),
@@ -777,7 +777,7 @@ def run_pipeline(conn: sqlite3.Connection, ticket_paths: Iterable[Path] | None =
             "work_order_id": wo_id, "ticket_id": tid, "vehicle_reg": reg,
             "created_at": str(t["created_at"]), "citations": citations,
         })
-        body = (f"Meridian update {tid}: a {str(t['severity']).lower()} {t['issue']} incident is recorded "
+        body = (f"Synchus update {tid}: a {str(t['severity']).lower()} {t['issue']} incident is recorded "
                 f"for vehicle {reg} on the {t['origin_hub']}–{t['destination']} movement. {response}. "
                 "This draft awaits operations approval.")
         pending.append({
@@ -816,7 +816,7 @@ def approve_communication(conn: sqlite3.Connection, ticket_id: str, approved_by:
 
 
 def cli() -> None:
-    parser = argparse.ArgumentParser(description="Meridian deterministic context pipeline")
+    parser = argparse.ArgumentParser(description="Synchus deterministic context pipeline")
     parser.add_argument("command", choices=["pipeline", "rebuild"])
     parser.add_argument("--tickets", nargs="*", type=Path, help="Ticket JSON files; aliases are normalized")
     args = parser.parse_args()

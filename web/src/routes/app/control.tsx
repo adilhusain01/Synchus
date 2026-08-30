@@ -6,7 +6,7 @@ import { koboyo } from '@/lib/icons'
 import { ErrorBlock, LoadingBlock, MetricGrid, PageHeader, Panel, StatusPill } from '@/components/common'
 import { Button } from '@/components/ui/button'
 
-export const Route = createFileRoute('/control')({ component: ControlRoom })
+export const Route = createFileRoute('/app/control')({ component: ControlRoom })
 
 function ControlRoom() {
   const [severity, setSeverity] = useState<'critical' | 'warning' | 'all'>('critical')

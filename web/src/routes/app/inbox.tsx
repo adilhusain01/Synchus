@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 type InboxData = { metrics: Record<string, number>; events: Array<Record<string, string>> }
 type IntakeResult = { run_id: string; dispositions: string[]; proposal_ids: string[] }
 
-export const Route = createFileRoute('/inbox')({ component: InboxPage })
+export const Route = createFileRoute('/app/inbox')({ component: InboxPage })
 
 function InboxPage() {
   const client = useQueryClient()

@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 type AuditData = { ledger: string; rows: Array<Record<string, unknown>>; counts: Record<string, number> }
 const ledgers = ['runs', 'events', 'sources', 'decisions', 'quarantine'] as const
 
-export const Route = createFileRoute('/audit')({ component: AuditPage })
+export const Route = createFileRoute('/app/audit')({ component: AuditPage })
 
 function AuditPage() {
   const [ledger, setLedger] = useState<(typeof ledgers)[number]>('runs')

@@ -5,20 +5,16 @@ export function KoboyoIcon({ src, alt = '', className }: { src: string; alt?: st
   return <img src={src} alt={alt} width={40} height={40} aria-hidden={alt ? undefined : true} className={cn('size-10 object-contain', className)} />
 }
 
-export function PageHeader({ icon, eyebrow, title, description, actions }: {
-  icon: string; eyebrow: string; title: string; description: string; actions?: ReactNode
+export function PageHeader({ icon, title, actions }: {
+  icon: string; eyebrow?: string; title: string; description?: string; actions?: ReactNode
 }) {
   return (
-    <header className="flex flex-col gap-5 border-b border-[#d7d1c3] pb-6 sm:flex-row sm:items-end sm:justify-between">
-      <div className="flex min-w-0 items-start gap-4">
-        <div className="grid size-14 shrink-0 place-items-center rounded-sm border border-[#c9c2b3] bg-[#fffaf0]">
-          <KoboyoIcon src={icon} className="size-11" />
+    <header className="flex flex-col gap-3 border-b border-[#d7d1c3] pb-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="grid size-12 shrink-0 place-items-center rounded-sm border border-[#c9c2b3] bg-[#fffaf0]">
+          <KoboyoIcon src={icon} className="size-9" />
         </div>
-        <div className="min-w-0">
-          <p className="font-['DM_Mono'] text-[11px] uppercase tracking-[0.13em] text-[#69716c]">{eyebrow}</p>
-          <h1 className="mt-1 text-pretty text-[clamp(1.7rem,3vw,2.8rem)] font-extrabold leading-[.98] tracking-[-.055em] text-[#17201c]">{title}</h1>
-          <p className="mt-2 max-w-3xl text-pretty text-sm leading-6 text-[#56605a]">{description}</p>
-        </div>
+        <h1 className="min-w-0 text-pretty text-[clamp(1.65rem,2.5vw,2.45rem)] font-extrabold leading-none tracking-[-.055em] text-[#17201c]">{title}</h1>
       </div>
       {actions ? <div className="flex shrink-0 flex-wrap gap-2">{actions}</div> : null}
     </header>
@@ -39,10 +35,10 @@ export function MetricGrid({ items }: { items: Array<{ label: string; value: num
   )
 }
 
-export function Panel({ title, eyebrow, children, className, action }: { title?: string; eyebrow?: string; children: ReactNode; className?: string; action?: ReactNode }) {
+export function Panel({ title, children, className, action }: { title?: string; eyebrow?: string; children: ReactNode; className?: string; action?: ReactNode }) {
   return (
     <section className={cn('rounded-sm border border-[#d7d1c3] bg-[#fffaf0]/65 p-5', className)}>
-      {title || action ? <div className="mb-4 flex items-start justify-between gap-3"><div>{eyebrow ? <p className="font-['DM_Mono'] text-[10px] uppercase tracking-[.12em] text-[#747b76]">{eyebrow}</p> : null}{title ? <h2 className="mt-1 text-xl font-extrabold tracking-[-.035em] text-[#17201c]">{title}</h2> : null}</div>{action}</div> : null}
+      {title || action ? <div className="mb-4 flex items-start justify-between gap-3">{title ? <h2 className="text-xl font-extrabold tracking-[-.035em] text-[#17201c]">{title}</h2> : <span />}{action}</div> : null}
       {children}
     </section>
   )

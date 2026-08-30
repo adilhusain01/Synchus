@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import Map, { Marker } from 'react-map-gl/maplibre'
+import type { Map as MapLibreMap } from 'maplibre-gl'
 import type { StyleSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { get, post, type AskResult } from '@/lib/api'
@@ -24,47 +25,53 @@ type RouteData = {
   origin_conflicts: Array<{ registration: string; field: string }>
 }
 
-function makeMapStyle(path: number[][]): StyleSpecification {
+function makeMapStyle(): StyleSpecification {
   return {
     version: 8,
     sources: {
       openStreetMap: {
         type: 'raster',
-        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+        tiles: [
+          'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+          'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+          'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+        ],
         tileSize: 256,
-        attribution: '© OpenStreetMap contributors',
-      },
-      route: {
-        type: 'geojson',
-        data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: path } },
+        attribution: '© OpenStreetMap contributors © CARTO',
       },
     },
-    layers: [
-      { id: 'open-street-map', type: 'raster', source: 'openStreetMap', minzoom: 0, maxzoom: 19 },
-      { id: 'route-casing', type: 'line', source: 'route', paint: { 'line-color': '#fffaf0', 'line-width': 9, 'line-opacity': 0.95 } },
-      { id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': '#ff5c35', 'line-width': 5, 'line-opacity': 1 } },
-    ],
+    layers: [{ id: 'open-street-map', type: 'raster', source: 'openStreetMap', minzoom: 0, maxzoom: 19 }],
   }
 }
 
-export const Route = createFileRoute('/route/')({ component: RoutePage })
+export const Route = createFileRoute('/app/route/')({ component: RoutePage })
 
 function RoutePage() {
   const filters = useUiStore((state) => state.route)
   const update = useUiStore((state) => state.updateRoute)
   const [question, setQuestion] = useState('')
+  const [routeOverlay, setRouteOverlay] = useState({ path: '', width: 1, height: 1 })
   const options = useQuery({ queryKey: ['route-options'], queryFn: () => get<RouteOptions>('/api/route/options') })
   const params = new URLSearchParams({ origin: filters.origin, destination: filters.destination, client: filters.client, travel_on: filters.travelOn })
   const route = useQuery({ queryKey: ['route', filters.origin, filters.destination, filters.client, filters.travelOn], queryFn: () => get<RouteData>(`/api/route?${params}`) })
   const ask = useMutation({ mutationFn: () => post<AskResult>('/api/ask', { question: `For ${filters.origin} to ${filters.destination} on ${filters.travelOn}, client ${filters.client}: ${question}` }) })
   const filteredCandidates = useMemo(() => route.data?.candidates.filter((item) => item.year >= filters.minimumYear && (filters.bsStage === 'All' || item.bs_stage === filters.bsStage)) || [], [route.data, filters.minimumYear, filters.bsStage])
   const trucks = useMemo(() => route.data?.trucks.filter((item) => item.home_hub === filters.origin && item.year >= filters.minimumYear && (filters.bsStage === 'All' || item.bs_stage === filters.bsStage)).slice(0, 36) || [], [route.data, filters])
-  const routeMapStyle = useMemo(() => makeMapStyle(route.data?.path || []), [route.data?.path])
+  const routeMapStyle = useMemo(() => makeMapStyle(), [])
   if (options.isLoading || route.isLoading) return <LoadingBlock label="Compiling route evidence" />
   if (options.error) return <ErrorBlock error={options.error} />
   if (route.error) return <ErrorBlock error={route.error} />
   const data = route.data!
   const midpoint = data.path[Math.floor(data.path.length / 2)] || [77.2, 28.6]
+  const routeBounds = data.path.reduce((bounds, point) => ({
+    minLon: Math.min(bounds.minLon, point[0]), minLat: Math.min(bounds.minLat, point[1]),
+    maxLon: Math.max(bounds.maxLon, point[0]), maxLat: Math.max(bounds.maxLat, point[1]),
+  }), { minLon: Infinity, minLat: Infinity, maxLon: -Infinity, maxLat: -Infinity })
+  const syncRouteOverlay = (map: MapLibreMap) => {
+    const points = data.path.filter((_, index) => index % 3 === 0 || index === data.path.length - 1).map(([lng, lat]) => map.project({ lng, lat }))
+    const canvas = map.getCanvas()
+    setRouteOverlay({ path: points.map((point, index) => `${index ? 'L' : 'M'}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' '), width: canvas.clientWidth, height: canvas.clientHeight })
+  }
 
   return <div className="space-y-6">
     <PageHeader icon={koboyo.route} eyebrow="Shared spatial query" title="Route intelligence" description="Fleet assignments, route evidence, map layers, and the assistant react to one selected route state." actions={<StatusPill tone={data.is_approximate ? 'warning' : 'good'}>{data.geometry_source}</StatusPill>} />
@@ -80,19 +87,39 @@ function RoutePage() {
       <label className="flex min-h-11 items-center gap-3 rounded-sm border border-[#aaa394] px-3 text-sm font-bold"><input type="checkbox" checked={filters.showHistory} onChange={(event) => update({ showHistory: event.target.checked })} className="size-4 accent-[#ff5c35]" />Historical incidents</label>
     </section>
 
-    <div className="grid gap-5 xl:grid-cols-[.72fr_1.55fr_.73fr]">
+    <div className="grid items-start gap-5 xl:grid-cols-[.72fr_1.55fr_.73fr]">
       <Panel title={`${filteredCandidates.length} origin assignments`} eyebrow="Conditional static screening" className="max-h-[700px] overflow-y-auto">
         <div className="divide-y divide-[#d7d1c3]">{filteredCandidates.map((candidate) => <details key={candidate.registration} className="py-3 first:pt-0"><summary className="cursor-pointer list-none text-sm font-extrabold"><span className={candidate.assessment === 'STATIC BLOCK' ? 'text-[#c83a20]' : 'text-[#6a7d16]'}>{candidate.assessment}</span> / {candidate.registration} / {candidate.year} {candidate.bs_stage}</summary><p className="mt-3 text-sm">{candidate.model}</p><ul className="mt-2 space-y-1 text-xs leading-5 text-[#59635d]">{candidate.checks.map((check) => <li key={check}>{check}</li>)}</ul></details>)}</div>
         <h3 className="mt-6 border-t-2 border-[#17201c] pt-4 font-extrabold">Route evidence</h3>{data.precautions.map((item) => <article key={item.rule_id} className="mt-3"><StatusPill tone={item.status === 'BLOCKING' ? 'critical' : 'warning'}>{item.status}</StatusPill><p className="mt-2 text-sm font-extrabold">{item.title}</p><p className="mt-1 text-xs leading-5 text-[#59635d]">{item.why_now}</p></article>)}
       </Panel>
 
-      <section className="overflow-hidden rounded-sm border border-[#c9c2b3] bg-white">
-        <Map key={`${data.origin}-${data.destination}`} initialViewState={{ longitude: midpoint[0], latitude: midpoint[1], zoom: data.distance_km < 450 ? 6.1 : 5.1, pitch: 0 }} mapStyle={routeMapStyle} attributionControl={{ compact: true }} style={{ width: '100%', height: 700 }}>
+      <section className="self-start overflow-hidden rounded-sm border border-[#c9c2b3] bg-white">
+        <div className="relative h-[700px]">
+        <Map
+          key={`${data.origin}-${data.destination}`}
+          initialViewState={{ longitude: midpoint[0], latitude: midpoint[1], zoom: data.distance_km < 450 ? 6.1 : 5.1, pitch: 0 }}
+          mapStyle={routeMapStyle}
+          attributionControl={{ compact: true }}
+          style={{ width: '100%', height: '100%' }}
+          onLoad={(event) => {
+            const map = event.target
+            if (Number.isFinite(routeBounds.minLon)) map.fitBounds([[routeBounds.minLon, routeBounds.minLat], [routeBounds.maxLon, routeBounds.maxLat]], { padding: 60, duration: 0 })
+            requestAnimationFrame(() => syncRouteOverlay(map))
+          }}
+          onMoveEnd={(event) => syncRouteOverlay(event.target)}
+          onZoomEnd={(event) => syncRouteOverlay(event.target)}
+          onResize={(event) => syncRouteOverlay(event.target)}
+        >
           {data.hubs.map((hub) => <Marker key={hub.hub} longitude={hub.lon} latitude={hub.lat} anchor="center"><div title={`${hub.hub}: ${hub.vehicles} home assignments`} className="grid size-10 place-items-center rounded-full border-2 border-[#17201c] bg-[#c8ff3d] font-['DM_Mono'] text-[10px] font-bold shadow-md">{hub.vehicles}</div></Marker>)}
           {trucks.map((truck, index) => <Marker key={truck.registration} longitude={truck.lon + ((index % 5) - 2) * 0.035} latitude={truck.lat + (Math.floor(index / 5) - 0.5) * 0.028} anchor="bottom"><img src={koboyo.truck} alt={`${truck.registration}: home assignment, not live location`} width={24} height={24} loading="lazy" className="h-6 w-6 object-contain drop-shadow" /></Marker>)}
           {data.precautions.map((item) => <Marker key={item.rule_id} longitude={item.lon} latitude={item.lat} anchor="bottom"><img src={koboyo.control} alt={`${item.status}: ${item.title}`} width={40} height={40} loading="lazy" className="h-10 w-10 object-contain drop-shadow" /></Marker>)}
           {filters.showHistory ? data.incidents.map((incident) => <Marker key={incident.ticket_id} longitude={incident.lon} latitude={incident.lat} anchor="center"><div title={`Historical: ${incident.issue}`} className="size-4 rounded-full border-2 border-white bg-[#2e64f5] shadow-md" /></Marker>) : null}
         </Map>
+        {routeOverlay.path ? <svg aria-label={`${data.origin} to ${data.destination} road route`} role="img" viewBox={`0 0 ${routeOverlay.width} ${routeOverlay.height}`} preserveAspectRatio="none" className="pointer-events-none absolute inset-0 z-[2] size-full overflow-visible">
+          <path d={routeOverlay.path} fill="none" stroke="#fffaf0" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
+          <path d={routeOverlay.path} fill="none" stroke="#ff5c35" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg> : null}
+        </div>
         <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-[#d7d1c3] bg-[#f7f4ea] px-4 py-3 font-['DM_Mono'] text-[9px] uppercase tracking-[.06em] text-[#626b65]"><span>Orange / route</span><span>Koboyo warning / precaution</span><span>Blue / historical</span><span>Lime / hub</span><span>Koboyo truck / home assignment</span></div>
       </section>
 
