@@ -25,9 +25,8 @@ st.markdown("""
 :root{--ink:#17201c;--paper:#f2efe6;--lime:#c8ff3d;--signal:#ff5c35;--blue:#2e64f5;--line:#d7d1c3}
 .stApp{background:var(--paper);color:var(--ink);font-family:'Manrope',sans-serif}
 [data-testid="stSidebar"]{background:#17201c;border-right:1px solid #344039}[data-testid="stSidebar"] *{color:#f7f4ea!important}[data-testid="stSidebar"] button{border-color:#58645e!important}[data-testid="stSidebar"] button p{color:#17201c!important}[data-testid="stSidebar"] [data-testid="stImage"] img{filter:invert(1)}
-h1,h2,h3{font-family:'Manrope',sans-serif;letter-spacing:-.04em}h1{font-size:clamp(2.2rem,5vw,5.4rem)!important;line-height:.92!important;font-weight:800!important}
+h1,h2,h3{font-family:'Manrope',sans-serif;letter-spacing:-.04em}
 .eyebrow,.source,.stamp{font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:.72rem}
-.hero{border-top:2px solid var(--ink);border-bottom:1px solid var(--line);padding:1.2rem 0 1.5rem;margin-bottom:1.5rem}.hero p{font-size:clamp(1rem,1.4vw,1.22rem);max-width:780px;color:#4b554f}
 .live-dot{display:inline-block;width:9px;height:9px;background:var(--lime);border-radius:50%;box-shadow:0 0 0 5px #c8ff3d22;margin-right:8px}
 .metric-card{border-top:3px solid var(--ink);padding:12px 2px 14px}.metric-card .v{font-size:clamp(1.8rem,3vw,3rem);font-weight:800;letter-spacing:-.06em}.metric-card .k{font-family:'DM Mono',monospace;font-size:.72rem;color:#606963;text-transform:uppercase}
 .signal{border-left:5px solid var(--signal);background:#fffaf0;padding:15px 18px;margin:.6rem 0}.signal.warning{border-color:#e7a817}.signal.info{border-color:var(--blue)}.signal b{font-size:1rem}.signal p{margin:.35rem 0 0;color:#56605a}.signal .source{margin-top:.55rem;color:#7f877f}
@@ -39,7 +38,7 @@ h1,h2,h3{font-family:'Manrope',sans-serif;letter-spacing:-.04em}h1{font-size:cla
 div[data-testid="stMetric"]{background:transparent;border-top:3px solid var(--ink);padding-top:10px}.stButton>button,.stDownloadButton>button{border-radius:0;font-weight:700;min-height:44px;border:1px solid var(--ink)}.stButton>button[kind="primary"]{background:var(--ink);color:white}.stTextInput input,.stTextArea textarea,.stSelectbox>div>div{border-radius:0!important}
 [data-testid="stMetricValue"],[data-testid="stMetricLabel"]{color:var(--ink)!important}[data-testid="stMetricDelta"]{color:#59635d!important}
 [data-testid="stWidgetLabel"] p{color:var(--ink)!important}[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p{color:#f7f4ea!important}[data-testid="stTab"]{font-family:'DM Mono';text-transform:uppercase;letter-spacing:.04em}[data-testid="stTab"] p{color:#5c645f!important;opacity:1!important}[data-testid="stTab"][aria-selected="true"] p{color:var(--signal)!important}
-@media(max-width:700px){.hero{padding-top:.7rem}.answer{box-shadow:6px 6px 0 var(--lime)}[data-testid="stSidebar"]{min-width:260px}.orb-stage{min-height:360px}.orb{width:230px}}
+@media(max-width:700px){.answer{box-shadow:6px 6px 0 var(--lime)}[data-testid="stSidebar"]{min-width:260px}.orb-stage{min-height:360px}.orb{width:230px}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -75,8 +74,6 @@ with st.sidebar:
         db.clear(); m.rebuild().close(); st.rerun()
     st.download_button("Download audit JSONL", m.export_audit(conn), "meridian-audit.jsonl", "application/jsonl", width="stretch")
     st.caption("Driver phones, Aadhaar and licence numbers are excluded or redacted.")
-
-st.markdown("<div class='hero'><div class='eyebrow'>Active operational intelligence · 30 Aug 2026</div><h1>Ground truth,<br>ready for action.</h1><p>Files, spreadsheets, workers and agents meet in one reusable context layer. Meridian reasons across them, preserves the raw event, stages useful claims, surfaces conflicts and asks a human before changing canonical truth.</p></div>", unsafe_allow_html=True)
 
 tabs = st.tabs(["CONTROL ROOM", "ROUTE", "ASK", "INBOX", "LIVE", "APPROVALS", "AUDIT"])
 
