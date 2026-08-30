@@ -1,0 +1,7 @@
+recorded_at,vehicle_registration,route,product,temperature_c,door_state,sensor_id,source_quality
+2026-08-30T13:40:00+05:30,DL30AN8381,Delhi-Ludhiana,Orion Pharma vaccines,4.2,closed,SNS-TEMP-042,device_signed
+2026-08-30T13:50:00+05:30,DL30AN8381,Delhi-Ludhiana,Orion Pharma vaccines,4.5,closed,SNS-TEMP-042,device_signed
+2026-08-30T14:00:00+05:30,DL30AN8381,Delhi-Ludhiana,Orion Pharma vaccines,7.8,open,SNS-TEMP-042,device_signed
+2026-08-30T14:10:00+05:30,DL30AN8381,Delhi-Ludhiana,Orion Pharma vaccines,6.9,closed,SNS-TEMP-042,device_signed
+2026-08-30T14:20:00+05:30,DL30AN8381,Delhi-Ludhiana,Orion Pharma vaccines,5.1,closed,SNS-TEMP-042,device_signed
+

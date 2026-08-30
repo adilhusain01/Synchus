@@ -129,6 +129,16 @@ def route_options() -> dict:
     }
 
 
+@app.get("/api/map/config")
+def map_config() -> dict:
+    return {
+        "provider": "CARTO",
+        "api_base_url": os.getenv("CARTO_API_BASE_URL", "https://gcp-asia-northeast1.api.carto.com"),
+        "api_access_configured": bool(os.getenv("CARTO_API_KEY") or os.getenv("CARTO_ACCESS_TOKEN")),
+        "basemap": "Positron",
+    }
+
+
 @app.get("/api/route")
 def route(
     origin: str = Query(default="Delhi"),

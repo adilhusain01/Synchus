@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 
 import meridian as m
-from live_agent import execute_tool, tool_declarations
+from live_agent import VOICE_INTAKE_POLICY, execute_tool, tool_declarations
 
 try:
     from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -54,7 +54,7 @@ def create_app():
                 "Match Hindi, Hinglish, or English. Use tools before operational claims. Be interruptible. "
                 "Never call history or home assignment live state, and never call a vehicle dispatch-ready "
                 "when availability or service state is unknown. Stage new worker information with stage_observation; "
-                "canonical context always needs human approval."
+                "canonical context always needs human approval. " + VOICE_INTAKE_POLICY
             ),
         }
         try:

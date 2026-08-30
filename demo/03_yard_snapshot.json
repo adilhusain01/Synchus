@@ -1,0 +1,23 @@
+{
+  "record_type": "yard_inventory_snapshot",
+  "demo_data": true,
+  "hub": "Delhi",
+  "captured_at": "2026-08-30T14:15:00+05:30",
+  "captured_by": "Meena Sharma, yard supervisor",
+  "source": "manual gate walk and key register",
+  "expires_at": "2026-08-30T15:15:00+05:30",
+  "counts": {
+    "physically_present": 12,
+    "keys_available": 9,
+    "loading": 3,
+    "maintenance_hold": 2,
+    "unverified": 1
+  },
+  "vehicles_sampled": [
+    {"registration": "DL11SJ8690", "state": "keys_available", "bay": "A-04"},
+    {"registration": "DL64IB1058", "state": "maintenance_hold", "bay": "M-02"},
+    {"registration": "DL30AN8381", "state": "loading", "bay": "C-07"}
+  ],
+  "warning": "This is a point-in-time manual snapshot, not a live yard feed."
+}
+

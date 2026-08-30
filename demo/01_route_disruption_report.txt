@@ -1,0 +1,17 @@
+DEMO RECORD — SYNTHETIC DATA
+
+Reporter: Rakesh Kumar, line-haul driver
+Reported at: 2026-08-30 14:10 IST
+Observed at: 2026-08-30 14:02 IST
+Location: NH44 northbound, approximately 1 km before Murthal exit, Haryana
+Affected movement: Delhi to Chandigarh and Delhi to Ludhiana
+Vehicle: DL30AN8381
+Severity: High
+Expected duration: Until 2026-08-30 18:00 IST; local police estimate, not yet independently verified
+
+Observation:
+An overturned tractor trolley is blocking the left and centre lanes. Heavy vehicles are moving one at a time through the right lane. The queue was approximately 2 km when observed. Drivers should keep extra braking distance, avoid the service lane near the exit, and add at least 35 minutes until the obstruction is cleared.
+
+Source note:
+First-hand voice update transcribed and reviewed by the reporter. Treat the clearance time as provisional.
+

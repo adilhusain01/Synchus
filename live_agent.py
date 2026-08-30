@@ -17,6 +17,16 @@ INPUT_RATE = 16_000
 OUTPUT_RATE = 24_000
 CHUNK = 1_600
 
+VOICE_INTAKE_POLICY = """
+For questions, answer normally. Before staging any worker report, run a short natural interview.
+Collect: reporter name or role, report type, what happened, exact location or route, when it happened,
+severity, affected vehicle/client/hub when relevant, and how long it is expected to remain true.
+For vehicle, maintenance, breakdown, or safety reports, vehicle registration is mandatory.
+For route disruptions, expected end time is mandatory; "unknown" is acceptable only if the worker explicitly says so.
+Never infer a missing identifier from a route name. Read back a one-sentence summary and ask the worker to confirm.
+Call stage_observation only after explicit confirmation. Ask at most two missing details at a time, in the worker's language.
+""".strip()
+
 
 def tool_declarations() -> list[dict]:
     return [{"function_declarations": [
@@ -36,12 +46,32 @@ def tool_declarations() -> list[dict]:
             }, "required": ["origin", "destination", "client", "travel_on"]},
         },
         {
-            "name": "stage_observation", "description": "Log a worker observation and let the intake agent decide whether to stage it for human approval. Never writes canonical truth directly.",
+            "name": "stage_observation", "description": "Stage a complete, worker-confirmed observation for intake and human approval. Refuses incomplete reports and never writes canonical truth directly.",
             "parameters": {"type": "object", "properties": {
                 "text": {"type": "string"}, "reporter": {"type": "string"},
-            }, "required": ["text"]},
+                "event_type": {"type": "string", "enum": ["route_disruption", "vehicle_issue", "maintenance", "safety", "client_rule", "hub_update", "other"]},
+                "occurred_at": {"type": "string", "description": "Worker-supplied date/time or relative time such as now or 20 minutes ago."},
+                "location": {"type": "string", "description": "Exact hub, road point, route, or facility."},
+                "entity_ref": {"type": "string", "description": "Vehicle registration, client, hub, or other affected entity when relevant."},
+                "severity": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+                "valid_until": {"type": "string", "description": "Expected end/expiry, durable, or explicitly unknown."},
+                "confirmed_by_worker": {"type": "boolean", "description": "True only after the worker confirms the spoken summary."},
+            }, "required": ["text", "reporter", "event_type", "occurred_at", "location", "severity", "confirmed_by_worker"]},
         },
     ]}]
+
+
+def validate_observation(args: dict[str, Any]) -> list[str]:
+    missing = [field for field in ("text", "reporter", "event_type", "occurred_at", "location", "severity")
+               if not str(args.get(field, "")).strip()]
+    event_type = str(args.get("event_type", ""))
+    if event_type in {"vehicle_issue", "maintenance", "safety"} and not m.norm_reg(str(args.get("entity_ref", ""))):
+        missing.append("vehicle registration")
+    if event_type == "route_disruption" and not str(args.get("valid_until", "")).strip():
+        missing.append("expected end time or explicit unknown")
+    if args.get("confirmed_by_worker") is not True:
+        missing.append("worker confirmation of the final summary")
+    return missing
 
 
 def execute_tool(conn, name: str, args: dict[str, Any]) -> Any:
@@ -56,8 +86,20 @@ def execute_tool(conn, name: str, args: dict[str, Any]) -> Any:
         return m.route_intelligence(conn, args["origin"], args["destination"], args.get("client", "Internal"), args.get("travel_on", date.today().isoformat()))
     if name == "stage_observation":
         import agent
-
-        return agent.ingest_text(conn, str(args.get("text", "")), actor=str(args.get("reporter", "Live voice worker")), channel="live_voice", source_ref="live Gemini session")
+        missing = validate_observation(args)
+        if missing:
+            return {"status": "needs_clarification", "missing_fields": missing, "staged": False}
+        details = [
+            str(args["text"]).strip(),
+            f"Report type: {args['event_type']}", f"Occurred: {args['occurred_at']}",
+            f"Location: {args['location']}", f"Severity: {args['severity']}",
+        ]
+        if str(args.get("entity_ref", "")).strip():
+            details.append(f"Affected entity: {args['entity_ref']}")
+        if str(args.get("valid_until", "")).strip():
+            details.append(f"Valid until: {args['valid_until']}")
+        result = agent.ingest_text(conn, ". ".join(details), actor=str(args["reporter"]), channel="live_voice", source_ref="live Gemini session")
+        return {"status": "staged_for_review", "staged": True, **result}
     return {"error": f"Unknown tool: {name}"}
 
 
@@ -100,6 +142,7 @@ Use tools before operational claims. Distinguish fleet home assignment/history f
 Never say a vehicle is dispatch-ready when availability, current location, or service-due state is unknown.
 When a worker supplies new information, call stage_observation; explain whether it was logged or staged.
 Canonical context always requires human approval. Today is {date.today().isoformat()}.
+{VOICE_INTAKE_POLICY}
 """
     config = {
         "response_modalities": ["AUDIO"], "system_instruction": system, "tools": tool_declarations(),

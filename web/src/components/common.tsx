@@ -22,12 +22,14 @@ export function PageHeader({ icon, title, actions }: {
 }
 
 export function MetricGrid({ items }: { items: Array<{ label: string; value: number | string; note?: string }> }) {
+  const tones = ['bg-[#e8f0df]', 'bg-[#eee8f6]', 'bg-[#fde8dc]', 'bg-[#fff4bf]', 'bg-[#dfe7f4]']
   return (
-    <section className="grid grid-cols-2 gap-x-5 gap-y-4 xl:grid-cols-4">
-      {items.map((item) => (
-        <article key={item.label} className="border-t-[3px] border-[#17201c] pt-3">
-          <p className="text-[clamp(1.8rem,4vw,3.2rem)] font-extrabold leading-none tracking-[-.07em] text-[#17201c] tabular-nums">{typeof item.value === 'number' ? formatNumber(item.value) : item.value}</p>
-          <p className="mt-3 font-['DM_Mono'] text-[10px] uppercase tracking-[0.1em] text-[#657069]">{item.label}</p>
+    <section className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      {items.map((item, index) => (
+        <article key={item.label} className={cn('relative min-h-28 overflow-hidden rounded-xl border border-[#c9c2b3]/80 p-4 shadow-[0_7px_20px_rgba(39,50,44,.05)]', tones[index % tones.length])}>
+          <span className="absolute right-3 top-3 size-2 rounded-full bg-[#17201c]/70" aria-hidden="true" />
+          <p className="font-['DM_Mono'] text-[9px] uppercase tracking-[0.12em] text-[#59645d]">{item.label}</p>
+          <p className="mt-4 text-[clamp(1.65rem,3vw,2.35rem)] font-extrabold leading-none tracking-[-.065em] text-[#17201c] tabular-nums">{typeof item.value === 'number' ? formatNumber(item.value) : item.value}</p>
           {item.note ? <p className="mt-1 text-xs text-[#737a75]">{item.note}</p> : null}
         </article>
       ))}

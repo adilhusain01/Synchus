@@ -2,8 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 import Map, { Marker, Popup, type MapRef } from 'react-map-gl/maplibre'
-import type { Map as MapLibreMap } from 'maplibre-gl'
-import type { StyleSpecification } from 'maplibre-gl'
+import type { Map as MapLibreMap, StyleSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { get, post, type AskResult } from '@/lib/api'
 import { koboyo } from '@/lib/icons'
@@ -26,23 +25,20 @@ type RouteData = {
   origin_conflicts: Array<{ registration: string; field: string }>
 }
 
-function makeMapStyle(): StyleSpecification {
-  return {
-    version: 8,
-    sources: {
-      openStreetMap: {
-        type: 'raster',
-        tiles: [
-          'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-          'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-          'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-        ],
-        tileSize: 256,
-        attribution: '© OpenStreetMap contributors © CARTO',
-      },
+// Keep the operational map reliably demo-safe. CARTO credentials are retained by
+// the API server for future CARTO data layers; the visible road base uses OSM so
+// an account-level CARTO tile watermark never obscures route evidence.
+const CARTO_BASEMAP: StyleSpecification = {
+  version: 8,
+  sources: {
+    osm: {
+      type: 'raster',
+      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: '© OpenStreetMap contributors',
     },
-    layers: [{ id: 'open-street-map', type: 'raster', source: 'openStreetMap', minzoom: 0, maxzoom: 19 }],
-  }
+  },
+  layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
 }
 
 function projectRoute(map: MapLibreMap, path: number[][]) {
@@ -68,7 +64,6 @@ function RoutePage() {
   const ask = useMutation({ mutationFn: () => post<AskResult>('/api/ask', { question: `For ${filters.origin} to ${filters.destination} on ${filters.travelOn}, client ${filters.client}: ${question}` }) })
   const filteredCandidates = useMemo(() => route.data?.candidates.filter((item) => item.year >= filters.minimumYear && (filters.bsStage === 'All' || item.bs_stage === filters.bsStage)) || [], [route.data, filters.minimumYear, filters.bsStage])
   const trucks = useMemo(() => route.data?.trucks.filter((item) => item.home_hub === filters.origin && item.year >= filters.minimumYear && (filters.bsStage === 'All' || item.bs_stage === filters.bsStage)).slice(0, 36) || [], [route.data, filters])
-  const routeMapStyle = useMemo(() => makeMapStyle(), [])
   const routeBounds = useMemo(() => route.data?.path.reduce((bounds, point) => ({
     minLon: Math.min(bounds.minLon, point[0]), minLat: Math.min(bounds.minLat, point[1]),
     maxLon: Math.max(bounds.maxLon, point[0]), maxLat: Math.max(bounds.maxLat, point[1]),
@@ -117,7 +112,7 @@ function RoutePage() {
         <Map
           ref={mapRef}
           initialViewState={{ longitude: midpoint[0], latitude: midpoint[1], zoom: data.distance_km < 450 ? 6.1 : 5.1, pitch: 0 }}
-          mapStyle={routeMapStyle}
+          mapStyle={CARTO_BASEMAP}
           attributionControl={{ compact: true }}
           style={{ width: '100%', height: '100%' }}
           onLoad={(event) => {

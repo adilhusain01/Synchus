@@ -2,6 +2,7 @@ from pathlib import Path
 import hashlib
 
 import agent
+import live_agent
 import meridian as m
 
 
@@ -127,3 +128,29 @@ def test_capability_lab_promotes_and_rolls_back_without_losing_evidence(tmp_path
     assert definition["status"] == "disabled"
     assert record["status"] == "held"
     assert conn.execute("SELECT count(*) FROM audit_event WHERE object_id=?", (proposal_id,)).fetchone()[0] == 3
+
+
+def test_voice_reports_require_missing_details_and_worker_confirmation():
+    incomplete = live_agent.validate_observation({
+        "text": "Delhi Punjab route blocked hai",
+        "reporter": "driver",
+        "event_type": "route_disruption",
+        "occurred_at": "now",
+        "location": "Delhi to Punjab route",
+        "severity": "high",
+        "confirmed_by_worker": False,
+    })
+    assert "expected end time or explicit unknown" in incomplete
+    assert "worker confirmation of the final summary" in incomplete
+
+    complete = live_agent.validate_observation({
+        "text": "NH44 par Murthal exit ke paas northbound lane blocked hai",
+        "reporter": "Driver Rakesh",
+        "event_type": "route_disruption",
+        "occurred_at": "2026-08-30 14:10",
+        "location": "NH44, Murthal exit, northbound",
+        "severity": "high",
+        "valid_until": "unknown, reporter confirmed",
+        "confirmed_by_worker": True,
+    })
+    assert complete == []
