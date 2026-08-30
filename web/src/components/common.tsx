@@ -50,7 +50,9 @@ export function StatusPill({ children, tone = 'neutral' }: { children: ReactNode
 }
 
 export function LoadingBlock({ label = 'Loading context' }: { label?: string }) {
-  return <div role="status" aria-live="polite" className="grid min-h-48 place-items-center rounded-sm border border-dashed border-[#b8b0a1] bg-white/25 font-['DM_Mono'] text-xs uppercase tracking-[.12em] text-[#6c746e]">{label}…</div>
+  return <div role="status" aria-live="polite" className="grid min-h-48 place-items-center rounded-sm border border-dashed border-[#b8b0a1] bg-white/25">
+    <div className="grid justify-items-center gap-3 font-['DM_Mono'] text-xs uppercase tracking-[.12em] text-[#6c746e]"><span className="size-6 animate-spin rounded-full border-2 border-[#a6afa9] border-t-[#17201c]" aria-hidden="true" />{label}…</div>
+  </div>
 }
 
 export function ErrorBlock({ error }: { error: Error }) {

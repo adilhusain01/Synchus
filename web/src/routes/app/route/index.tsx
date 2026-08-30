@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import Map, { Marker } from 'react-map-gl/maplibre'
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
+import Map, { Marker, type MapRef } from 'react-map-gl/maplibre'
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import type { StyleSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -44,6 +44,12 @@ function makeMapStyle(): StyleSpecification {
   }
 }
 
+function projectRoute(map: MapLibreMap, path: number[][]) {
+  const points = path.filter((_, index) => index % 3 === 0 || index === path.length - 1).map(([lng, lat]) => map.project({ lng, lat }))
+  const canvas = map.getCanvas()
+  return { path: points.map((point, index) => `${index ? 'L' : 'M'}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' '), width: canvas.clientWidth, height: canvas.clientHeight }
+}
+
 export const Route = createFileRoute('/app/route/')({ component: RoutePage })
 
 function RoutePage() {
@@ -51,26 +57,34 @@ function RoutePage() {
   const update = useUiStore((state) => state.updateRoute)
   const [question, setQuestion] = useState('')
   const [routeOverlay, setRouteOverlay] = useState({ path: '', width: 1, height: 1 })
+  const mapRef = useRef<MapRef>(null)
   const options = useQuery({ queryKey: ['route-options'], queryFn: () => get<RouteOptions>('/api/route/options') })
   const params = new URLSearchParams({ origin: filters.origin, destination: filters.destination, client: filters.client, travel_on: filters.travelOn })
-  const route = useQuery({ queryKey: ['route', filters.origin, filters.destination, filters.client, filters.travelOn], queryFn: () => get<RouteData>(`/api/route?${params}`) })
+  const route = useQuery({ queryKey: ['route', filters.origin, filters.destination, filters.client, filters.travelOn], queryFn: () => get<RouteData>(`/api/route?${params}`), placeholderData: keepPreviousData })
   const ask = useMutation({ mutationFn: () => post<AskResult>('/api/ask', { question: `For ${filters.origin} to ${filters.destination} on ${filters.travelOn}, client ${filters.client}: ${question}` }) })
   const filteredCandidates = useMemo(() => route.data?.candidates.filter((item) => item.year >= filters.minimumYear && (filters.bsStage === 'All' || item.bs_stage === filters.bsStage)) || [], [route.data, filters.minimumYear, filters.bsStage])
   const trucks = useMemo(() => route.data?.trucks.filter((item) => item.home_hub === filters.origin && item.year >= filters.minimumYear && (filters.bsStage === 'All' || item.bs_stage === filters.bsStage)).slice(0, 36) || [], [route.data, filters])
   const routeMapStyle = useMemo(() => makeMapStyle(), [])
-  if (options.isLoading || route.isLoading) return <LoadingBlock label="Compiling route evidence" />
-  if (options.error) return <ErrorBlock error={options.error} />
-  if (route.error) return <ErrorBlock error={route.error} />
-  const data = route.data!
-  const midpoint = data.path[Math.floor(data.path.length / 2)] || [77.2, 28.6]
-  const routeBounds = data.path.reduce((bounds, point) => ({
+  const routeBounds = useMemo(() => route.data?.path.reduce((bounds, point) => ({
     minLon: Math.min(bounds.minLon, point[0]), minLat: Math.min(bounds.minLat, point[1]),
     maxLon: Math.max(bounds.maxLon, point[0]), maxLat: Math.max(bounds.maxLat, point[1]),
-  }), { minLon: Infinity, minLat: Infinity, maxLon: -Infinity, maxLat: -Infinity })
+  }), { minLon: Infinity, minLat: Infinity, maxLon: -Infinity, maxLat: -Infinity }), [route.data])
+
+  useEffect(() => {
+    const map = mapRef.current?.getMap()
+    if (!map || !route.data || !routeBounds || !Number.isFinite(routeBounds.minLon)) return
+    map.fitBounds([[routeBounds.minLon, routeBounds.minLat], [routeBounds.maxLon, routeBounds.maxLat]], { padding: 96, duration: 350 })
+    const frame = requestAnimationFrame(() => setRouteOverlay(projectRoute(map, route.data!.path)))
+    return () => cancelAnimationFrame(frame)
+  }, [route.data, routeBounds])
+
+  if (options.isLoading || route.isLoading) return <LoadingBlock label="Compiling route evidence" />
+  if (options.error) return <ErrorBlock error={options.error} />
+  if (route.error && !route.data) return <ErrorBlock error={route.error} />
+  const data = route.data!
+  const midpoint = data.path[Math.floor(data.path.length / 2)] || [77.2, 28.6]
   const syncRouteOverlay = (map: MapLibreMap) => {
-    const points = data.path.filter((_, index) => index % 3 === 0 || index === data.path.length - 1).map(([lng, lat]) => map.project({ lng, lat }))
-    const canvas = map.getCanvas()
-    setRouteOverlay({ path: points.map((point, index) => `${index ? 'L' : 'M'}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' '), width: canvas.clientWidth, height: canvas.clientHeight })
+    setRouteOverlay(projectRoute(map, data.path))
   }
 
   return <div className="space-y-6">
@@ -96,22 +110,21 @@ function RoutePage() {
       <section className="self-start overflow-hidden rounded-sm border border-[#c9c2b3] bg-white">
         <div className="relative h-[700px]">
         <Map
-          key={`${data.origin}-${data.destination}`}
+          ref={mapRef}
           initialViewState={{ longitude: midpoint[0], latitude: midpoint[1], zoom: data.distance_km < 450 ? 6.1 : 5.1, pitch: 0 }}
           mapStyle={routeMapStyle}
           attributionControl={{ compact: true }}
           style={{ width: '100%', height: '100%' }}
           onLoad={(event) => {
             const map = event.target
-            if (Number.isFinite(routeBounds.minLon)) map.fitBounds([[routeBounds.minLon, routeBounds.minLat], [routeBounds.maxLon, routeBounds.maxLat]], { padding: 60, duration: 0 })
+            if (routeBounds && Number.isFinite(routeBounds.minLon)) map.fitBounds([[routeBounds.minLon, routeBounds.minLat], [routeBounds.maxLon, routeBounds.maxLat]], { padding: 96, duration: 0 })
             requestAnimationFrame(() => syncRouteOverlay(map))
           }}
-          onMoveEnd={(event) => syncRouteOverlay(event.target)}
-          onZoomEnd={(event) => syncRouteOverlay(event.target)}
+          onMove={(event) => syncRouteOverlay(event.target)}
           onResize={(event) => syncRouteOverlay(event.target)}
         >
           {data.hubs.map((hub) => <Marker key={hub.hub} longitude={hub.lon} latitude={hub.lat} anchor="center"><div title={`${hub.hub}: ${hub.vehicles} home assignments`} className="grid size-10 place-items-center rounded-full border-2 border-[#17201c] bg-[#c8ff3d] font-['DM_Mono'] text-[10px] font-bold shadow-md">{hub.vehicles}</div></Marker>)}
-          {trucks.map((truck, index) => <Marker key={truck.registration} longitude={truck.lon + ((index % 5) - 2) * 0.035} latitude={truck.lat + (Math.floor(index / 5) - 0.5) * 0.028} anchor="bottom"><img src={koboyo.truck} alt={`${truck.registration}: home assignment, not live location`} width={24} height={24} loading="lazy" className="h-6 w-6 object-contain drop-shadow" /></Marker>)}
+          {trucks.map((truck, index) => <Marker key={truck.registration} longitude={truck.lon} latitude={truck.lat} anchor="center" offset={[((index % 5) - 2) * 26, (Math.floor(index / 5) - 0.5) * 34 - 28]} style={{ zIndex: '3' }}><img src={koboyo.truck} alt={`${truck.registration}: home assignment, not live location`} title={`${truck.registration} · ${truck.model} · home assignment`} width={26} height={26} className="h-[26px] w-[26px] object-contain drop-shadow" /></Marker>)}
           {data.precautions.map((item) => <Marker key={item.rule_id} longitude={item.lon} latitude={item.lat} anchor="bottom"><img src={koboyo.control} alt={`${item.status}: ${item.title}`} width={40} height={40} loading="lazy" className="h-10 w-10 object-contain drop-shadow" /></Marker>)}
           {filters.showHistory ? data.incidents.map((incident) => <Marker key={incident.ticket_id} longitude={incident.lon} latitude={incident.lat} anchor="center"><div title={`Historical: ${incident.issue}`} className="size-4 rounded-full border-2 border-white bg-[#2e64f5] shadow-md" /></Marker>) : null}
         </Map>
@@ -119,8 +132,10 @@ function RoutePage() {
           <path d={routeOverlay.path} fill="none" stroke="#fffaf0" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
           <path d={routeOverlay.path} fill="none" stroke="#ff5c35" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
         </svg> : null}
+        {route.isFetching ? <div role="status" aria-live="polite" className="pointer-events-none absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-[#aaa394] bg-[#fffaf0]/95 px-3 py-2 font-['DM_Mono'] text-[9px] uppercase tracking-[.08em] text-[#4d5651] shadow-md backdrop-blur"><span className="size-3.5 animate-spin rounded-full border-2 border-[#a6afa9] border-t-[#17201c]" aria-hidden="true" />Updating route</div> : null}
+        {route.isError && route.data ? <div role="status" className="pointer-events-none absolute right-3 top-3 z-20 rounded-full border border-[#d8a013]/50 bg-[#fff4bf]/95 px-3 py-2 font-['DM_Mono'] text-[9px] uppercase tracking-[.08em] text-[#72550c] shadow-md backdrop-blur">Update failed · showing previous route</div> : null}
         </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-[#d7d1c3] bg-[#f7f4ea] px-4 py-3 font-['DM_Mono'] text-[9px] uppercase tracking-[.06em] text-[#626b65]"><span>Orange / route</span><span>Koboyo warning / precaution</span><span>Blue / historical</span><span>Lime / hub</span><span>Koboyo truck / home assignment</span></div>
+        <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-[#d7d1c3] bg-[#f7f4ea] px-4 py-3 font-['DM_Mono'] text-[9px] uppercase tracking-[.06em] text-[#626b65]"><span>Orange / route</span><span>Koboyo warning / precaution</span><span>Blue / historical</span><span>Lime / hub</span><span>{trucks.length} Koboyo trucks / filtered home assignments</span></div>
       </section>
 
       <div className="space-y-4">
