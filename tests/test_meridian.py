@@ -1,6 +1,7 @@
 from pathlib import Path
 import hashlib
 
+import agent
 import meridian as m
 
 
@@ -32,3 +33,33 @@ def test_pipeline_is_byte_stable_and_exactly_once(tmp_path: Path, monkeypatch):
     assert first == second == {"work_orders": 30, "pending": 30, "sent": 0, "quarantine": 2, "audit_events": 92}
     assert hashes_1 == hashes_2
     assert len((tmp_path / "outputs" / "work_orders.jsonl").read_text().splitlines()) == 30
+
+
+def test_route_intelligence_is_explicit_about_unknown_live_state(tmp_path: Path, monkeypatch):
+    conn = m.rebuild(tmp_path / "route.db")
+    monkeypatch.setattr(m, "road_route", lambda origin, destination: {
+        "path": [[77.209, 28.6139], [76.8, 29.6], [75.8573, 30.901]],
+        "distance_km": 310.0, "duration_hr": 6.0, "geometry_source": "test road route", "is_approximate": False,
+    })
+    result = m.route_intelligence(conn, "Delhi", "Ludhiana", "Vertex Retail", "2026-12-10")
+    ids = {rule["rule_id"] for rule in result["precautions"]}
+    assert {"RULE-DELHI-WINTER", "RULE-VERTEX-GATE", "RULE-SERVICE"} <= ids
+    assert "parked count now" in result["unknowns"]
+    assert all(candidate["assessment"] != "PASS" for candidate in result["candidates"])
+    assert len(m.truck_rows(conn)) == 100
+
+
+def test_agent_stages_useful_updates_and_deduplicates_uploads(tmp_path: Path, monkeypatch):
+    conn = m.rebuild(tmp_path / "agent.db")
+    monkeypatch.setattr(agent, "provider_status", lambda: {"provider": "Rules", "model": "test", "mode": "fallback"})
+    data = b"Kal Lucknow route par bridge diversion hai. 20 minute extra rakho."
+    first = agent.ingest_upload(conn, "worker-note.txt", data, "text/plain", "Test worker")
+    second = agent.ingest_upload(conn, "worker-note.txt", data, "text/plain", "Test worker")
+    assert first["proposal_ids"]
+    assert second["duplicate"] is True
+    event = conn.execute("SELECT disposition FROM context_event").fetchone()
+    assert event["disposition"] == "stage_context"
+    proposal = conn.execute("SELECT status,reasoning,source_ref FROM proposal").fetchone()
+    assert proposal["status"] == "pending"
+    assert proposal["reasoning"]
+    assert proposal["source_ref"].startswith("upload:worker-note.txt:")

@@ -1,8 +1,11 @@
+.env
+.env.*
+!.env.example
 .venv/
-.pytest_cache/
 __pycache__/
+.pytest_cache/
 *.py[cod]
-data/*.db
-data/*.db-shm
-data/*.db-wal
+data/*.db*
+inbox/*
+!inbox/.gitkeep
 .DS_Store

@@ -4,19 +4,23 @@ import csv
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import sqlite3
 import urllib.request
 import uuid
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import date, datetime, timedelta
+from functools import lru_cache
 from pathlib import Path
 from typing import Iterable
 
 from openpyxl import load_workbook
+from dotenv import load_dotenv
 
 ROOT = Path(__file__).parent
+load_dotenv(ROOT / ".env")
 BUNDLE = ROOT / "candidate_bundle"
 DB_PATH = ROOT / "data" / "meridian.db"
 OUTPUTS = ROOT / "outputs"
@@ -32,6 +36,16 @@ HUBS = {
     "Kanpur": (26.4499, 80.3319),
     "Lucknow": (26.8467, 80.9462),
     "Rudrapur": (28.9875, 79.4141),
+}
+
+# Named places are evidence-backed demo anchors, not geofences or live telemetry.
+PLACES = {
+    **HUBS,
+    "Faridabad": (28.4089, 77.3178),
+    "Noida": (28.5355, 77.3910),
+    "Nainital": (29.3919, 79.4542),
+    "Patna": (25.5941, 85.1376),
+    "Varanasi": (25.3176, 82.9739),
 }
 
 RULES = [
@@ -123,6 +137,22 @@ def _schema(conn: sqlite3.Connection) -> None:
           language TEXT NOT NULL, entity_ref TEXT, location TEXT, valid_until TEXT,
           status TEXT NOT NULL, source_ref TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS agent_run (
+          id TEXT PRIMARY KEY, started_at TEXT NOT NULL, finished_at TEXT,
+          provider TEXT NOT NULL, task TEXT NOT NULL, source_ref TEXT,
+          status TEXT NOT NULL, trace_json TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS source_upload (
+          fingerprint TEXT PRIMARY KEY, name TEXT NOT NULL, media_type TEXT,
+          redacted_text TEXT NOT NULL, status TEXT NOT NULL,
+          processed_at TEXT NOT NULL, agent_run_id TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS context_event (
+          id TEXT PRIMARY KEY, at TEXT NOT NULL, channel TEXT NOT NULL,
+          actor_ref TEXT NOT NULL, event_type TEXT NOT NULL, redacted_text TEXT NOT NULL,
+          disposition TEXT NOT NULL, reasoning TEXT NOT NULL, source_ref TEXT NOT NULL,
+          agent_run_id TEXT NOT NULL
+        );
         CREATE TABLE IF NOT EXISTS audit_event (
           id TEXT PRIMARY KEY, at TEXT NOT NULL, actor TEXT NOT NULL,
           action TEXT NOT NULL, object_type TEXT NOT NULL, object_id TEXT NOT NULL,
@@ -136,6 +166,17 @@ def _schema(conn: sqlite3.Connection) -> None:
         );
         """
     )
+    # Existing demo databases migrate in place; rebuild is not required.
+    existing = {r[1] for r in conn.execute("PRAGMA table_info(proposal)")}
+    for name, declaration in {
+        "confidence": "REAL NOT NULL DEFAULT 0.5",
+        "reasoning": "TEXT NOT NULL DEFAULT ''",
+        "connections_json": "TEXT NOT NULL DEFAULT '[]'",
+        "agent_name": "TEXT NOT NULL DEFAULT 'rules-fallback'",
+        "risk": "TEXT NOT NULL DEFAULT 'medium'",
+    }.items():
+        if name not in existing:
+            conn.execute(f"ALTER TABLE proposal ADD COLUMN {name} {declaration}")
 
 
 def _source(conn: sqlite3.Connection, path: Path, kind: str) -> str:
@@ -322,6 +363,147 @@ def hub_rows(conn: sqlite3.Connection) -> list[dict]:
     return rows
 
 
+def truck_rows(conn: sqlite3.Connection) -> list[dict]:
+    """One visible truck glyph per canonical home assignment; never a live position."""
+    rows: list[dict] = []
+    for vehicle in conn.execute("SELECT registration,model,year,bs_stage,home_hub,status FROM vehicle ORDER BY home_hub,registration"):
+        if vehicle["home_hub"] not in HUBS:
+            continue
+        lat, lon = HUBS[vehicle["home_hub"]]
+        digest = int(hashlib.sha1(vehicle["registration"].encode()).hexdigest()[:8], 16)
+        angle = (digest % 360) * math.pi / 180
+        radius = .025 + ((digest // 360) % 6) * .012
+        rows.append({
+            **dict(vehicle), "lat": lat + math.sin(angle) * radius,
+            "lon": lon + math.cos(angle) * radius, "glyph": "🚚",
+            "evidence": "fleet-master home assignment; not parked/live telemetry",
+        })
+    return rows
+
+
+@lru_cache(maxsize=48)
+def road_route(origin: str, destination: str) -> dict:
+    """Return OSRM road geometry, with an explicit approximate fallback."""
+    if origin not in PLACES or destination not in PLACES:
+        raise ValueError("Unknown route endpoint")
+    a_lat, a_lon = PLACES[origin]
+    b_lat, b_lon = PLACES[destination]
+    url = (
+        "https://router.project-osrm.org/route/v1/driving/"
+        f"{a_lon},{a_lat};{b_lon},{b_lat}?overview=full&geometries=geojson"
+    )
+    req = urllib.request.Request(url, headers={"User-Agent": "Meridian-Hackathon/0.2 (route-intelligence-demo)"})
+    try:
+        with urllib.request.urlopen(req, timeout=7) as response:
+            route = json.loads(response.read())["routes"][0]
+        return {
+            "path": route["geometry"]["coordinates"],
+            "distance_km": round(route["distance"] / 1000, 1),
+            "duration_hr": round(route["duration"] / 3600, 1),
+            "geometry_source": "OSRM road route",
+            "is_approximate": False,
+        }
+    except (OSError, KeyError, IndexError, json.JSONDecodeError):
+        # A curved interpolation keeps the UI useful offline without claiming a road route.
+        path = []
+        for i in range(21):
+            t = i / 20
+            bend = math.sin(math.pi * t) * .18
+            path.append([a_lon + (b_lon - a_lon) * t + bend, a_lat + (b_lat - a_lat) * t])
+        straight_km = 111 * math.sqrt((b_lat - a_lat) ** 2 + ((b_lon - a_lon) * math.cos(math.radians((a_lat + b_lat) / 2))) ** 2)
+        return {
+            "path": path, "distance_km": round(straight_km, 1), "duration_hr": None,
+            "geometry_source": "approximate endpoint connection (OSRM unavailable)", "is_approximate": True,
+        }
+
+
+def _point_on_path(path: list[list[float]], fraction: float) -> list[float]:
+    if not path:
+        return [0, 0]
+    idx = min(len(path) - 1, max(0, round(fraction * (len(path) - 1))))
+    return path[idx]
+
+
+def route_intelligence(conn: sqlite3.Connection, origin: str, destination: str, client: str, travel_on: date | str) -> dict:
+    """Compile evidence, rules, historical incidents and bounded fleet checks for a route."""
+    when = date.fromisoformat(travel_on) if isinstance(travel_on, str) else travel_on
+    route = road_route(origin, destination)
+    cities = {origin, destination}
+    lower_client = client.lower()
+    precautions: list[dict] = []
+
+    def add(rule_id: str, status: str, why: str) -> None:
+        row = conn.execute("SELECT * FROM rule WHERE rule_id=?", (rule_id,)).fetchone()
+        if row:
+            precautions.append({**dict(row), "status": status, "why_now": why})
+
+    if when.month in (10, 11, 12, 1, 2) and cities & {"Delhi", "Gurgaon", "Faridabad", "Noida"}:
+        add("RULE-DELHI-WINTER", "BLOCKING", "Selected date is inside the Delhi-NCR winter window.")
+    if when.month in (11, 12, 1, 2) and cities & {"Rudrapur", "Nainital"}:
+        add("RULE-HILLS-WINTER", "BLOCKING", "Selected route/date touches the winter hill corridor.")
+    if "shakti" in lower_client:
+        add("RULE-SHAKTI-SLA", "PLAN", "Client selected: Shakti Cement.")
+    if "vertex" in lower_client and "Ludhiana" in cities:
+        add("RULE-VERTEX-GATE", "PLAN", "Vertex delivery touches Ludhiana.")
+    if "apex" in lower_client:
+        add("RULE-APEX-ROTATE", "CHECK", "Apex history must be checked before assignment.")
+    if "orion" in lower_client:
+        add("RULE-ORION", "BLOCKING", "Orion load constraints apply.")
+    if when.month in (7, 8, 9) and (destination in {"Patna", "Varanasi"} or origin in {"Patna", "Varanasi"}):
+        add("RULE-MONSOON", "PLAN", "Selected route/date is in the eastern monsoon window.")
+    add("RULE-SERVICE", "UNKNOWN", "Current service-due state is absent, so no vehicle can be marked fully eligible.")
+
+    incidents: list[dict] = []
+    for row in conn.execute(
+        "SELECT ticket_id,km_from_origin,issue,severity,status,source_ref FROM ticket WHERE valid=1 AND origin_hub=? AND destination=? ORDER BY created_at DESC",
+        (origin, destination),
+    ):
+        fraction = min(.96, max(.04, (row["km_from_origin"] or 0) / max(route["distance_km"], 1)))
+        lon, lat = _point_on_path(route["path"], fraction)
+        incidents.append({**dict(row), "lat": lat, "lon": lon, "position_basis": "historical km-from-origin projected onto selected route"})
+
+    candidates: list[dict] = []
+    has_delhi = any(p["rule_id"] == "RULE-DELHI-WINTER" for p in precautions)
+    has_hills = any(p["rule_id"] == "RULE-HILLS-WINTER" for p in precautions)
+    has_orion = "orion" in lower_client
+    for vehicle in conn.execute("SELECT * FROM vehicle WHERE home_hub=? ORDER BY registration", (origin,)):
+        checks, blocked = [], False
+        if has_delhi:
+            ok = vehicle["bs_stage"] == "BS6"
+            checks.append(f"Delhi winter: {'PASS' if ok else 'FAIL'} ({vehicle['bs_stage']})")
+            blocked |= not ok
+        if has_hills:
+            ok = (vehicle["engine_heater"] or "").strip().lower() in {"yes", "true", "1", "y"}
+            checks.append(f"Engine heater: {'PASS' if ok else 'FAIL/UNKNOWN'}")
+            blocked |= not ok
+            cutoff = (when - timedelta(days=30)).isoformat()
+            recent_brakes = conn.execute("SELECT count(*) FROM maintenance WHERE vehicle_reg=? AND is_brake_work=1 AND date BETWEEN ? AND ?", (vehicle["registration"], cutoff, when.isoformat())).fetchone()[0]
+            checks.append(f"Brake work prior 30d: {'FAIL' if recent_brakes else 'no recorded event'}")
+            blocked |= bool(recent_brakes)
+        if has_orion:
+            conflicts = conn.execute("SELECT 1 FROM vehicle_conflict WHERE registration=? AND field='year'", (vehicle["registration"],)).fetchone()
+            ok = vehicle["year"] >= 2020 and not conflicts
+            checks.append(f"Orion 2020+: {'PASS' if ok else 'FAIL/CONFLICT'} ({vehicle['year']})")
+            blocked |= not ok
+        checks += ["Current availability: UNKNOWN", "Service due: UNKNOWN"]
+        candidates.append({
+            "registration": vehicle["registration"], "model": vehicle["model"], "year": vehicle["year"],
+            "bs_stage": vehicle["bs_stage"], "assessment": "STATIC BLOCK" if blocked else "CONDITIONAL",
+            "checks": checks, "note": "Never a dispatch PASS until live availability and service state are connected.",
+        })
+
+    midpoint = _point_on_path(route["path"], .5)
+    for i, item in enumerate(precautions):
+        point = _point_on_path(route["path"], min(.88, .15 + i * .11))
+        item.update({"lon": point[0], "lat": point[1]})
+    return {
+        **route, "origin": origin, "destination": destination, "client": client, "travel_on": when.isoformat(),
+        "precautions": precautions, "incidents": incidents, "candidates": candidates,
+        "midpoint": {"lon": midpoint[0], "lat": midpoint[1]},
+        "unknowns": ["current vehicle positions", "parked count now", "live availability", "verified service-due state", "live road/weather conditions"],
+    }
+
+
 def search(conn: sqlite3.Connection, question: str, limit: int = 6) -> list[dict]:
     tokens = re.findall(r"[A-Za-z0-9]+", question)
     if not tokens:
@@ -406,13 +588,26 @@ def classify(text: str) -> str:
     return "ground observation"
 
 
-def propose(conn: sqlite3.Connection, reporter: str, transcript: str, location: str = "", valid_until: str = "", entity_ref: str = "") -> str:
+def propose(
+    conn: sqlite3.Connection, reporter: str, transcript: str, location: str = "", valid_until: str = "",
+    entity_ref: str = "", *, kind: str | None = None, confidence: float = .5, reasoning: str = "",
+    connections: list[str] | None = None, agent_name: str = "rules-fallback", risk: str = "medium",
+    source_ref: str = "worker voice/text",
+) -> str:
     pid = "PROP-" + uuid.uuid4().hex[:10].upper()
     clean = redact(transcript.strip())
-    conn.execute("INSERT INTO proposal VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                 (pid, datetime.now().isoformat(timespec="seconds"), reporter.strip() or "Anonymous worker", clean, clean,
-                  classify(clean), detect_language(clean), norm_reg(entity_ref) or None, location or None, valid_until or None, "pending", "worker voice/text"))
-    _audit(conn, reporter or "Anonymous worker", "proposal.created", "proposal", pid, f"{classify(clean)} awaiting approval")
+    proposal_kind = kind or classify(clean)
+    conn.execute(
+        """INSERT INTO proposal(
+          id,created_at,reporter,transcript,redacted_text,kind,language,entity_ref,location,valid_until,
+          status,source_ref,confidence,reasoning,connections_json,agent_name,risk
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+        (pid, datetime.now().isoformat(timespec="seconds"), reporter.strip() or "Anonymous worker", clean, clean,
+         proposal_kind, detect_language(clean), norm_reg(entity_ref) or None, location or None, valid_until or None,
+         "pending", source_ref, max(0, min(1, float(confidence))), reasoning.strip(),
+         json.dumps(connections or [], ensure_ascii=False), agent_name, risk),
+    )
+    _audit(conn, agent_name, "proposal.created", "proposal", pid, f"{proposal_kind} staged from {source_ref}; awaiting human approval")
     conn.commit()
     return pid
 
