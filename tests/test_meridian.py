@@ -46,6 +46,11 @@ def test_route_intelligence_is_explicit_about_unknown_live_state(tmp_path: Path,
     assert {"RULE-DELHI-WINTER", "RULE-VERTEX-GATE", "RULE-SERVICE"} <= ids
     assert "parked count now" in result["unknowns"]
     assert all(candidate["assessment"] != "PASS" for candidate in result["candidates"])
+    assert {group["label"] for group in result["uncertainty_groups"]} == {
+        "Live feeds not connected", "Required field absent", "Historical, not current",
+    }
+    assert result["origin_conflicts"] == []
+    assert any(rule["status"] == "DATA GAP" for rule in result["precautions"])
     assert len(m.truck_rows(conn)) == 100
 
 
@@ -63,3 +68,28 @@ def test_agent_stages_useful_updates_and_deduplicates_uploads(tmp_path: Path, mo
     assert proposal["status"] == "pending"
     assert proposal["reasoning"]
     assert proposal["source_ref"].startswith("upload:worker-note.txt:")
+
+
+def test_agent_degrades_safely_when_hosted_model_is_unavailable(tmp_path: Path, monkeypatch):
+    conn = m.rebuild(tmp_path / "degraded.db")
+    hosted = {"provider": "Gemini", "model": "retired-model", "mode": "model"}
+    monkeypatch.setattr(agent, "provider_status", lambda: hosted)
+    monkeypatch.setattr(agent, "_model", lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("provider unavailable")))
+
+    answer = agent.ask(conn, "Breakdown origin se 40 km hai—replacement kahan se aaye?")
+    assert answer["provider"]["provider"] == "Rules"
+    assert answer["trace"] == ["retrieve_context", "model_unavailable", "rules_fallback"]
+    assert "origin hub" in answer["headline"].lower()
+
+    items, provider = agent.analyze_update("Kal Lucknow route par bridge diversion hai", "test-note")
+    assert provider["provider"] == "Rules"
+    assert items[0]["disposition"] == "stage_context"
+
+
+def test_current_gemini_default(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("MERIDIAN_MODEL", raising=False)
+    assert agent.provider_status()["model"] == "gemini-3.6-flash"

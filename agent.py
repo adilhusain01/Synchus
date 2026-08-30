@@ -27,7 +27,7 @@ MAX_TEXT = 80_000
 
 def provider_status() -> dict[str, str]:
     if os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"):
-        return {"provider": "Gemini", "model": os.getenv("MERIDIAN_MODEL", "gemini-2.5-flash"), "mode": "model"}
+        return {"provider": "Gemini", "model": os.getenv("MERIDIAN_MODEL", "gemini-3.6-flash"), "mode": "model"}
     if os.getenv("GROQ_API_KEY"):
         return {"provider": "Groq", "model": os.getenv("MERIDIAN_MODEL", "openai/gpt-oss-20b"), "mode": "model"}
     if os.getenv("OPENAI_API_KEY"):
@@ -97,7 +97,9 @@ def _model(prompt: str, *, json_mode: bool = True) -> str:
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
         req = urllib.request.Request(endpoint, data=json.dumps(payload).encode(), method="POST", headers={
-            "Authorization": f"Bearer {key}", "Content-Type": "application/json",
+            "Authorization": f"Bearer {key}",
+            "Content-Type": "application/json",
+            "User-Agent": "Meridian-Hackathon/0.2",
         })
         with urllib.request.urlopen(req, timeout=60) as response:
             return json.loads(response.read())["choices"][0]["message"]["content"]
@@ -108,18 +110,23 @@ def transcribe_audio(data: bytes, mime_type: str = "audio/ogg") -> str:
     """Transcribe a submitted voice note; this is distinct from the live speech-to-speech path."""
     status = provider_status()
     if status["provider"] == "Gemini":
-        from google import genai
-        from google.genai import types
+        try:
+            from google import genai
+            from google.genai import types
 
-        client = genai.Client(api_key=os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"))
-        response = client.models.generate_content(
-            model=status["model"],
-            contents=[
-                "Transcribe this worker voice note exactly. Preserve Hindi, Hinglish or English. Return only the transcript.",
-                types.Part.from_bytes(data=data, mime_type=mime_type),
-            ],
-        )
-        return (response.text or "").strip()
+            client = genai.Client(api_key=os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"))
+            response = client.models.generate_content(
+                model=status["model"],
+                contents=[
+                    "Transcribe this worker voice note exactly. Preserve Hindi, Hinglish or English. Return only the transcript.",
+                    types.Part.from_bytes(data=data, mime_type=mime_type),
+                ],
+            )
+            return (response.text or "").strip()
+        except Exception:
+            if os.getenv("SARVAM_API_KEY"):
+                return m.transcribe_sarvam(data, mime_type)
+            raise RuntimeError("Gemini transcription is unavailable and no Sarvam fallback is configured") from None
     if os.getenv("SARVAM_API_KEY"):
         return m.transcribe_sarvam(data, mime_type)
     raise RuntimeError("Voice-note transcription needs GEMINI_API_KEY or SARVAM_API_KEY")
@@ -168,9 +175,13 @@ DATA START
 {text[:MAX_TEXT]}
 DATA END
 """
-    parsed = _extract_json(_model(prompt))
-    items = parsed.get("items", parsed if isinstance(parsed, list) else [])
-    return items[:8], status
+    try:
+        parsed = _extract_json(_model(prompt))
+        items = parsed.get("items", parsed if isinstance(parsed, list) else [])
+        return items[:8], status
+    except Exception:
+        fallback = {"provider": "Rules", "model": "auditable fallback", "mode": "fallback"}
+        return _fallback_analysis(text, source_ref), fallback
 
 
 def corroborate(conn: sqlite3.Connection, statement: str, entity_ref: str = "") -> dict:
@@ -295,10 +306,22 @@ Return JSON with headline, detail, citations (source_ref strings), unknowns (str
 QUESTION: {question}
 EVIDENCE: {json.dumps(evidence, ensure_ascii=False, default=str)[:100_000]}
 """
-    parsed = _extract_json(_model(prompt))
-    return {
-        "headline": parsed.get("headline", "No grounded answer produced."), "detail": parsed.get("detail", ""),
-        "citations": list(dict.fromkeys(parsed.get("citations", []))), "unknowns": parsed.get("unknowns", []),
-        "extras": parsed.get("extras", []), "language": m.detect_language(question), "provider": status,
-        "trace": ["retrieve_context", "reconcile_conflicts", "model_synthesis"],
-    }
+    try:
+        parsed = _extract_json(_model(prompt))
+        return {
+            "headline": parsed.get("headline", "No grounded answer produced."), "detail": parsed.get("detail", ""),
+            "citations": list(dict.fromkeys(parsed.get("citations", []))), "unknowns": parsed.get("unknowns", []),
+            "extras": parsed.get("extras", []), "language": m.detect_language(question), "provider": status,
+            "trace": ["retrieve_context", "reconcile_conflicts", "model_synthesis"],
+        }
+    except Exception:
+        result = m.answer(conn, question)
+        fallback = {"provider": "Rules", "model": "auditable fallback", "mode": "fallback"}
+        extras = [*result.get("extras", []), "Hosted model unavailable; this answer used Meridian's deterministic rules fallback."]
+        return {
+            **result,
+            "extras": extras,
+            "language": m.detect_language(question),
+            "provider": fallback,
+            "trace": ["retrieve_context", "model_unavailable", "rules_fallback"],
+        }

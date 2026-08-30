@@ -469,7 +469,7 @@ def route_intelligence(conn: sqlite3.Connection, origin: str, destination: str, 
         add("RULE-ORION", "BLOCKING", "Orion load constraints apply.")
     if when.month in (7, 8, 9) and (destination in {"Patna", "Varanasi"} or origin in {"Patna", "Varanasi"}):
         add("RULE-MONSOON", "PLAN", "Selected route/date is in the eastern monsoon window.")
-    add("RULE-SERVICE", "UNKNOWN", "Current service-due state is absent, so no vehicle can be marked fully eligible.")
+    add("RULE-SERVICE", "DATA GAP", "Current service-due state is absent, so no vehicle can be marked fully eligible.")
 
     incidents: list[dict] = []
     for row in conn.execute(
@@ -486,6 +486,10 @@ def route_intelligence(conn: sqlite3.Connection, origin: str, destination: str, 
     has_orion = "orion" in lower_client
     for vehicle in conn.execute("SELECT * FROM vehicle WHERE home_hub=? ORDER BY registration", (origin,)):
         checks, blocked = [], False
+        conflict_fields = [row["field"] for row in conn.execute("SELECT field FROM vehicle_conflict WHERE registration=?", (vehicle["registration"],))]
+        if conflict_fields:
+            checks.append("Conflicting canonical fields: " + ", ".join(conflict_fields))
+            blocked = True
         if has_delhi:
             ok = vehicle["bs_stage"] == "BS6"
             checks.append(f"Delhi winter: {'PASS' if ok else 'FAIL'} ({vehicle['bs_stage']})")
@@ -503,7 +507,7 @@ def route_intelligence(conn: sqlite3.Connection, origin: str, destination: str, 
             ok = vehicle["year"] >= 2020 and not conflicts
             checks.append(f"Orion 2020+: {'PASS' if ok else 'FAIL/CONFLICT'} ({vehicle['year']})")
             blocked |= not ok
-        checks += ["Current availability: UNKNOWN", "Service due: UNKNOWN"]
+        checks += ["Current availability: LIVE FEED MISSING", "Service due: FIELD ABSENT"]
         candidates.append({
             "registration": vehicle["registration"], "model": vehicle["model"], "year": vehicle["year"],
             "bs_stage": vehicle["bs_stage"], "assessment": "STATIC BLOCK" if blocked else "CONDITIONAL",
@@ -517,11 +521,35 @@ def route_intelligence(conn: sqlite3.Connection, origin: str, destination: str, 
             "lon": point[0], "lat": point[1],
             "icon": {"url": _sized_svg_data_url(KOBOYO_WARNING_ICON, 185, 174), "width": 185, "height": 174, "anchorY": 174},
         })
+    trip_span = conn.execute("SELECT substr(min(created_at),1,10),substr(max(created_at),1,10) FROM trip").fetchone()
+    maintenance_count = conn.execute("SELECT count(*) FROM maintenance").fetchone()[0]
+    origin_conflicts = [dict(row) for row in conn.execute(
+        "SELECT vc.registration,vc.field,vc.source_ref FROM vehicle_conflict vc JOIN vehicle v ON v.registration=vc.registration WHERE v.home_hub=? ORDER BY vc.registration",
+        (origin,),
+    )]
     return {
         **route, "origin": origin, "destination": destination, "client": client, "travel_on": when.isoformat(),
         "precautions": precautions, "incidents": incidents, "candidates": candidates,
         "midpoint": {"lon": midpoint[0], "lat": midpoint[1]},
         "unknowns": ["current vehicle positions", "parked count now", "live availability", "verified service-due state", "live road/weather conditions"],
+        "uncertainty_groups": [
+            {
+                "label": "Live feeds not connected",
+                "items": ["current vehicle positions", "parked count now", "dispatch availability", "live road and weather"],
+                "effect": "Final dispatch state cannot be claimed.",
+            },
+            {
+                "label": "Required field absent",
+                "items": ["verified service-due date/state"],
+                "effect": f"{maintenance_count} maintenance events exist, but none supplies a service-due field.",
+            },
+            {
+                "label": "Historical, not current",
+                "items": [f"trip history covers {trip_span[0]} to {trip_span[1]}"],
+                "effect": "Useful for patterns and precedent, not live conditions.",
+            },
+        ],
+        "origin_conflicts": origin_conflicts,
     }
 
 

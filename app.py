@@ -58,6 +58,10 @@ def icon_heading(icon: str, title: str, caption: str | None = None, *, width: in
                 st.caption(caption)
 
 
+def load_ask_example(question: str) -> None:
+    st.session_state["ask_question"] = question
+
+
 conn = db()
 agent.scan_inbox(conn)
 provider = agent.provider_status()
@@ -79,17 +83,50 @@ tabs = st.tabs(["CONTROL ROOM", "ROUTE", "ASK", "INBOX", "LIVE", "APPROVALS", "A
 
 with tabs[0]:
     icon_heading(KOBOYO_WARNING, "Control room", "Exceptions first: bad data, operational conflicts and rules that can stop work.")
-    s = m.stats(conn); pipeline = m.run_pipeline(conn)
-    cols = st.columns(5)
-    for col, (value, label) in zip(cols, [(s["vehicles"], "canonical vehicles"), (s["trips"], "historical trips"), (s["drivers"], "PII-safe drivers"), (s["rules"], "approved rules"), (s["pending"], "awaiting approval")]):
+    s = m.stats(conn)
+    pipeline = m.run_pipeline(conn)
+    open_decisions = s["pending"] + pipeline["pending"]
+    cols = st.columns(4)
+    for col, (value, label) in zip(cols, [
+        (s["vehicles"], "canonical vehicles"),
+        (s["trips"], "historical trips"),
+        (s["rules"], "approved rules"),
+        (open_decisions, "human decisions queued"),
+    ]):
         col.markdown(f"<div class='metric-card'><div class='v'>{value:,}</div><div class='k'>{label}</div></div>", unsafe_allow_html=True)
-    st.caption(f"Pipeline ready · {pipeline['work_orders']} work orders · {pipeline['pending']} client drafts · {pipeline['quarantine']} quarantined · deterministic outputs preserved")
-    st.markdown("### What needs attention")
-    for item in m.data_quality(conn):
-        st.markdown(f"<div class='signal {item['severity']}'><b>{item['title']}</b><p>{item['detail']}</p><div class='source'>SOURCE · {item['source']}</div></div>", unsafe_allow_html=True)
-    st.markdown("### Rules that can stop a dispatch")
-    for _, r in pd.read_sql_query("SELECT title,body,scope,severity,source_ref FROM rule ORDER BY severity,scope", conn).iterrows():
-        st.markdown(f"<div class='rule'><div class='eyebrow {r.severity}'>{r.scope} · {r.severity}</div><h4>{r.title}</h4><p>{r.body}</p><div class='source'>↳ {r.source_ref}</div></div>", unsafe_allow_html=True)
+    st.caption(f"{s['drivers']} PII-safe drivers · {pipeline['work_orders']} generated work orders · {pipeline['quarantine']} quarantined records · deterministic outputs preserved")
+
+    issues = m.data_quality(conn)
+    rules = pd.read_sql_query("SELECT title,body,scope,severity,source_ref FROM rule ORDER BY severity,scope", conn)
+    attention_col, guardrail_col = st.columns([1.35, 1], gap="large")
+    with attention_col:
+        st.subheader("Action queue")
+        severity_view = st.segmented_control(
+            "Show issues",
+            ["Critical", "Warnings", "Everything"],
+            default="Critical",
+            required=True,
+            key="control_severity",
+        )
+        visible_issues = issues
+        if severity_view == "Critical":
+            visible_issues = [item for item in issues if item["severity"] == "critical"]
+        elif severity_view == "Warnings":
+            visible_issues = [item for item in issues if item["severity"] == "warning"]
+        for item in visible_issues:
+            st.markdown(f"<div class='signal {item['severity']}'><b>{item['title']}</b><p>{item['detail']}</p><div class='source'>SOURCE · {item['source']}</div></div>", unsafe_allow_html=True)
+        st.caption(f"Showing {len(visible_issues)} of {len(issues)} detected data conditions.")
+    with guardrail_col:
+        st.subheader("Dispatch guardrails")
+        st.caption("Approved critical rules the agent must apply before suggesting action.")
+        featured_rules = rules[rules["severity"] == "critical"].head(4)
+        for _, rule in featured_rules.iterrows():
+            with st.expander(f"{rule['scope'].upper()} · {rule['title']}"):
+                st.write(rule["body"])
+                st.caption("Source: " + rule["source_ref"])
+        with st.expander(f"Browse all {len(rules)} approved rules"):
+            for _, rule in rules.iterrows():
+                st.markdown(f"**{rule['title']}** · {rule['scope']} / {rule['severity']}  \n{rule['body']}  \n`{rule['source_ref']}`")
 
 with tabs[1]:
     icon_heading(KOBOYO_TRUCK, "Route intelligence", "The fleet list, evidence, map and assistant share one selected route state.")
@@ -206,100 +243,238 @@ with tabs[1]:
             st.write(result["detail"])
             for unknown in result["unknowns"]:
                 st.warning("Unknown: " + unknown)
-        unknown_items = "".join(f"<li>{html.escape(u)}</li>" for u in route["unknowns"])
-        st.markdown(f"<div class='unknown-list'><b>Unknowns blocking certainty</b><ul>{unknown_items}</ul></div>", unsafe_allow_html=True)
+        with st.expander("Why this route is conditional", expanded=True):
+            for group in route["uncertainty_groups"]:
+                st.markdown(f"**{group['label']}**")
+                st.write("\n".join(f"- {item}" for item in group["items"]))
+                st.caption(group["effect"])
+            if route["origin_conflicts"]:
+                conflict_labels = ", ".join(f"{item['registration']} ({item['field']})" for item in route["origin_conflicts"])
+                st.error("Conflicting source values: " + conflict_labels)
+            else:
+                st.success(f"No canonical source conflicts among {origin}'s displayed assignments.")
 
 with tabs[2]:
     icon_heading(KOBOYO_WORKER, "Ask the operational agent", "Ask naturally in Hindi, Hinglish or English; the answer carries evidence, unknowns and useful extras.")
     examples = ["RJ43DD3546 Orion ke liye eligible hai?", "Shakti ka real SLA kitna hai?", "Breakdown origin se 40 km hai—replacement kahan se aaye?"]
-    pick = st.selectbox("Quick scenario", ["Choose an example…", *examples])
-    q = st.text_input("Question", value="" if pick.startswith("Choose") else pick, placeholder="e.g. Kya DL30AN8381 ko winter mein Delhi bhej sakte hain?")
-    if st.button("Reason over context", type="primary", width="stretch", disabled=not q.strip()):
-        with st.spinner("Retrieving → reconciling → answering…"):
-            result = agent.ask(conn, q)
-        citations = "".join(f"<span class='chip'>{html.escape(str(x))}</span>" for x in result["citations"]) or "<span class='chip'>NO DIRECT SOURCE</span>"
-        st.markdown(f"<div class='answer'><div class='eyebrow'>ANSWER · {html.escape(result['provider']['provider'])}</div><h3>{html.escape(result['headline'])}</h3><p>{html.escape(result['detail'])}</p><div>{citations}</div></div>", unsafe_allow_html=True)
-        for extra in result.get("extras", []): st.info(extra)
-        for unknown in result["unknowns"]: st.markdown(f"<div class='unknown'>UNKNOWN · {html.escape(str(unknown))}</div>", unsafe_allow_html=True)
-        st.caption("Agent trace: " + " → ".join(result["trace"]))
-        with st.expander("Retrieved evidence"):
-            for hit in m.search(conn, q): st.markdown(f"**{hit['title']}**  \n{hit['body'][:500]}  \n`{hit['source_ref']}`")
+    answer_col, prompt_col = st.columns([1.55, .8], gap="large")
+    with answer_col:
+        q = st.text_input(
+            "What do you need to know?",
+            key="ask_question",
+            placeholder="e.g. Kya DL30AN8381 ko winter mein Delhi bhej sakte hain?",
+        )
+        if st.button("Reason over context", type="primary", width="stretch", disabled=not q.strip()):
+            with st.spinner("Retrieving → reconciling → answering…"):
+                st.session_state["ask_result"] = agent.ask(conn, q)
+                st.session_state["ask_result_question"] = q
+        result = st.session_state.get("ask_result")
+        if result:
+            citations = "".join(f"<span class='chip'>{html.escape(str(x))}</span>" for x in result["citations"]) or "<span class='chip'>NO DIRECT SOURCE</span>"
+            st.caption("Answering: " + st.session_state.get("ask_result_question", q))
+            st.markdown(f"<div class='answer'><div class='eyebrow'>ANSWER · {html.escape(result['provider']['provider'])}</div><h3>{html.escape(result['headline'])}</h3><p>{html.escape(result['detail'])}</p><div>{citations}</div></div>", unsafe_allow_html=True)
+            for extra in result.get("extras", []):
+                st.info(extra)
+            for unknown in result["unknowns"]:
+                st.markdown(f"<div class='unknown'>UNKNOWN · {html.escape(str(unknown))}</div>", unsafe_allow_html=True)
+            with st.status("How this answer was assembled", state="complete", expanded=False, type="compact"):
+                st.write(" → ".join(result["trace"]))
+                for hit in m.search(conn, st.session_state.get("ask_result_question", q)):
+                    st.markdown(f"**{hit['title']}**  \n{hit['body'][:500]}  \n`{hit['source_ref']}`")
+        else:
+            st.info("Ask a question or load a scenario. Meridian will separate known facts, useful inferences and missing live state.")
+    with prompt_col:
+        st.subheader("Try a field question")
+        for index, example in enumerate(examples):
+            st.button(example, key=f"ask_example_{index}", on_click=load_ask_example, args=(example,), width="stretch")
+        with st.container(border=True):
+            st.markdown("#### Answer contract")
+            st.markdown("1. Retrieve bounded evidence  \n2. Reconcile conflicts  \n3. Reason conservatively  \n4. Cite sources  \n5. Surface unknowns")
+        st.warning("No live GPS, yard availability or service-due feed is connected. The agent must say **unknown** when those facts matter.")
 
 with tabs[3]:
     icon_heading(KOBOYO_WORKER, "Autonomous intake", "Workers and documents become preserved events before the agent decides what deserves reusable context.")
-    uploaded = st.file_uploader("Drop company documents", type=["txt", "md", "csv", "tsv", "json", "xlsx", "pdf", "docx"], accept_multiple_files=True)
-    for file in uploaded:
-        try:
-            result = agent.ingest_upload(conn, file.name, file.getvalue(), file.type or "", actor="App uploader")
-            st.caption(f"{file.name} · {'already processed' if result.get('duplicate') else f'{len(result['proposal_ids'])} proposal(s) staged'}")
-        except Exception as exc: st.error(f"{file.name}: {exc}")
-    left, right = st.columns(2)
-    with left:
-        audio = st.audio_input("Leave a voice note (Hindi / Hinglish / English)")
-        if audio and st.button("Interpret voice note", type="primary", width="stretch"):
+    intake_metrics = {
+        "events": conn.execute("SELECT count(*) FROM context_event").fetchone()[0],
+        "pending": conn.execute("SELECT count(*) FROM proposal WHERE status='pending'").fetchone()[0],
+        "approved": conn.execute("SELECT count(*) FROM proposal WHERE status='approved'").fetchone()[0],
+        "channels": conn.execute("SELECT count(DISTINCT channel) FROM context_event").fetchone()[0],
+    }
+    intake_cols = st.columns(4)
+    for col, (value, label) in zip(intake_cols, [
+        (intake_metrics["events"], "preserved events"),
+        (intake_metrics["pending"], "awaiting review"),
+        (intake_metrics["approved"], "promoted claims"),
+        (intake_metrics["channels"], "active intake channels"),
+    ]):
+        col.markdown(f"<div class='metric-card'><div class='v'>{value:,}</div><div class='k'>{label}</div></div>", unsafe_allow_html=True)
+    st.caption("RAW EVENT → AGENT TRIAGE → LOG / ANSWER / PROPOSAL → HUMAN APPROVAL → CANONICAL CONTEXT")
+
+    document_col, voice_col, update_col = st.columns(3, gap="large")
+    with document_col:
+        st.subheader("Company documents")
+        st.caption("Spreadsheets, PDFs, text and structured exports.")
+        uploaded = st.file_uploader("Choose files", type=["txt", "md", "csv", "tsv", "json", "xlsx", "pdf", "docx"], accept_multiple_files=True)
+        for file in uploaded:
             try:
-                transcript = agent.transcribe_audio(audio.getvalue(), audio.type); st.session_state["worker_transcript"] = transcript
+                result = agent.ingest_upload(conn, file.name, file.getvalue(), file.type or "", actor="App uploader")
+                outcome = "already processed" if result.get("duplicate") else f"{len(result['proposal_ids'])} proposal(s) staged"
+                st.success(f"{file.name} · {outcome}")
+            except Exception as exc:
+                st.error(f"{file.name}: {exc}")
+    with voice_col:
+        st.subheader("Worker voice note")
+        st.caption("Hindi, Hinglish or English; Sarvam handles transcription when configured.")
+        audio = st.audio_input("Record an operational update")
+        if audio and st.button("Interpret and triage", type="primary", width="stretch"):
+            try:
+                transcript = agent.transcribe_audio(audio.getvalue(), audio.type)
+                st.session_state["worker_transcript"] = transcript
                 result = agent.ingest_text(conn, transcript, actor="App worker", channel="voice_note", source_ref="app voice note")
-                st.success(f"Agent decision: {', '.join(result['dispositions'])} · {len(result['proposal_ids'])} staged")
-            except Exception as exc: st.error(str(exc))
-    with right:
-        note = st.text_area("Typed ground update", value=st.session_state.get("worker_transcript", ""), height=150, placeholder="Kal se Lucknow–Kanpur route par Unnao bridge ke paas diversion hai…")
+                st.success(f"Decision: {', '.join(result['dispositions'])} · {len(result['proposal_ids'])} staged")
+            except Exception as exc:
+                st.error(str(exc))
+    with update_col:
+        st.subheader("Typed ground update")
+        st.caption("Fastest path for a dispatcher, driver or hub worker.")
+        note = st.text_area("What changed?", value=st.session_state.get("worker_transcript", ""), height=150, placeholder="Kal se Lucknow–Kanpur route par Unnao bridge ke paas diversion hai…")
         reporter = st.text_input("Reporter / role", placeholder="Driver 17 or Lucknow dispatcher")
-        if st.button("Let agent triage this update", type="primary", width="stretch", disabled=not note.strip()):
+        if st.button("Let agent triage", type="primary", width="stretch", disabled=not note.strip()):
             result = agent.ingest_text(conn, note, actor=reporter or "App worker", channel="app_text", source_ref="app worker update")
             st.success(f"Decision: {', '.join(result['dispositions'])}. Staged: {len(result['proposal_ids'])}. Run: {result['run_id']}")
-    st.info("Watched folder: place supported files in `inbox/`; fingerprints prevent duplicate processing on future app reruns.")
+    with st.expander("Watched-folder automation"):
+        st.write("Place supported files in `inbox/`. The scanner preserves a fingerprint, prevents duplicate processing, records the agent run and stages only reusable claims for approval.")
 
 with tabs[4]:
     icon_heading(KOBOYO_MIC, "Live voice + worker channels", "The same operational agent is reachable by a browser voice session or a controlled Telegram gateway.")
     live_ready = bool(os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"))
-    st.markdown(f"<div class='orb-stage'><div class='orb'></div><div class='orb-label'>{'ready · gemini live' if live_ready else 'model key required'}</div></div>", unsafe_allow_html=True)
-    a, b = st.columns(2)
-    with a:
-        st.markdown("#### Real-time conversation")
-        st.write("Persistent speech-to-speech with interruption, live transcription and bounded context tools. The browser orb captures and plays audio; the model key remains server-side.")
-        st.code("uv sync --extra live\nuv run python voice_server.py", language="bash")
-        st.link_button("Open working voice orb", "http://127.0.0.1:8765", width="stretch")
-        st.caption("Terminal-only fallback: `uv run python live_agent.py`.")
-        st.caption("Free hosted demo: Gemini Live. Optional transport: LiveKit/Pipecat. Fully local experiment: Moshi/MLX on capable Apple Silicon; hardware-heavy, so not the default.")
-    with b:
-        st.markdown("#### Telegram field gateway")
-        st.write("Workers send text, voice notes or documents. The same agent answers, logs, stages reusable context, and flags urgent safety updates.")
-        st.code("uv sync --extra telegram\nexport TELEGRAM_BOT_TOKEN='…'\nexport TELEGRAM_ALLOWED_USER_IDS='123,456'\nuv run python telegram_bot.py", language="bash")
-        st.caption("Configured" if os.getenv("TELEGRAM_BOT_TOKEN") else "Not configured · add a BotFather token and explicit user allowlist")
+    stage_col, channel_col = st.columns([1.4, .9], gap="large")
+    with stage_col:
+        st.markdown(f"<div class='orb-stage'><div class='orb'></div><div class='orb-label'>{'ready · gemini live' if live_ready else 'model key required'}</div></div>", unsafe_allow_html=True)
+        st.caption("Persistent speech-to-speech · interruption · live transcription · context tools")
+    with channel_col:
+        with st.container(border=True):
+            st.markdown("#### Browser voice")
+            st.write("Talk naturally while the agent retrieves operational context and calls bounded tools. Audio passes through the local backend; model credentials stay server-side.")
+            if live_ready:
+                st.success("Live model configured")
+            else:
+                st.warning("Add a Gemini model key before starting")
+            st.link_button("Open voice conversation", "http://127.0.0.1:8765", type="primary", width="stretch")
+        with st.container(border=True):
+            st.markdown("#### Telegram field gateway")
+            st.write("Workers send text, voice notes or documents. The same agent answers, logs, stages context and escalates urgent safety updates.")
+            if os.getenv("TELEGRAM_BOT_TOKEN"):
+                st.success("Bot token configured")
+            else:
+                st.info("Not configured · add a BotFather token and an explicit user allowlist")
+        with st.expander("Developer setup"):
+            st.code("uv sync --extra live\nuv run python voice_server.py", language="bash")
+            st.caption("Terminal-only voice fallback: `uv run python live_agent.py`.")
+            st.code("uv sync --extra telegram\nexport TELEGRAM_BOT_TOKEN='…'\nexport TELEGRAM_ALLOWED_USER_IDS='123,456'\nuv run python telegram_bot.py", language="bash")
+            st.caption("Hosted demo: Gemini Live. Optional transport: LiveKit/Pipecat. Local experiment: Moshi/MLX on capable Apple Silicon.")
     st.warning("Telegram is a field channel, not the system of record. Restrict users, redact PII, minimize retention of raw voice, and store only the operational data you need.")
 
 with tabs[5]:
     icon_heading(KOBOYO_WORKER, "Human approval queue", "People retain authority over canonical context and outbound client communication.")
-    st.markdown("#### Client communications")
     approved_comms = {r["ticket_id"] for r in conn.execute("SELECT ticket_id FROM comm_approval")}
     comms = [json.loads(line) for line in (m.OUTPUTS / "comms_pending.jsonl").read_text().splitlines() if line]
     unapproved = [draft for draft in comms if draft["ticket_id"] not in approved_comms]
-    if unapproved:
-        selected_ticket = st.selectbox("Draft to review", [d["ticket_id"] for d in unapproved]); draft = next(d for d in unapproved if d["ticket_id"] == selected_ticket)
-        with st.container(border=True):
-            st.markdown(f"<div class='eyebrow'>{draft['message_id']} · TO {draft['recipient']}</div>", unsafe_allow_html=True); st.write(draft["body"]); st.json(draft["context"], expanded=False); st.caption("Sources: " + " · ".join(draft["citations"]))
-            approver = st.text_input("Communication approver", value="Operations lead")
-            if st.button("Approve this client message", type="primary", width="stretch"): m.approve_communication(conn, selected_ticket, approver); st.rerun()
-    else: st.success("All client drafts have been decided.")
-    st.markdown("#### Agent-staged context")
     pending = list(conn.execute("SELECT * FROM proposal WHERE status='pending' ORDER BY risk='critical' DESC,created_at DESC"))
-    if not pending: st.success("Queue clear. No unreviewed claims.")
-    for r in pending:
+    approved_claims = conn.execute("SELECT count(*) FROM proposal WHERE status='approved'").fetchone()[0]
+    rejected_claims = conn.execute("SELECT count(*) FROM proposal WHERE status='rejected'").fetchone()[0]
+    approval_cols = st.columns(4)
+    for col, (value, label) in zip(approval_cols, [
+        (len(pending), "context claims waiting"),
+        (len(unapproved), "client drafts waiting"),
+        (approved_claims, "claims approved"),
+        (rejected_claims, "claims rejected"),
+    ]):
+        col.markdown(f"<div class='metric-card'><div class='v'>{value:,}</div><div class='k'>{label}</div></div>", unsafe_allow_html=True)
+
+    queue_view = st.segmented_control(
+        "Review queue",
+        ["Context proposals", "Client communications"],
+        default="Context proposals" if pending else "Client communications",
+        required=True,
+        key="approval_queue",
+    )
+    review_col, standard_col = st.columns([1.5, .75], gap="large")
+    with review_col:
+        if queue_view == "Context proposals":
+            st.subheader("Agent-staged context")
+            if pending:
+                proposal_id = st.selectbox("Claim to review", [row["id"] for row in pending])
+                proposal = next(row for row in pending if row["id"] == proposal_id)
+                with st.container(border=True):
+                    st.markdown(f"<div class='eyebrow'>{proposal['id']} · {proposal['risk']} risk · {proposal['confidence']:.0%} confidence</div><h3>{html.escape(proposal['kind'].title())}</h3>", unsafe_allow_html=True)
+                    st.write(proposal["redacted_text"])
+                    st.caption(f"Agent: {proposal['agent_name']} · Reporter: {proposal['reporter']} · Location: {proposal['location'] or 'not inferred'} · Vehicle: {proposal['entity_ref'] or 'not inferred'} · Expiry: {proposal['valid_until'] or 'durable/unknown'}")
+                    if proposal["reasoning"]:
+                        st.info("Why staged: " + proposal["reasoning"])
+                    connections = json.loads(proposal["connections_json"] or "[]")
+                    if connections:
+                        st.caption("Connections: " + " · ".join(connections))
+                    approve_col, reject_col = st.columns(2)
+                    if approve_col.button("Approve into context", key="a" + proposal["id"], type="primary", width="stretch"):
+                        m.decide_proposal(conn, proposal["id"], True)
+                        st.rerun()
+                    if reject_col.button("Reject claim", key="r" + proposal["id"], width="stretch"):
+                        m.decide_proposal(conn, proposal["id"], False)
+                        st.rerun()
+            else:
+                st.success("Queue clear. No unreviewed context claims.")
+        else:
+            st.subheader("Client communications")
+            if unapproved:
+                selected_ticket = st.selectbox("Draft to review", [draft["ticket_id"] for draft in unapproved])
+                draft = next(item for item in unapproved if item["ticket_id"] == selected_ticket)
+                with st.container(border=True):
+                    st.markdown(f"<div class='eyebrow'>{draft['message_id']} · TO {draft['recipient']}</div>", unsafe_allow_html=True)
+                    st.write(draft["body"])
+                    with st.expander("Message context"):
+                        st.json(draft["context"], expanded=True)
+                    st.caption("Sources: " + " · ".join(draft["citations"]))
+                    approver = st.text_input("Communication approver", value="Operations lead")
+                    if st.button("Approve this client message", type="primary", width="stretch"):
+                        m.approve_communication(conn, selected_ticket, approver)
+                        st.rerun()
+            else:
+                st.success("All client drafts have been decided.")
+    with standard_col:
+        st.subheader("Approval standard")
         with st.container(border=True):
-            st.markdown(f"<div class='eyebrow'>{r['id']} · {r['risk']} risk · {r['confidence']:.0%} confidence</div><h3>{html.escape(r['kind'].title())}</h3>", unsafe_allow_html=True); st.write(r["redacted_text"])
-            st.caption(f"Agent: {r['agent_name']} · Reporter: {r['reporter']} · Location: {r['location'] or 'not inferred'} · Vehicle: {r['entity_ref'] or 'not inferred'} · Expiry: {r['valid_until'] or 'durable/unknown'}")
-            if r["reasoning"]: st.info("Why staged: " + r["reasoning"])
-            connections = json.loads(r["connections_json"] or "[]")
-            if connections: st.caption("Connections: " + " · ".join(connections))
-            x, y = st.columns(2)
-            if x.button("Approve into context", key="a" + r["id"], type="primary", width="stretch"): m.decide_proposal(conn, r["id"], True); st.rerun()
-            if y.button("Reject", key="r" + r["id"], width="stretch"): m.decide_proposal(conn, r["id"], False); st.rerun()
+            st.markdown("**Before promoting a claim**  \n- Is the source identifiable?  \n- Is the statement reusable?  \n- Is location/entity linkage valid?  \n- Is expiry explicit when temporary?  \n- Are conflicts preserved?")
+        st.warning("Approval changes canonical context. Rejection preserves the original event and audit trail.")
 
 with tabs[6]:
     icon_heading(KOBOYO_WARNING, "Provenance, events & agent trace", "Raw inputs, proposed facts, human decisions and model/tool runs stay separate and inspectable.")
-    st.markdown("#### Agent runs"); st.dataframe(pd.read_sql_query("SELECT started_at,provider,task,source_ref,status,trace_json FROM agent_run ORDER BY started_at DESC LIMIT 100", conn), hide_index=True, width="stretch")
-    st.markdown("#### Intake event log"); st.dataframe(pd.read_sql_query("SELECT at,channel,actor_ref,event_type,disposition,reasoning,source_ref FROM context_event ORDER BY at DESC LIMIT 200", conn), hide_index=True, width="stretch")
-    st.markdown("#### Source ledger"); st.dataframe(pd.read_sql_query("SELECT kind,path,substr(fingerprint,1,16) AS sha256,ingested_at FROM source ORDER BY path", conn), hide_index=True, width="stretch")
-    st.markdown("#### Decision ledger"); st.dataframe(pd.read_sql_query("SELECT at,actor,action,object_type,object_id,details FROM audit_event ORDER BY at DESC", conn), hide_index=True, width="stretch")
-    st.markdown("#### Quarantine"); st.dataframe(pd.read_sql_query("SELECT ticket_id,created_at,vehicle_reg,driver_id,issue,source_ref FROM ticket WHERE valid=0", conn), hide_index=True, width="stretch")
+    audit_counts = [
+        (conn.execute("SELECT count(*) FROM agent_run").fetchone()[0], "agent runs"),
+        (conn.execute("SELECT count(*) FROM context_event").fetchone()[0], "intake events"),
+        (conn.execute("SELECT count(*) FROM source").fetchone()[0], "source files"),
+        (conn.execute("SELECT count(*) FROM ticket WHERE valid=0").fetchone()[0], "quarantined records"),
+    ]
+    audit_cols = st.columns(4)
+    for col, (value, label) in zip(audit_cols, audit_counts):
+        col.markdown(f"<div class='metric-card'><div class='v'>{value:,}</div><div class='k'>{label}</div></div>", unsafe_allow_html=True)
+
+    ledger_view = st.segmented_control(
+        "Ledger",
+        ["Agent runs", "Intake events", "Sources", "Decisions", "Quarantine"],
+        default="Agent runs",
+        required=True,
+        key="audit_ledger",
+        width="stretch",
+    )
+    ledger_queries = {
+        "Agent runs": ("Model/tool execution trace", "SELECT started_at,provider,task,source_ref,status,trace_json FROM agent_run ORDER BY started_at DESC LIMIT 100"),
+        "Intake events": ("Immutable worker and document events", "SELECT at,channel,actor_ref,event_type,disposition,reasoning,source_ref FROM context_event ORDER BY at DESC LIMIT 200"),
+        "Sources": ("Fingerprint-backed source ledger", "SELECT kind,path,substr(fingerprint,1,16) AS sha256,ingested_at FROM source ORDER BY path"),
+        "Decisions": ("Human and deterministic decision history", "SELECT at,actor,action,object_type,object_id,details FROM audit_event ORDER BY at DESC"),
+        "Quarantine": ("Records excluded from canonical operational use", "SELECT ticket_id,created_at,vehicle_reg,driver_id,issue,source_ref FROM ticket WHERE valid=0"),
+    }
+    ledger_caption, ledger_query = ledger_queries[ledger_view]
+    st.subheader(ledger_view)
+    st.caption(ledger_caption)
+    st.dataframe(pd.read_sql_query(ledger_query, conn), hide_index=True, width="stretch", height=520)

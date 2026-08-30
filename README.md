@@ -17,7 +17,7 @@ The first run builds `data/meridian.db` from `candidate_bundle/`. The app loads 
 
 Text/document reasoning uses the first configured provider in this order:
 
-1. `GEMINI_API_KEY` — hosted free-tier demo default (`gemini-2.5-flash`)
+1. `GEMINI_API_KEY` — hosted demo default (`gemini-3.6-flash`)
 2. `GROQ_API_KEY` — fast hosted OSS model default (`openai/gpt-oss-20b`)
 3. `OPENAI_API_KEY`
 4. No key — deterministic, auditable rules fallback

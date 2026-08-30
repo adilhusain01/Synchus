@@ -4,20 +4,25 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import logging
 import os
 from pathlib import Path
 
 import meridian as m
 from live_agent import execute_tool, tool_declarations
 
+try:
+    from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+    from fastapi.responses import FileResponse
+except ImportError:  # Keep the base app importable without the optional live stack.
+    FastAPI = WebSocket = WebSocketDisconnect = FileResponse = None
+
 ROOT = Path(__file__).parent
+LOGGER = logging.getLogger(__name__)
 
 
 def create_app():
-    try:
-        from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-        from fastapi.responses import FileResponse
-    except ImportError:
+    if FastAPI is None:
         raise RuntimeError("Install live dependencies: uv sync --extra live")
 
     app = FastAPI(title="Meridian Live Voice")
@@ -96,8 +101,14 @@ def create_app():
         except WebSocketDisconnect:
             pass
         except Exception as exc:
+            LOGGER.error("Voice model session failed (%s)", type(exc).__name__)
             try:
-                await websocket.send_json({"type": "error", "text": str(exc)})
+                await websocket.send_json(
+                    {
+                        "type": "error",
+                        "text": "The voice model session could not be started. Check the voice server log.",
+                    }
+                )
             except Exception:
                 pass
 
