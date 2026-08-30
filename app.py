@@ -191,8 +191,10 @@ with tabs[4]:
     a, b = st.columns(2)
     with a:
         st.markdown("#### Real-time conversation")
-        st.write("Persistent speech-to-speech with interruption, live transcription and bounded context tools. This is not record-then-transcribe.")
-        st.code("uv sync --extra live\nexport GEMINI_API_KEY='…'\nuv run python live_agent.py", language="bash")
+        st.write("Persistent speech-to-speech with interruption, live transcription and bounded context tools. The browser orb captures and plays audio; the model key remains server-side.")
+        st.code("uv sync --extra live\nuv run python voice_server.py", language="bash")
+        st.link_button("Open working voice orb", "http://127.0.0.1:8765", width="stretch")
+        st.caption("Terminal-only fallback: `uv run python live_agent.py`.")
         st.caption("Free hosted demo: Gemini Live. Optional transport: LiveKit/Pipecat. Fully local experiment: Moshi/MLX on capable Apple Silicon; hardware-heavy, so not the default.")
     with b:
         st.markdown("#### Telegram field gateway")

@@ -34,15 +34,16 @@ No key is printed by the app. Without a speech key, typed Hindi, Hinglish and En
 
 ## True live voice
 
-`live_agent.py` is a persistent, full-duplex Gemini Live session: 16 kHz microphone input, 24 kHz audio output, server voice-activity detection, interruption, live transcripts and bounded context/database tools.
+`voice_server.py` serves the animated browser orb backed by a persistent, full-duplex Gemini Live session: 16 kHz microphone input, 24 kHz audio output, server voice-activity detection, interruption, live transcripts and bounded context/database tools. The API key remains on the server.
 
 ```bash
 uv sync --extra live
 # add GEMINI_API_KEY to .env
-uv run python live_agent.py
+uv run python voice_server.py
+# open http://127.0.0.1:8765
 ```
 
-This is distinct from record-then-transcribe. The optional architecture boundary is compatible with LiveKit or Pipecat; Moshi/MLX is the fully local experiment for capable Apple Silicon, but is deliberately not a default dependency.
+Use `uv run python live_agent.py` for the terminal microphone client. Both paths are distinct from record-then-transcribe. The optional architecture boundary is compatible with LiveKit or Pipecat; Moshi/MLX is the fully local experiment for capable Apple Silicon, but is deliberately not a default dependency.
 
 ## Telegram worker gateway
 
