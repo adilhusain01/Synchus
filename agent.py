@@ -173,6 +173,27 @@ DATA END
     return items[:8], status
 
 
+def corroborate(conn: sqlite3.Connection, statement: str, entity_ref: str = "") -> dict:
+    hits = m.search(conn, statement, 8)
+    sources: list[str] = []
+    for hit in hits:
+        for source in str(hit.get("source_ref", "")).split(";"):
+            source = source.strip()
+            if source and source not in sources:
+                sources.append(source)
+    conflicts = []
+    reg = m.norm_reg(entity_ref)
+    if reg:
+        conflicts = [dict(row) for row in conn.execute("SELECT field,values_json,source_ref FROM vehicle_conflict WHERE registration=?", (reg,))]
+    if conflicts:
+        state = "conflict_present"
+    elif len(sources) >= 2:
+        state = "corroborated"
+    else:
+        state = "single_source"
+    return {"state": state, "sources": sources[:8], "conflicts": conflicts}
+
+
 def ingest_text(conn: sqlite3.Connection, text: str, *, actor: str, channel: str, source_ref: str) -> dict:
     clean = m.redact(text.strip())
     run_id = "RUN-" + uuid.uuid4().hex[:10].upper()
@@ -196,10 +217,17 @@ def ingest_text(conn: sqlite3.Connection, text: str, *, actor: str, channel: str
                  m.redact(item.get("statement", clean)), disposition, item.get("reasoning", ""), source_ref, run_id),
             )
             if disposition in {"stage_context", "urgent_escalation"}:
+                evidence = corroborate(conn, item.get("statement", clean), item.get("entity_ref", ""))
+                connections = list(dict.fromkeys([*item.get("connections", []), *evidence["sources"]]))
+                if evidence["conflicts"]:
+                    connections.append("CONFLICT: canonical vehicle fields disagree")
+                confidence = float(item.get("confidence", .5))
+                if evidence["state"] == "conflict_present":
+                    confidence = min(confidence, .6)
                 pid = m.propose(
                     conn, actor, item.get("statement", clean), item.get("location", ""), item.get("valid_until", ""),
-                    item.get("entity_ref", ""), kind=item.get("kind"), confidence=item.get("confidence", .5),
-                    reasoning=item.get("reasoning", ""), connections=item.get("connections", []),
+                    item.get("entity_ref", ""), kind=item.get("kind"), confidence=confidence,
+                    reasoning=f"{item.get('reasoning', '')} Evidence state: {evidence['state']}.", connections=connections,
                     agent_name=f"{used['provider']}:{used['model']}", risk=item.get("risk", "critical" if disposition == "urgent_escalation" else "medium"),
                     source_ref=source_ref,
                 )
