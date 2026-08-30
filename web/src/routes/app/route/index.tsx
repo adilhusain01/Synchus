@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
-import Map, { Marker, type MapRef } from 'react-map-gl/maplibre'
+import Map, { Marker, Popup, type MapRef } from 'react-map-gl/maplibre'
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import type { StyleSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 
 type RouteOptions = { origins: string[]; destinations: string[]; clients: string[] }
 type Candidate = { registration: string; model: string; year: number; bs_stage: string; assessment: string; checks: string[]; note: string }
+type MapSelection = { kind: string; title: string; longitude: number; latitude: number; rows: Array<[string, string | number]>; note?: string; offset?: [number, number] }
 type RouteData = {
   origin: string; destination: string; client: string; travel_on: string
   path: number[][]; distance_km: number; duration_hr?: number; geometry_source: string; is_approximate: boolean
@@ -50,6 +51,8 @@ function projectRoute(map: MapLibreMap, path: number[][]) {
   return { path: points.map((point, index) => `${index ? 'L' : 'M'}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' '), width: canvas.clientWidth, height: canvas.clientHeight }
 }
 
+const truckOffset = (index: number): [number, number] => [((index % 5) - 2) * 26, (Math.floor(index / 5) - 0.5) * 34 - 28]
+
 export const Route = createFileRoute('/app/route/')({ component: RoutePage })
 
 function RoutePage() {
@@ -57,6 +60,7 @@ function RoutePage() {
   const update = useUiStore((state) => state.updateRoute)
   const [question, setQuestion] = useState('')
   const [routeOverlay, setRouteOverlay] = useState({ path: '', width: 1, height: 1 })
+  const [selection, setSelection] = useState<MapSelection | null>(null)
   const mapRef = useRef<MapRef>(null)
   const options = useQuery({ queryKey: ['route-options'], queryFn: () => get<RouteOptions>('/api/route/options') })
   const params = new URLSearchParams({ origin: filters.origin, destination: filters.destination, client: filters.client, travel_on: filters.travelOn })
@@ -73,6 +77,7 @@ function RoutePage() {
   useEffect(() => {
     const map = mapRef.current?.getMap()
     if (!map || !route.data || !routeBounds || !Number.isFinite(routeBounds.minLon)) return
+    setSelection(null)
     map.fitBounds([[routeBounds.minLon, routeBounds.minLat], [routeBounds.maxLon, routeBounds.maxLat]], { padding: 96, duration: 350 })
     const frame = requestAnimationFrame(() => setRouteOverlay(projectRoute(map, route.data!.path)))
     return () => cancelAnimationFrame(frame)
@@ -122,11 +127,13 @@ function RoutePage() {
           }}
           onMove={(event) => syncRouteOverlay(event.target)}
           onResize={(event) => syncRouteOverlay(event.target)}
+          onClick={() => setSelection(null)}
         >
-          {data.hubs.map((hub) => <Marker key={hub.hub} longitude={hub.lon} latitude={hub.lat} anchor="center"><div title={`${hub.hub}: ${hub.vehicles} home assignments`} className="grid size-10 place-items-center rounded-full border-2 border-[#17201c] bg-[#c8ff3d] font-['DM_Mono'] text-[10px] font-bold shadow-md">{hub.vehicles}</div></Marker>)}
-          {trucks.map((truck, index) => <Marker key={truck.registration} longitude={truck.lon} latitude={truck.lat} anchor="center" offset={[((index % 5) - 2) * 26, (Math.floor(index / 5) - 0.5) * 34 - 28]} style={{ zIndex: '3' }}><img src={koboyo.truck} alt={`${truck.registration}: home assignment, not live location`} title={`${truck.registration} · ${truck.model} · home assignment`} width={26} height={26} className="h-[26px] w-[26px] object-contain drop-shadow" /></Marker>)}
-          {data.precautions.map((item) => <Marker key={item.rule_id} longitude={item.lon} latitude={item.lat} anchor="bottom"><img src={koboyo.control} alt={`${item.status}: ${item.title}`} width={40} height={40} loading="lazy" className="h-10 w-10 object-contain drop-shadow" /></Marker>)}
-          {filters.showHistory ? data.incidents.map((incident) => <Marker key={incident.ticket_id} longitude={incident.lon} latitude={incident.lat} anchor="center"><div title={`Historical: ${incident.issue}`} className="size-4 rounded-full border-2 border-white bg-[#2e64f5] shadow-md" /></Marker>) : null}
+          {data.hubs.map((hub) => <Marker key={hub.hub} longitude={hub.lon} latitude={hub.lat} anchor="center" onClick={(event) => { event.originalEvent.stopPropagation(); setSelection({ kind: 'Hub', title: hub.hub, longitude: hub.lon, latitude: hub.lat, rows: [['Home assignments', hub.vehicles], ['Historical incidents', hub.incidents], ['Coordinates', `${hub.lat.toFixed(3)}, ${hub.lon.toFixed(3)}`]], note: 'Assignment counts are not live parked-vehicle counts.', offset: [0, -28] }) }}><button type="button" aria-label={`Inspect ${hub.hub} hub`} title={`${hub.hub}: ${hub.vehicles} home assignments`} className="grid size-10 cursor-pointer place-items-center rounded-full border-2 border-[#17201c] bg-[#c8ff3d] font-['DM_Mono'] text-[10px] font-bold shadow-md transition-transform hover:scale-110 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#2e64f5]">{hub.vehicles}</button></Marker>)}
+          {trucks.map((truck, index) => <Marker key={truck.registration} longitude={truck.lon} latitude={truck.lat} anchor="center" offset={truckOffset(index)} style={{ zIndex: '3' }} onClick={(event) => { event.originalEvent.stopPropagation(); const [x, y] = truckOffset(index); setSelection({ kind: 'Truck · home assignment', title: truck.registration, longitude: truck.lon, latitude: truck.lat, rows: [['Model', truck.model], ['Model year', truck.year], ['Emission stage', truck.bs_stage], ['Home hub', truck.home_hub]], note: 'This is its registered home assignment, not a live position.', offset: [x, y - 18] }) }}><button type="button" aria-label={`Inspect truck ${truck.registration}`} title={`${truck.registration} · ${truck.model} · home assignment`} className="cursor-pointer rounded-sm transition-transform hover:scale-125 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#2e64f5]"><img src={koboyo.truck} alt="" width={26} height={26} className="h-[26px] w-[26px] object-contain drop-shadow" /></button></Marker>)}
+          {data.precautions.map((item) => <Marker key={item.rule_id} longitude={item.lon} latitude={item.lat} anchor="bottom" onClick={(event) => { event.originalEvent.stopPropagation(); setSelection({ kind: 'Route precaution', title: item.title, longitude: item.lon, latitude: item.lat, rows: [['Status', item.status], ['Rule', item.rule_id], ['Source', item.source_ref]], note: item.why_now, offset: [0, -18] }) }}><button type="button" aria-label={`Inspect precaution ${item.title}`} className="cursor-pointer rounded-sm transition-transform hover:scale-110 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#2e64f5]"><img src={koboyo.control} alt="" width={40} height={40} loading="lazy" className="h-10 w-10 object-contain drop-shadow" /></button></Marker>)}
+          {filters.showHistory ? data.incidents.map((incident) => <Marker key={incident.ticket_id} longitude={incident.lon} latitude={incident.lat} anchor="center" onClick={(event) => { event.originalEvent.stopPropagation(); setSelection({ kind: 'Historical incident', title: incident.issue, longitude: incident.lon, latitude: incident.lat, rows: [['Ticket', incident.ticket_id], ['Severity', incident.severity], ['Evidence state', 'Historical']], note: 'Useful for patterns and precedent; not a current road condition.', offset: [0, -16] }) }}><button type="button" aria-label={`Inspect historical incident ${incident.issue}`} title={`Historical: ${incident.issue}`} className="block size-4 cursor-pointer rounded-full border-2 border-white bg-[#2e64f5] shadow-md transition-transform hover:scale-125 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#17201c]" /></Marker>) : null}
+          {selection ? <Popup longitude={selection.longitude} latitude={selection.latitude} anchor="bottom" offset={selection.offset || 24} closeOnClick={false} onClose={() => setSelection(null)} maxWidth="310px" className="z-30 [&_.maplibregl-popup-close-button]:right-1.5 [&_.maplibregl-popup-close-button]:top-1 [&_.maplibregl-popup-close-button]:size-7 [&_.maplibregl-popup-close-button]:text-lg [&_.maplibregl-popup-close-button]:text-[#bfc8c2] [&_.maplibregl-popup-content]:!rounded-sm [&_.maplibregl-popup-content]:!bg-[#17201c] [&_.maplibregl-popup-content]:!p-0 [&_.maplibregl-popup-content]:shadow-xl [&_.maplibregl-popup-tip]:!border-t-[#17201c]"><MapInspector selection={selection} /></Popup> : null}
         </Map>
         {routeOverlay.path ? <svg aria-label={`${data.origin} to ${data.destination} road route`} role="img" viewBox={`0 0 ${routeOverlay.width} ${routeOverlay.height}`} preserveAspectRatio="none" className="pointer-events-none absolute inset-0 z-[2] size-full overflow-visible">
           <path d={routeOverlay.path} fill="none" stroke="#fffaf0" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
@@ -153,4 +160,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function RouteStat({ label, value, note }: { label: string; value: string; note: string }) {
   return <article className="border-t-[3px] border-[#17201c] pt-3"><p className="font-['DM_Mono'] text-[9px] uppercase tracking-[.1em] text-[#6b746e]">{label}</p><p className="mt-2 text-2xl font-extrabold tracking-[-.05em]">{value}</p><p className="mt-1 text-[11px] leading-4 text-[#68716b]">{note}</p></article>
+}
+
+function MapInspector({ selection }: { selection: MapSelection }) {
+  return <article className="min-w-[250px] overflow-hidden bg-[#17201c] text-[#f7f4ea]"><header className="border-b border-[#3b4740] px-4 py-3 pr-10"><p className="font-['DM_Mono'] text-[9px] uppercase tracking-[.1em] text-[#c8ff3d]">{selection.kind}</p><h3 className="mt-1 text-base font-extrabold tracking-[-.025em]">{selection.title}</h3></header><dl className="divide-y divide-[#344039] px-4">{selection.rows.map(([label, value]) => <div key={label} className="grid grid-cols-[1fr_auto] gap-4 py-2.5 text-xs"><dt className="text-[#a9b4ad]">{label}</dt><dd className="max-w-40 text-right font-bold text-[#f7f4ea]">{value}</dd></div>)}</dl>{selection.note ? <p className="border-t border-[#3b4740] bg-[#202b25] px-4 py-3 text-[11px] leading-4 text-[#d1d9d4]">{selection.note}</p> : null}</article>
 }
