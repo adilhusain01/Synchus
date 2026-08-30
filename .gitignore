@@ -9,3 +9,5 @@ data/*.db*
 inbox/*
 !inbox/.gitkeep
 .DS_Store
+.agents/skills/developing-with-streamlit
+.claude/skills/developing-with-streamlit

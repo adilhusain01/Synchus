@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import argparse
+import base64
 import hashlib
 import json
 import math
@@ -47,6 +48,22 @@ PLACES = {
     "Patna": (25.5941, 85.1376),
     "Varanasi": (25.3176, 82.9739),
 }
+
+KOBOYO_TRUCK_ICON = "https://koboyo.com/icons/svg/cartoon-truck.svg"
+KOBOYO_WARNING_ICON = "https://koboyo.com/icons/svg/warning-sign-for-road.svg"
+
+
+@lru_cache(maxsize=4)
+def _sized_svg_data_url(url: str, width: int, height: int) -> str:
+    """Give a dimensionless Koboyo SVG natural dimensions for Deck.gl's bitmap loader."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Meridian-Hackathon/0.2"})
+        with urllib.request.urlopen(req, timeout=5) as response:
+            svg = response.read().decode("utf-8")
+        svg = re.sub(r"<svg\b", f'<svg width="{width}" height="{height}"', svg, count=1)
+        return "data:image/svg+xml;base64," + base64.b64encode(svg.encode()).decode()
+    except (OSError, UnicodeDecodeError):
+        return url
 
 RULES = [
     ("RULE-DELHI-WINTER", "Delhi winter: BS6 only", "October to February, any route touching Delhi, Gurgaon, Faridabad or Noida requires a BS6 vehicle.", "dispatcher_interview.txt", "route", "critical"),
@@ -375,7 +392,8 @@ def truck_rows(conn: sqlite3.Connection) -> list[dict]:
         radius = .025 + ((digest // 360) % 6) * .012
         rows.append({
             **dict(vehicle), "lat": lat + math.sin(angle) * radius,
-            "lon": lon + math.cos(angle) * radius, "glyph": "🚚",
+            "lon": lon + math.cos(angle) * radius,
+            "icon": {"url": _sized_svg_data_url(KOBOYO_TRUCK_ICON, 259, 259), "width": 259, "height": 259, "anchorY": 259},
             "evidence": "fleet-master home assignment; not parked/live telemetry",
         })
     return rows
@@ -495,7 +513,10 @@ def route_intelligence(conn: sqlite3.Connection, origin: str, destination: str, 
     midpoint = _point_on_path(route["path"], .5)
     for i, item in enumerate(precautions):
         point = _point_on_path(route["path"], min(.88, .15 + i * .11))
-        item.update({"lon": point[0], "lat": point[1]})
+        item.update({
+            "lon": point[0], "lat": point[1],
+            "icon": {"url": _sized_svg_data_url(KOBOYO_WARNING_ICON, 185, 174), "width": 185, "height": 174, "anchorY": 174},
+        })
     return {
         **route, "origin": origin, "destination": destination, "client": client, "travel_on": when.isoformat(),
         "precautions": precautions, "incidents": incidents, "candidates": candidates,

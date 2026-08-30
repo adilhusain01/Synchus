@@ -12,6 +12,11 @@ import streamlit as st
 import agent
 import meridian as m
 
+KOBOYO_TRUCK = "https://koboyo.com/icons/svg/cartoon-truck.svg"
+KOBOYO_WORKER = "https://koboyo.com/icons/svg/factory-worker.svg"
+KOBOYO_MIC = "https://koboyo.com/icons/svg/boom-microphone.svg"
+KOBOYO_WARNING = "https://koboyo.com/icons/svg/warning-sign-for-road.svg"
+
 st.set_page_config(page_title="Meridian Context", page_icon="◉", layout="wide", initial_sidebar_state="expanded")
 
 st.markdown("""
@@ -19,7 +24,7 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
 :root{--ink:#17201c;--paper:#f2efe6;--lime:#c8ff3d;--signal:#ff5c35;--blue:#2e64f5;--line:#d7d1c3}
 .stApp{background:var(--paper);color:var(--ink);font-family:'Manrope',sans-serif}
-[data-testid="stSidebar"]{background:#17201c;border-right:1px solid #344039}[data-testid="stSidebar"] *{color:#f7f4ea!important}[data-testid="stSidebar"] button{border-color:#58645e!important}
+[data-testid="stSidebar"]{background:#17201c;border-right:1px solid #344039}[data-testid="stSidebar"] *{color:#f7f4ea!important}[data-testid="stSidebar"] button{border-color:#58645e!important}[data-testid="stSidebar"] button p{color:#17201c!important}[data-testid="stSidebar"] [data-testid="stImage"] img{filter:invert(1)}
 h1,h2,h3{font-family:'Manrope',sans-serif;letter-spacing:-.04em}h1{font-size:clamp(2.2rem,5vw,5.4rem)!important;line-height:.92!important;font-weight:800!important}
 .eyebrow,.source,.stamp{font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:.72rem}
 .hero{border-top:2px solid var(--ink);border-bottom:1px solid var(--line);padding:1.2rem 0 1.5rem;margin-bottom:1.5rem}.hero p{font-size:clamp(1rem,1.4vw,1.22rem);max-width:780px;color:#4b554f}
@@ -28,9 +33,11 @@ h1,h2,h3{font-family:'Manrope',sans-serif;letter-spacing:-.04em}h1{font-size:cla
 .signal{border-left:5px solid var(--signal);background:#fffaf0;padding:15px 18px;margin:.6rem 0}.signal.warning{border-color:#e7a817}.signal.info{border-color:var(--blue)}.signal b{font-size:1rem}.signal p{margin:.35rem 0 0;color:#56605a}.signal .source{margin-top:.55rem;color:#7f877f}
 .answer{background:#17201c;color:#f7f4ea;padding:clamp(1.1rem,3vw,2rem);border-radius:2px;margin-top:1rem;box-shadow:10px 10px 0 var(--lime)}.answer h3{font-size:clamp(1.3rem,2vw,2rem);margin:0 0 .8rem;color:white}.answer p{color:#d9dedb}
 .chip{display:inline-block;background:#303b35;color:#e7ece9;border:1px solid #526058;padding:4px 8px;margin:3px;font-family:'DM Mono';font-size:.68rem}.rule{border-top:1px solid var(--line);padding:13px 0}.rule h4{margin:0 0 5px}.rule p{color:#59615c;margin:0}.critical{color:#c83a20}.unknown{background:#e8e3d7;border:1px dashed #938d81;padding:10px 12px;margin:.4rem 0;font-family:'DM Mono';font-size:.78rem}
+.route-stat{border-top:3px solid var(--ink);padding:10px 0 16px}.route-stat .label{font-family:'DM Mono';font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#68726c}.route-stat .value{font-size:2rem;font-weight:800;letter-spacing:-.05em;color:var(--ink);margin:4px 0}.route-stat .note{font-size:.76rem;color:#59635d}.unknown-list{background:#e8e3d7;border-left:4px solid #938d81;padding:12px 14px}.unknown-list b{display:block;margin-bottom:6px}.unknown-list ul{margin:0;padding-left:18px}
 .orb-stage{min-height:430px;background:#050706;display:grid;place-items:center;position:relative;overflow:hidden;border:1px solid #283029}.orb{width:min(42vw,300px);aspect-ratio:1;border-radius:50%;position:relative;background:radial-gradient(circle at 38% 34%,#f4fbff 0 8%,#c9d4ff 24%,#7793ff 51%,#4052bc 74%,#17224f 100%);box-shadow:0 0 90px #7898ff55,inset -32px -28px 70px #101b5b88;animation:breathe 3.8s ease-in-out infinite}.orb:before,.orb:after{content:"";position:absolute;border-radius:48%;filter:blur(18px);mix-blend-mode:screen;animation:drift 7s ease-in-out infinite alternate}.orb:before{inset:13% 6% 45% 9%;background:#ffffff99;transform:rotate(-12deg)}.orb:after{inset:50% 12% 12% 38%;background:#788fff99;animation-delay:-2.5s}.orb-label{position:absolute;bottom:24px;color:#b9c3bd;font-family:'DM Mono';font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}
 @keyframes breathe{0%,100%{transform:scale(.97);filter:saturate(.9)}50%{transform:scale(1.025);filter:saturate(1.2)}}@keyframes drift{to{transform:translate(20px,28px) rotate(26deg) scale(1.15)}}@media(prefers-reduced-motion:reduce){.orb,.orb:before,.orb:after{animation:none}}
 div[data-testid="stMetric"]{background:transparent;border-top:3px solid var(--ink);padding-top:10px}.stButton>button,.stDownloadButton>button{border-radius:0;font-weight:700;min-height:44px;border:1px solid var(--ink)}.stButton>button[kind="primary"]{background:var(--ink);color:white}.stTextInput input,.stTextArea textarea,.stSelectbox>div>div{border-radius:0!important}
+[data-testid="stMetricValue"],[data-testid="stMetricLabel"]{color:var(--ink)!important}[data-testid="stMetricDelta"]{color:#59635d!important}
 [data-testid="stWidgetLabel"] p{color:var(--ink)!important}[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p{color:#f7f4ea!important}[data-testid="stTab"]{font-family:'DM Mono';text-transform:uppercase;letter-spacing:.04em}[data-testid="stTab"] p{color:#5c645f!important;opacity:1!important}[data-testid="stTab"][aria-selected="true"] p{color:var(--signal)!important}
 @media(max-width:700px){.hero{padding-top:.7rem}.answer{box-shadow:6px 6px 0 var(--lime)}[data-testid="stSidebar"]{min-width:260px}.orb-stage{min-height:360px}.orb{width:230px}}
 </style>
@@ -42,11 +49,22 @@ def db():
     return m.ensure_db()
 
 
+def icon_heading(icon: str, title: str, caption: str | None = None, *, width: int = 52) -> None:
+    """A restrained Koboyo section marker with accessible text beside it."""
+    with st.container(horizontal=True, vertical_alignment="center", gap="small"):
+        st.image(icon, width=width)
+        with st.container(gap=None):
+            st.subheader(title)
+            if caption:
+                st.caption(caption)
+
+
 conn = db()
 agent.scan_inbox(conn)
 provider = agent.provider_status()
 
 with st.sidebar:
+    st.image(KOBOYO_TRUCK, width=72)
     st.markdown("## ◉ MERIDIAN")
     st.caption("OPERATIONAL MEMORY / DEMO")
     st.markdown("<span class='live-dot'></span><span class='stamp'>Context online</span>", unsafe_allow_html=True)
@@ -63,6 +81,7 @@ st.markdown("<div class='hero'><div class='eyebrow'>Active operational intellige
 tabs = st.tabs(["CONTROL ROOM", "ROUTE", "ASK", "INBOX", "LIVE", "APPROVALS", "AUDIT"])
 
 with tabs[0]:
+    icon_heading(KOBOYO_WARNING, "Control room", "Exceptions first: bad data, operational conflicts and rules that can stop work.")
     s = m.stats(conn); pipeline = m.run_pipeline(conn)
     cols = st.columns(5)
     for col, (value, label) in zip(cols, [(s["vehicles"], "canonical vehicles"), (s["trips"], "historical trips"), (s["drivers"], "PII-safe drivers"), (s["rules"], "approved rules"), (s["pending"], "awaiting approval")]):
@@ -76,8 +95,7 @@ with tabs[0]:
         st.markdown(f"<div class='rule'><div class='eyebrow {r.severity}'>{r.scope} · {r.severity}</div><h4>{r.title}</h4><p>{r.body}</p><div class='source'>↳ {r.source_ref}</div></div>", unsafe_allow_html=True)
 
 with tabs[1]:
-    st.markdown("### Route intelligence")
-    st.caption("Hotelist-inspired shared state: route selectors and fleet filters update the evidence list and map together; the assistant reasons over the same selection.")
+    icon_heading(KOBOYO_TRUCK, "Route intelligence", "The fleet list, evidence, map and assistant share one selected route state.")
     a, b, c, d = st.columns(4)
     origin = a.selectbox("Origin", list(m.HUBS), index=list(m.HUBS).index("Delhi"))
     destinations = [x for x in m.PLACES if x != origin]
@@ -91,7 +109,16 @@ with tabs[1]:
     with st.spinner("Compiling route evidence…"):
         route = m.route_intelligence(conn, origin, destination, client, travel_on)
     filtered_candidates = [v for v in route["candidates"] if v["year"] >= min_year and (bs_filter == "All" or v["bs_stage"] == bs_filter)]
-    filtered_trucks = [v for v in m.truck_rows(conn) if v["year"] >= min_year and (bs_filter == "All" or v["bs_stage"] == bs_filter)]
+    filtered_trucks = [
+        {
+            **v,
+            "tooltip_title": v["registration"],
+            "tooltip_detail": f"{v['model']} · {v['year']} {v['bs_stage']} · home assignment {v['home_hub']}",
+            "tooltip_source": v["evidence"],
+        }
+        for v in m.truck_rows(conn)
+        if v["year"] >= min_year and (bs_filter == "All" or v["bs_stage"] == bs_filter)
+    ]
     if route["is_approximate"]:
         st.warning("OSRM was unavailable, so the line is an approximate endpoint connection—not a road route.")
 
@@ -110,26 +137,70 @@ with tabs[1]:
         for p in route["precautions"]:
             st.markdown(f"**{p['status']} · {p['title']}**  \n{p['why_now']}  \n`{p['source_ref']}`")
     with map_col:
-        hubs = m.hub_rows(conn)
-        route_row = [{"path": route["path"], "label": f"{origin} → {destination}", "source": route["geometry_source"]}]
+        hubs = [
+            {
+                **hub,
+                "tooltip_title": f"{hub['hub']} hub",
+                "tooltip_detail": f"{hub['vehicles']} fleet-master home assignments · {hub['incidents']} open valid incidents",
+                "tooltip_source": "Canonical fleet and ticket records · not a live yard count",
+            }
+            for hub in m.hub_rows(conn)
+        ]
+        precautions = [
+            {
+                **item,
+                "tooltip_title": f"{item['status']} · {item['title']}",
+                "tooltip_detail": item["why_now"],
+                "tooltip_source": item["source_ref"],
+            }
+            for item in route["precautions"]
+        ]
+        incidents = [
+            {
+                **item,
+                "tooltip_title": f"Historical incident · {item['ticket_id']}",
+                "tooltip_detail": item["issue"],
+                "tooltip_source": f"{item['source_ref']} · {item['position_basis']}",
+            }
+            for item in route["incidents"]
+        ]
+        route_row = [{
+            "path": route["path"],
+            "tooltip_title": f"{origin} → {destination}",
+            "tooltip_detail": f"{route['distance_km']:,.0f} km · {route['geometry_source']}",
+            "tooltip_source": "Selected route state",
+        }]
         layers = [
             pdk.Layer("PathLayer", route_row, get_path="path", get_color="[255,92,53,235]", get_width=6, width_min_pixels=4, pickable=True),
             pdk.Layer("ScatterplotLayer", hubs, get_position="[lon,lat]", get_radius=4500, get_fill_color="[200,255,61,190]", get_line_color="[23,32,28,255]", line_width_min_pixels=2, pickable=True),
-            pdk.Layer("TextLayer", filtered_trucks, get_position="[lon,lat]", get_text="glyph", get_size=20, size_min_pixels=13, size_max_pixels=24, get_color="[23,32,28,255]", pickable=True),
-            pdk.Layer("ScatterplotLayer", route["precautions"], get_position="[lon,lat]", get_radius=4200, get_fill_color="[255,184,46,220]", get_line_color="[23,32,28,255]", line_width_min_pixels=1, pickable=True),
+            pdk.Layer("IconLayer", filtered_trucks, get_position="[lon,lat]", get_icon="icon", get_size=30, size_units="pixels", size_min_pixels=24, size_max_pixels=36, pickable=True),
+            pdk.Layer("IconLayer", precautions, get_position="[lon,lat]", get_icon="icon", get_size=34, size_units="pixels", size_min_pixels=28, size_max_pixels=40, pickable=True),
         ]
         if show_incidents:
-            layers.append(pdk.Layer("ScatterplotLayer", route["incidents"], get_position="[lon,lat]", get_radius=4800, get_fill_color="[46,100,245,220]", get_line_color="[255,255,255,255]", line_width_min_pixels=2, pickable=True))
+            layers.append(pdk.Layer("ScatterplotLayer", incidents, get_position="[lon,lat]", get_radius=4800, get_fill_color="[46,100,245,220]", get_line_color="[255,255,255,255]", line_width_min_pixels=2, pickable=True))
         span = max(abs(m.PLACES[origin][0] - m.PLACES[destination][0]), abs(m.PLACES[origin][1] - m.PLACES[destination][1]))
         zoom = 6.4 if span < 2 else 5.4 if span < 5 else 4.5
-        deck = pdk.Deck(layers=layers, map_style="light", initial_view_state=pdk.ViewState(latitude=(m.PLACES[origin][0] + m.PLACES[destination][0]) / 2, longitude=(m.PLACES[origin][1] + m.PLACES[destination][1]) / 2, zoom=zoom, pitch=16), tooltip={"html": "<b>{hub}{registration}{title}{ticket_id}{label}</b><br/>{vehicles} fleet assignments<br/>{evidence}{body}{issue}{why_now}<br/><small>{source_ref}{source}</small>"})
+        deck = pdk.Deck(
+            layers=layers,
+            map_style="light",
+            initial_view_state=pdk.ViewState(
+                latitude=(m.PLACES[origin][0] + m.PLACES[destination][0]) / 2,
+                longitude=(m.PLACES[origin][1] + m.PLACES[destination][1]) / 2,
+                zoom=zoom,
+                pitch=16,
+            ),
+            tooltip={
+                "html": "<b>{tooltip_title}</b><br/>{tooltip_detail}<br/><small>{tooltip_source}</small>",
+                "style": {"backgroundColor": "#17201c", "color": "#f7f4ea", "fontSize": "13px"},
+            },
+        )
         st.pydeck_chart(deck, width="stretch", height=650)
-        st.caption("🟧 route · 🟡 precaution · 🔵 historical incident · 🟢 hub · 🚚 home assignment")
+        st.caption("Orange route · Koboyo warning = precaution · blue = historical incident · lime = hub · Koboyo truck = home assignment")
     with assistant_col:
         st.markdown("#### Route assistant")
-        st.metric("Distance", f"{route['distance_km']:,.0f} km", route["geometry_source"])
-        st.metric("Precautions", len(route["precautions"]))
-        st.metric("Parked now", "Unknown", "yard feed not connected")
+        st.markdown(f"<div class='route-stat'><div class='label'>Distance</div><div class='value'>{route['distance_km']:,.0f} km</div><div class='note'>{route['geometry_source']}</div></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='route-stat'><div class='label'>Precautions</div><div class='value'>{len(route['precautions'])}</div><div class='note'>for this route, client and date</div></div>", unsafe_allow_html=True)
+        st.markdown("<div class='route-stat'><div class='label'>Parked now</div><div class='value'>Unknown</div><div class='note'>yard feed not connected</div></div>", unsafe_allow_html=True)
         route_question = st.text_area("Ask about this selection", placeholder="What are the biggest risks, and which assigned trucks survive static checks?", height=120)
         if st.button("Ask route agent", type="primary", width="stretch", disabled=not route_question.strip()):
             full_question = f"For {origin} to {destination} on {travel_on}, client {client}: {route_question}"
@@ -138,12 +209,11 @@ with tabs[1]:
             st.write(result["detail"])
             for unknown in result["unknowns"]:
                 st.warning("Unknown: " + unknown)
-        with st.expander("Unknowns that block certainty", expanded=True):
-            st.write("\n".join(f"- {u}" for u in route["unknowns"]))
+        unknown_items = "".join(f"<li>{html.escape(u)}</li>" for u in route["unknowns"])
+        st.markdown(f"<div class='unknown-list'><b>Unknowns blocking certainty</b><ul>{unknown_items}</ul></div>", unsafe_allow_html=True)
 
 with tabs[2]:
-    st.markdown("### Ask the operational agent")
-    st.caption("The agent retrieves bounded evidence, reconciles conflicts, reasons, and responds in the asker's Hindi, Hinglish or English.")
+    icon_heading(KOBOYO_WORKER, "Ask the operational agent", "Ask naturally in Hindi, Hinglish or English; the answer carries evidence, unknowns and useful extras.")
     examples = ["RJ43DD3546 Orion ke liye eligible hai?", "Shakti ka real SLA kitna hai?", "Breakdown origin se 40 km hai—replacement kahan se aaye?"]
     pick = st.selectbox("Quick scenario", ["Choose an example…", *examples])
     q = st.text_input("Question", value="" if pick.startswith("Choose") else pick, placeholder="e.g. Kya DL30AN8381 ko winter mein Delhi bhej sakte hain?")
@@ -159,8 +229,7 @@ with tabs[2]:
             for hit in m.search(conn, q): st.markdown(f"**{hit['title']}**  \n{hit['body'][:500]}  \n`{hit['source_ref']}`")
 
 with tabs[3]:
-    st.markdown("### Autonomous intake")
-    st.caption("Every input is preserved as an event. The agent decides whether to answer, log only, stage reusable context, or escalate—and records why.")
+    icon_heading(KOBOYO_WORKER, "Autonomous intake", "Workers and documents become preserved events before the agent decides what deserves reusable context.")
     uploaded = st.file_uploader("Drop company documents", type=["txt", "md", "csv", "tsv", "json", "xlsx", "pdf", "docx"], accept_multiple_files=True)
     for file in uploaded:
         try:
@@ -185,7 +254,7 @@ with tabs[3]:
     st.info("Watched folder: place supported files in `inbox/`; fingerprints prevent duplicate processing on future app reruns.")
 
 with tabs[4]:
-    st.markdown("### Live voice + worker channels")
+    icon_heading(KOBOYO_MIC, "Live voice + worker channels", "The same operational agent is reachable by a browser voice session or a controlled Telegram gateway.")
     live_ready = bool(os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"))
     st.markdown(f"<div class='orb-stage'><div class='orb'></div><div class='orb-label'>{'ready · gemini live' if live_ready else 'model key required'}</div></div>", unsafe_allow_html=True)
     a, b = st.columns(2)
@@ -204,7 +273,7 @@ with tabs[4]:
     st.warning("Telegram is a field channel, not the system of record. Restrict users, redact PII, minimize retention of raw voice, and store only the operational data you need.")
 
 with tabs[5]:
-    st.markdown("### Human approval queue")
+    icon_heading(KOBOYO_WORKER, "Human approval queue", "People retain authority over canonical context and outbound client communication.")
     st.markdown("#### Client communications")
     approved_comms = {r["ticket_id"] for r in conn.execute("SELECT ticket_id FROM comm_approval")}
     comms = [json.loads(line) for line in (m.OUTPUTS / "comms_pending.jsonl").read_text().splitlines() if line]
@@ -231,8 +300,7 @@ with tabs[5]:
             if y.button("Reject", key="r" + r["id"], width="stretch"): m.decide_proposal(conn, r["id"], False); st.rerun()
 
 with tabs[6]:
-    st.markdown("### Provenance, events & agent trace")
-    st.caption("Raw inputs remain events; proposed facts, human decisions and model/tool runs stay separable and inspectable.")
+    icon_heading(KOBOYO_WARNING, "Provenance, events & agent trace", "Raw inputs, proposed facts, human decisions and model/tool runs stay separate and inspectable.")
     st.markdown("#### Agent runs"); st.dataframe(pd.read_sql_query("SELECT started_at,provider,task,source_ref,status,trace_json FROM agent_run ORDER BY started_at DESC LIMIT 100", conn), hide_index=True, width="stretch")
     st.markdown("#### Intake event log"); st.dataframe(pd.read_sql_query("SELECT at,channel,actor_ref,event_type,disposition,reasoning,source_ref FROM context_event ORDER BY at DESC LIMIT 200", conn), hide_index=True, width="stretch")
     st.markdown("#### Source ledger"); st.dataframe(pd.read_sql_query("SELECT kind,path,substr(fingerprint,1,16) AS sha256,ingested_at FROM source ORDER BY path", conn), hide_index=True, width="stretch")
