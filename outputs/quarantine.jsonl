@@ -1,0 +1,2 @@
+{"reasons":["missing driver_id","missing km_from_origin_hub","missing vehicle"],"source":"tickets.json","ticket_id":"TKT-9101"}
+{"reasons":["invalid created_at","missing destination","missing issue","missing origin_hub","missing severity"],"source":"tickets.json","ticket_id":"TKT-9102"}

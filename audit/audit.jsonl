@@ -1,0 +1,92 @@
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0001"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Lucknow) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0001"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-8501C92C357967; MSG-8501C92C357967","step":"outputs_drafted","ticket_id":"TKT-0001"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0002"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Delhi) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0002"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-7904B6A21BA2A1; MSG-7904B6A21BA2A1","step":"outputs_drafted","ticket_id":"TKT-0002"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0003"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Ludhiana) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0003"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-A36418A4145F7E; MSG-A36418A4145F7E","step":"outputs_drafted","ticket_id":"TKT-0003"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0004"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Nearest hub with an eligible vehicle sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0004"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-C0255F0899436E; MSG-C0255F0899436E","step":"outputs_drafted","ticket_id":"TKT-0004"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0005"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Rudrapur) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0005"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-CCF0B51498C506; MSG-CCF0B51498C506","step":"outputs_drafted","ticket_id":"TKT-0005"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0006"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Ludhiana) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0006"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-B3B71DD01D8D18; MSG-B3B71DD01D8D18","step":"outputs_drafted","ticket_id":"TKT-0006"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0007"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Delhi) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0007"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-DE65E46C7B4FA2; MSG-DE65E46C7B4FA2","step":"outputs_drafted","ticket_id":"TKT-0007"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0008"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Ludhiana) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0008"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-FA60C3AA1DA221; MSG-FA60C3AA1DA221","step":"outputs_drafted","ticket_id":"TKT-0008"}
+{"citations":["tickets.json"],"decision":"canonicalized; 2 source row(s)","step":"normalized","ticket_id":"TKT-0009"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Chandigarh) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0009"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-35F95980486E1F; MSG-35F95980486E1F","step":"outputs_drafted","ticket_id":"TKT-0009"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0010"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Kanpur) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0010"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-0511737DDDB159; MSG-0511737DDDB159","step":"outputs_drafted","ticket_id":"TKT-0010"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0011"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Gurgaon) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0011"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-53FDFBF7C3615A; MSG-53FDFBF7C3615A","step":"outputs_drafted","ticket_id":"TKT-0011"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0012"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Ludhiana) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0012"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-8E9FB2A01424F7; MSG-8E9FB2A01424F7","step":"outputs_drafted","ticket_id":"TKT-0012"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0013"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Ambala) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0013"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-7C824BB1917A5B; MSG-7C824BB1917A5B","step":"outputs_drafted","ticket_id":"TKT-0013"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0014"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Nearest hub with an eligible vehicle sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0014"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-BCE48DCC02B285; MSG-BCE48DCC02B285","step":"outputs_drafted","ticket_id":"TKT-0014"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0015"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Chandigarh) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0015"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-F38AA4D7600307; MSG-F38AA4D7600307","step":"outputs_drafted","ticket_id":"TKT-0015"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0016"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Nearest hub with an eligible vehicle sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0016"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-1884B28930757D; MSG-1884B28930757D","step":"outputs_drafted","ticket_id":"TKT-0016"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0017"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Kanpur) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0017"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-75A854BD3471CD; MSG-75A854BD3471CD","step":"outputs_drafted","ticket_id":"TKT-0017"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0018"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Rudrapur) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0018"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-E8CE04CEC5DD76; MSG-E8CE04CEC5DD76","step":"outputs_drafted","ticket_id":"TKT-0018"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0019"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Nearest hub with an eligible vehicle sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0019"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-AFC3C84A2AC34F; MSG-AFC3C84A2AC34F","step":"outputs_drafted","ticket_id":"TKT-0019"}
+{"citations":["tickets.json"],"decision":"canonicalized; 2 source row(s)","step":"normalized","ticket_id":"TKT-0020"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Gurgaon) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0020"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-6FB8A622F4C908; MSG-6FB8A622F4C908","step":"outputs_drafted","ticket_id":"TKT-0020"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0021"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Nearest hub with an eligible vehicle sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0021"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-C36181E1159BFA; MSG-C36181E1159BFA","step":"outputs_drafted","ticket_id":"TKT-0021"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0022"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Jaipur) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0022"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-1C8776A3FD1B8B; MSG-1C8776A3FD1B8B","step":"outputs_drafted","ticket_id":"TKT-0022"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0023"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Rudrapur) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0023"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-D538194EDD8D28; MSG-D538194EDD8D28","step":"outputs_drafted","ticket_id":"TKT-0023"}
+{"citations":["tickets.json"],"decision":"canonicalized; 2 source row(s)","step":"normalized","ticket_id":"TKT-0024"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Nearest hub with an eligible vehicle sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0024"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-B565A075795291; MSG-B565A075795291","step":"outputs_drafted","ticket_id":"TKT-0024"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0025"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Gurgaon) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0025"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-EAA08D359B9BE3; MSG-EAA08D359B9BE3","step":"outputs_drafted","ticket_id":"TKT-0025"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0026"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Chandigarh) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0026"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-4868279F1050D3; MSG-4868279F1050D3","step":"outputs_drafted","ticket_id":"TKT-0026"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0027"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Lucknow) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0027"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-C0F756B009DDC8; MSG-C0F756B009DDC8","step":"outputs_drafted","ticket_id":"TKT-0027"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0028"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Kanpur) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0028"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-C87474AB77425A; MSG-C87474AB77425A","step":"outputs_drafted","ticket_id":"TKT-0028"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0029"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Nearest hub with an eligible vehicle sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0029"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-AA0C84315008B2; MSG-AA0C84315008B2","step":"outputs_drafted","ticket_id":"TKT-0029"}
+{"citations":["tickets.json"],"decision":"canonicalized; 1 source row(s)","step":"normalized","ticket_id":"TKT-0030"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"Origin hub (Rudrapur) sends replacement","rule_id":"RULE-BREAKDOWN","step":"response_decided","ticket_id":"TKT-0030"}
+{"citations":["tickets.json","dispatcher_interview.txt"],"decision":"WO-E659CA57A4251B; MSG-E659CA57A4251B","step":"outputs_drafted","ticket_id":"TKT-0030"}
+{"citations":["tickets.json"],"decision":"missing driver_id; missing km_from_origin_hub; missing vehicle","step":"quarantined","ticket_id":"TKT-9101"}
+{"citations":["tickets.json"],"decision":"invalid created_at; missing destination; missing issue; missing origin_hub; missing severity","step":"quarantined","ticket_id":"TKT-9102"}
