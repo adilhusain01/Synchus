@@ -6,12 +6,21 @@ The agent is allowed to retrieve, reconcile, reason, log and stage changes. It i
 
 ## Run
 
+The primary UI is the reactive TanStack client. It uses TanStack Router and Query, Zustand, shadcn-style primitives, inline Tailwind utilities, MapLibre and the shared FastAPI context service.
+
 ```bash
-uv sync
-uv run streamlit run app.py --server.address 127.0.0.1
+uv sync --extra live --extra telegram --extra web
+uv run python api_server.py
+
+# in another terminal
+cd web
+pnpm install
+pnpm dev
 ```
 
-The first run builds `data/meridian.db` from `candidate_bundle/`. The app loads local settings from `.env`; real values are ignored by Git. Copy `.env.example` if needed.
+Open `http://127.0.0.1:5173`. TanStack Query listens to the API event stream, so new voice, Telegram, document, approval, and audit activity refreshes open workspaces without a page reload. The original Streamlit prototype remains available with `uv run streamlit run app.py --server.address 127.0.0.1`.
+
+The first run builds `data/meridian.db` from `candidate_bundle/`. Services load local settings from `.env`; real values are ignored by Git. Copy `.env.example` if needed.
 
 ## Model choices
 
