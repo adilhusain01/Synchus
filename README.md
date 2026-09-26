@@ -4,6 +4,18 @@ An active operational-memory product built from the supplied Meridian Freight ch
 
 The agent is allowed to retrieve, reconcile, reason, log and stage changes. It is not allowed to silently turn a model output into canonical operational truth. Human approval is the promotion boundary.
 
+## Getting started
+
+Prerequisites: Python 3.12 with [uv](https://docs.astral.sh/uv/), Node.js 20+ with pnpm.
+
+```bash
+git clone git@github.com:adilhusain01/Synchus.git
+cd Synchus
+cp .env.example .env   # fill in the API keys you need (SARVAM, GEMINI, Telegram, CARTO…)
+```
+
+Then follow **Run** below. Runtime data (`data/meridian.db`, `inbox/`) is regenerated locally and not committed.
+
 ## Run
 
 The primary UI is the reactive TanStack client. It uses TanStack Router and Query, Zustand, shadcn-style primitives, inline Tailwind utilities, MapLibre and the shared FastAPI context service.

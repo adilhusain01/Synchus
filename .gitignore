@@ -11,3 +11,9 @@ inbox/*
 .DS_Store
 .agents/skills/developing-with-streamlit
 .claude/skills/developing-with-streamlit
+
+# Build output / deps
+node_modules/
+web/dist/
+presentation/build/node_modules
+*.log
